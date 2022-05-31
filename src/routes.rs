@@ -2,6 +2,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
+
+use crate::handlers::home::index;
 fn channel_routes() -> Router{
     Router::new()
     .route("/:ucid", get(|| async {}))
@@ -22,7 +24,7 @@ fn user_and_c_routes() -> Router{
 
 pub fn get_router() -> Router{
     Router::new()
-    .route("/", get(|| async {}))
+    .route("/", get(index))
     .nest("/channel", channel_routes())
 
     .nest("/c", user_and_c_routes())
