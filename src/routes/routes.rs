@@ -2,7 +2,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
-pub fn channel_routes() -> Router{
+fn channel_routes() -> Router{
     Router::new()
     .route("/:ucid", get(|| async {}))
     .route("/:ucid/home", get(|| async {}))
@@ -12,7 +12,7 @@ pub fn channel_routes() -> Router{
     .route("/:ucid/about", get(|| async {}))
     .route("/:ucid/live", get(|| async{}))
 }
-pub fn user_and_c_routes() -> Router{
+fn user_and_c_routes() -> Router{
     Router::new()
     .route("/:user/videos", get(|| async {}))
     .route("/:user/playlists", get(|| async {}))
