@@ -24,23 +24,23 @@ pub fn get_router() -> Router{
     Router::new()
     .route("/", get(|| async {}))
     .nest("/channel", channel_routes())
-    .nest("/c", user_and_c_routes())
 
+    .nest("/c", user_and_c_routes())
     .nest("/user", user_and_c_routes())
 
     .route("/attribution_link", get(|| async {}))
-
+    
     .route("/watch", get(|| async {}))
-    .route("/watch/:id", get(|| async {}))
+    .route("/watch_ajax", get(|| async {}))
     .route("/watch/:id", get(|| async {}))
     .route("/shorts/:id", get(|| async {}))
     .route("/clip/:clip", get(|| async {}))
     .route("/w/:id", get(|| async {}))
     .route("/v/:id", get(|| async {}))
     .route("/e/:id", get(|| async {}))
-
-    .route("search", get(|| async {}))
-    .route("results", get(|| async {}))
+    
+    .route("/search", get(|| async {}))
+    .route("/results", get(|| async {}))
 
 
 }
