@@ -2,8 +2,10 @@ use axum::{
     routing::{get, post},
     Router,
 };
-
+// Imports of the handlers
 use crate::handlers::home::index;
+
+/// Short hand for nested /channel routes
 fn channel_routes() -> Router{
     Router::new()
     .route("/:ucid", get(|| async {}))
@@ -14,6 +16,7 @@ fn channel_routes() -> Router{
     .route("/:ucid/about", get(|| async {}))
     .route("/:ucid/live", get(|| async{}))
 }
+/// Short hand for nested /c and /user routes
 fn user_and_c_routes() -> Router{
     Router::new()
     .route("/:user/videos", get(|| async {}))
@@ -21,7 +24,7 @@ fn user_and_c_routes() -> Router{
     .route("/:user/community", get(|| async {}))
     .route("/:user/about", get(|| async {}))
 }
-
+/// Create the main router struct used for all routes
 pub fn get_router() -> Router{
     Router::new()
     .route("/", get(index))
