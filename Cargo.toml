@@ -16,3 +16,4 @@ tower-http = { version = "0.3.0", features = ["trace"] }
 youtubei-rs = "0.1"
 askama = "0.11"
 envconfig = "0.10"
+scylla = "0.4.5"
