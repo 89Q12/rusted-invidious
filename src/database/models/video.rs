@@ -24,4 +24,6 @@ pub struct Video{
     publish_date: Timestamp,
     formats:String, // This string contains json that holds all formats for the video. Could be stored in own table I think
     storyboard_spec_url: String,
+    continuation_comments: Option<String>,
+    continuation_related: Option<String>,
 }
