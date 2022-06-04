@@ -14,7 +14,7 @@ pub async fn redirect(Extension(state): Extension<Arc<State>>,Path(id): Path<Str
 
 /// Handler for the path /watch_ajax which is used to mark a video as watched if the user is logged in
 /// Protected route
-async fn watch_ajax(Extension(state): Extension<Arc<State>>,body: String){
+pub async fn watch_ajax(Extension(state): Extension<Arc<State>>,body: String){
     todo!()
 }
 
