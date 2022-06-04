@@ -36,10 +36,10 @@ pub fn get_router() -> Router{
     .nest("/c", user_and_c_routes())
     .nest("/user", user_and_c_routes())
 
-    .route("/attribution_link", post(|| async {}))
+    .route("/attribution_link", get(channel::attribution_link))
     
     .route("/watch", get(video::watch_v))
-    .route("/watch_ajax", get(video::watch_v))
+    .route("/watch_ajax", post(video::watch_v))
     .route("/watch/:id", get(video::redirect))
     .route("/shorts/:id", get(video::redirect))
     .route("/clip/:clip", get(video::clip))
