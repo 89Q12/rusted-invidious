@@ -27,6 +27,12 @@ pub async fn live(Extension(state): Extension<Arc<State>>,Path(id): Path<String>
     todo!()
 }
 
+/// Handler for the path /attribution_link?a=something&u=/channel/:id/ it resolves the url and redirects to /channel/:id/
+pub async fn attribution_link(Extension(state): Extension<Arc<State>>,Path(id): Path<String>) -> Redirect{
+    todo!()
+}
+
+/// fetches a channel with the given tab e.g. videos
 fn fetch_channel(ucid: String, tab: Tab,state: Extension<Arc<State>>) -> ChannelQuery{
     todo!()
 }
