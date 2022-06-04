@@ -39,7 +39,7 @@ pub fn get_router() -> Router{
     .route("/attribution_link", get(channel::attribution_link))
     
     .route("/watch", get(video::watch_v))
-    .route("/watch_ajax", post(video::watch_v))
+    .route("/watch_ajax", post(video::watch_ajax))
     .route("/watch/:id", get(video::redirect))
     .route("/shorts/:id", get(video::redirect))
     .route("/clip/:clip", get(video::clip))
