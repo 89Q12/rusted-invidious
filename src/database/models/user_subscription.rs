@@ -4,5 +4,5 @@ use scylla::cql_to_rust::FromCqlVal;
 #[derive(Debug,IntoUserType, FromUserType)]
 pub struct UserSubscribed {
     uuid: String, // partition key
-    channel_id: String, // clustering key
+    channel_id: String,
 }

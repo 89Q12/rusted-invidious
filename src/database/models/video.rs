@@ -6,7 +6,7 @@ use scylla::frame::value::Timestamp;
 #[derive(Debug,IntoUserType, FromUserType)]
 pub struct Video{
     video_id: String, // Primary Key -> partition key
-    updated_at: Timestamp, // Primary Key -> clustering key
+    updated_at: Timestamp,
     channel_id: String,
     title: String,
     likes: String,

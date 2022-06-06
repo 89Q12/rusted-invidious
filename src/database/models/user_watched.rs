@@ -4,5 +4,5 @@ use scylla::cql_to_rust::FromCqlVal;
 #[derive(Debug,IntoUserType, FromUserType)]
 pub struct UserWatched{
     uuid: String, // partition key I guess
-    video_id: String,// clustering key
+    video_id: String,
 }
