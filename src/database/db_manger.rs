@@ -19,15 +19,64 @@ impl DbManager {
         }
  
         match session_builder.build().await {
-            Ok(session) => Ok(Self { session, prepared_statements: Vec::new() }),
+            Ok(session) => {
+                Ok(Self { session, prepared_statements: Vec::new() })
+            },
             Err(err) => Err(err),
+        }
+    }
+
+    pub async fn use_keyspace(&self){
+        match self.session.use_keyspace("rusted_invidious", false).await{
+            Ok(_) => tracing::event!(target:"db", Level::DEBUG, "Successfully set keyspace"),
+            Err(_) => panic!("KESPACE NOT FOUND EXISTING...."),
         }
     }
     /// Prepares all select statements used throughout the handlers
     /// Prepared statements are stored in in a vec and the indices are statically maped to specific statements
+    /// Not fancy but fast
     /// E.g. index 0 will be the statement to get a video by id from the database
-    pub fn init_prepared_statements(&self){
-        todo!()
+    /// 0 =get_video 1= get_user 2 = get_user_uid 3 = get_channel_video 4 = get_channel 5 = get_session 
+    /// 6= insert_video 7 insert_user 8 = insert_user_uid, 9 = insert_channel_video 10 = insert_channel 11 = insert_session 12 = insert_subscription 13 = insert_watched
+    pub async fn init_prepared_statements(&mut self){
+        let get_video = self.session.prepare("SELECT * FROM videos WHERE video_id = ?");
+        let get_user = self.session.prepare("SELECT * FROM users WHERE uid = ? and name = ?");
+        let get_user_uid = self.session.prepare("SELECT uid FROM username_uuid WHERE name = ?");
+        let get_channel_video = self.session.prepare("SELECT * FROM channel_videos WHERE video_id = ? and channel_id = ? and updated_at < ?");
+        let get_channel = self.session.prepare("SELECT * FROM channels WHERE channel_id = ?");
+        let get_session = self.session.prepare("SELECT issued FROM sessions WHERE uid = ? and session_id = ?");
+        
+        let insert_video = self.session.prepare("INSERT INTO videos (video_id, updated_at, channel_id, title, likes, view_count,\
+             description, length_in_seconds, genere, genre_url, license, author_verified, subcriber_count, author_name, author_thumbnail_url, is_famliy_safe, publish_date, formats, storyboard_spec_url, continuation_related, continuation_comments ) \
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        let insert_user = self.session.prepare("INSERT INTO users (uid, name, created_at, password, access_token, feed_needs_update) VALUES(?,?,?,?,?,?)");
+        let insert_user_uid = self.session.prepare("INSERT INTO username_uuid (name, uid) VALUES (?,?)");
+        let insert_channel_video = self.session.prepare("INSERT INTO channel_videos (video_id, updated_at, channel_id, title, likes, view_count,\
+            description, length_in_seconds, genere, genre_url, license, author_verified, subcriber_count, author_name, author_thumbnail_url, is_famliy_safe, publish_date, formats, storyboard_spec_url, live, premiere_timestamp ) \
+       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        let insert_channel = self.session.prepare("INSERT INTO channels (channel_id, updated_at, subscribed_at, author_name) VALUES (?,?,?,?)");
+        let insert_session = self.session.prepare("INSERT INTO sessions (uid, session_id, issued) VALUES(?,?,?)");
+        let insert_subscription = self.session.prepare("INSERT INTO user_subscriptions (uid, channel_id) VALUES(?,?)");
+        let insert_watched = self.session.prepare("INSERT INTO user_watched (uid, video_id) VALUES(?,?)");
+
+        let results = tokio::join!(get_video, get_user, get_user_uid, get_channel_video, get_channel,get_session, 
+            insert_video,insert_user,insert_user_uid, insert_channel_video, insert_channel, insert_session, insert_subscription, insert_watched);
+
+        self.prepared_statements.push(results.0.unwrap());
+        self.prepared_statements.push(results.1.unwrap());
+        self.prepared_statements.push(results.2.unwrap());
+        self.prepared_statements.push(results.3.unwrap());
+        self.prepared_statements.push(results.4.unwrap());
+        self.prepared_statements.push(results.5.unwrap());
+        self.prepared_statements.push(results.6.unwrap());
+        self.prepared_statements.push(results.7.unwrap());
+        self.prepared_statements.push(results.8.unwrap());
+        self.prepared_statements.push(results.9.unwrap());
+        self.prepared_statements.push(results.10.unwrap());
+        self.prepared_statements.push(results.11.unwrap());
+        self.prepared_statements.push(results.12.unwrap());
+        self.prepared_statements.push(results.13.unwrap());
+
     }
     /// Checks if the database exists if not it creates a new keyspace and creates all tables.
     /// With the assumption that the database is a single node cluster.
@@ -49,7 +98,7 @@ impl DbManager {
         self.session
         .query(
             "CREATE TABLE IF NOT EXISTS rusted_invidious.videos (video_id ASCII primary key, updated_at timestamp, channel_id ASCII, title TEXT, \
-                likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genere_url ASCII, license ASCII, author_verified boolean, \
+                likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genre_url ASCII, license ASCII, author_verified boolean, \
                 subcriber_count bigint, author_name TEXT, author_thumbnail_url ASCII, is_famliy_safe boolean, publish_date timestamp, \
                 formats TEXT, storyboard_spec_url ASCII, continuation_related TEXT, continuation_comments TEXT);",
             &[],
@@ -58,32 +107,32 @@ impl DbManager {
         // Creates the users table
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.users (uid UUID, name TEXT,created_at timestamp, password TEXT, access_token TEXT,feed_needs_update boolean, PRIMARY KEY((uid, feed_needs_update), name));",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.users (uid UUID, name TEXT,created_at timestamp, password TEXT, access_token TEXT,feed_needs_update boolean, PRIMARY KEY(uid, name));",
             &[],
         )
         .await?;
 
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.username_uuid (name TEXT PRIMARY KEY, uuid UUID);",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.username_uuid (name TEXT PRIMARY KEY, uid UUID);",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uuid UUID PRIMARY KEY, channel_id ASCII);",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uid UUID PRIMARY KEY, channel_id ASCII);",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_watched (uuid UUID PRIMARY KEY, video_id ASCII);",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_watched (uid UUID PRIMARY KEY, video_id ASCII);",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.sessions (uuid UUID, session_id ASCII, issued timestamp, PRIMARY KEY(uuid, session_id));",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.sessions (uid UUID, session_id ASCII, issued timestamp, PRIMARY KEY(uid, session_id));",
             &[],
         )
         .await?;
@@ -96,7 +145,7 @@ impl DbManager {
         self.session
         .query(
             "CREATE TABLE IF NOT EXISTS rusted_invidious.channel_videos (video_id ASCII, updated_at timestamp, channel_id ASCII, title TEXT, \
-                likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genere_url ASCII, license ASCII, author_verified boolean, \
+                likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genre_url ASCII, license ASCII, author_verified boolean, \
                 subcriber_count bigint, author_name TEXT, author_thumbnail_url ASCII, is_famliy_safe boolean, publish_date timestamp, \
                 formats TEXT, storyboard_spec_url ASCII, live boolean, premiere_timestamp timestamp, PRIMARY KEY((channel_id), video_id, updated_at));",
             &[],
