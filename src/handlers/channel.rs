@@ -1,30 +1,59 @@
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use axum::{response::{Response, Redirect}, Extension,extract::path::Path};
-use youtubei_rs::types::{channel::Tab, query_results::ChannelQuery};
+use youtubei_rs::types::{channel::Tab, query_results::BrowseResult, error::Errors};
+use youtubei_rs::query::{browse_id, resolve};
 use crate::config::State;
 
 /// Handler for the path /channel/:id, /c/:id, /user/:id
-pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) -> Response{
-    todo!()
+pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) ->  Result<String, String>{
+   let result =fetch_channel(id, Tab::Videos, axum::Extension(state)).await;
+   match result{
+    Ok(pl) => Ok(pl.metadata.unwrap().channel_metadata_renderer.title),
+    Err(e) => match e{
+            youtubei_rs::types::error::Errors::RequestError(err) =>Err(err.message) ,
+            youtubei_rs::types::error::Errors::ParseError(err) => Err(err.message),
+        },
+    }
 }
 
 /// Handler for the path /channel/:id/videos, /c/:id/videos, /user/:id/videos
-pub async fn videos(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) -> Response{
-    todo!()
+pub async fn videos(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) ->  Result<String, String>{
+    let result =fetch_channel(id, Tab::Videos, axum::Extension(state)).await;
+    match result{
+     Ok(pl) => Ok(pl.metadata.unwrap().channel_metadata_renderer.title),
+     Err(e) => match e{
+             youtubei_rs::types::error::Errors::RequestError(err) =>Err(err.message) ,
+             youtubei_rs::types::error::Errors::ParseError(err) => Err(err.message),
+         },
+     }
 }
 
 /// Handler for the path /channel/:id/playlists, /c/:id/playlists, /user/:id/playlists
-pub async fn playlists(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) -> Response{
-    todo!()
+pub async fn playlists(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) ->  Result<String, String>{
+    let result =fetch_channel(id, Tab::Playlists, axum::Extension(state)).await;
+    match result{
+     Ok(pl) => Ok(pl.metadata.unwrap().channel_metadata_renderer.title),
+     Err(e) => match e{
+             youtubei_rs::types::error::Errors::RequestError(err) =>Err(err.message) ,
+             youtubei_rs::types::error::Errors::ParseError(err) => Err(err.message),
+         },
+     }
 }
 
 /// Handler for the path /channel/:id/community, /c/:id/community, /user/:id/community
-pub async fn community(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) -> Response{
-    todo!()
+pub async fn community(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) ->  Result<String, String>{
+    let result =fetch_channel(id, Tab::Community, axum::Extension(state)).await;
+    match result{
+     Ok(pl) => Ok(pl.metadata.unwrap().channel_metadata_renderer.title),
+     Err(e) => match e{
+             youtubei_rs::types::error::Errors::RequestError(err) =>Err(err.message) ,
+             youtubei_rs::types::error::Errors::ParseError(err) => Err(err.message),
+         },
+     }
 }
-/// Handler for the path /channel/:id/live, /c/:id/Mutex<State>, /user/:id/live
-pub async fn live(Extension(state): Extension<Arc<State>>,Path(id): Path<String>) -> Redirect{
+/// Handler for the path /channel/:id/live, /c/:id/, /user/:id/live
+pub async fn live(Extension(state): Extension<Arc<Mutex<State>>>,Path(id): Path<String>) -> Redirect{
     todo!()
 }
 
@@ -34,6 +63,13 @@ pub async fn attribution_link(Extension(state): Extension<Arc<Mutex<State>>>,Pat
 }
 
 /// fetches a channel with the given tab e.g. videos
-fn fetch_channel(ucid: String, tab: Tab,state: Extension<Arc<Mutex<State>>>) -> ChannelQuery{
-    todo!()
+async fn fetch_channel(ucid: String, tab: Tab,state: Extension<Arc<Mutex<State>>>) -> Result<BrowseResult, Errors>{
+    let lock = state.lock().await;
+    match tab {
+        Tab::Videos => browse_id(ucid,"EgZ2aWRlb3O4AQDyBgQKAjoA".to_string(), &lock.yt_client_config).await,
+        Tab::Playlists => browse_id(ucid,"EglwbGF5bGlzdHO4AQDyBgQKAkIA".to_string(), &lock.yt_client_config).await,
+        Tab::Community => browse_id(ucid,"Egljb21tdW5pdHm4AQDyBgQKAkoA".to_string(), &lock.yt_client_config).await,
+        // TODO add about tab in youtubei_rs params: "EgVhYm91dLgBAPIGBAoCEgA%3D"
+    }
 }
+
