@@ -8,8 +8,8 @@ pub async fn watch_v(Extension(state): Extension<Arc<State>>,Query(params): Quer
 }
 
 /// Handler for the paths /w/:id, /v/:id,/e/:id, /shorts/:id and /watch/:id it redirects to the /watch/v=id path
-pub async fn redirect(Extension(state): Extension<Arc<State>>,Path(id): Path<String>) -> Redirect{
-    todo!()
+pub async fn redirect(Path(id): Path<String>) -> Redirect{
+    Redirect::temporary(&("/watch?v=".to_owned()+ &id))
 }
 
 /// Handler for the path /watch_ajax which is used to mark a video as watched if the user is logged in
