@@ -35,6 +35,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "askama_axum"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1463e29c311d12424dce7d3ef3d064200c56da064e339c37c40478269eb7ea68"
+dependencies = [
+ "askama",
+ "axum-core 0.1.2",
+ "http",
+ "http-body",
+]
+
+[[package]]
 name = "askama_derive"
 version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -108,7 +120,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ab2504b827a8bef941ba3dd64bdffe9cf56ca182908a147edd6189c95fbcae7d"
 dependencies = [
  "async-trait",
- "axum-core",
+ "axum-core 0.2.4",
  "bitflags",
  "bytes",
  "futures-util",
@@ -131,6 +143,20 @@ dependencies = [
  "tower-http",
  "tower-layer",
  "tower-service",
+]
+
+[[package]]
+name = "axum-core"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6dbcda393bef9c87572779cb8ef916f12d77750b27535dd6819fa86591627a51"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "futures-util",
+ "http",
+ "http-body",
+ "mime",
 ]
 
 [[package]]
@@ -1172,6 +1198,7 @@ name = "rusted-invidious"
 version = "0.1.0"
 dependencies = [
  "askama",
+ "askama_axum",
  "axum",
  "chrono",
  "envconfig",
@@ -1944,12 +1971,13 @@ dependencies = [
 
 [[package]]
 name = "youtubei-rs"
-version = "0.1.0"
+version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99a11aefa8f095b0aca013398a11aacf1b69c6a2c3aeef219e10680b8222e96c"
+checksum = "a7b8fbd6785dfc729e82d6e02b1864639349f2644233ccab0b8c655e346e8769"
 dependencies = [
  "reqwest",
  "serde",
  "serde_json",
  "tokio",
+ "tracing",
 ]
