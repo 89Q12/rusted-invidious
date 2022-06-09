@@ -1,14 +1,11 @@
-use scylla::{Session, batch::Batch, prepared_statement::PreparedStatement, SessionBuilder, transport::errors::{NewSessionError, QueryError}, frame::request::Query};
+use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::errors::{NewSessionError, QueryError}};
 use tracing::Level;
 
 use super::models::video::Video;
 
-
 pub struct DbManager {
     session: Session,
-    batch_insert: Batch,
     prepared_statements: Vec<PreparedStatement>,
-
 }
 
 impl DbManager {
@@ -22,7 +19,7 @@ impl DbManager {
         }
  
         match session_builder.build().await {
-            Ok(session) => Ok(Self { session, batch_insert: Default::default(), prepared_statements: Vec::new() }),
+            Ok(session) => Ok(Self { session, prepared_statements: Vec::new() }),
             Err(err) => Err(err),
         }
     }
@@ -39,7 +36,7 @@ impl DbManager {
         let keyspace = self.session
         .query(
             "CREATE KEYSPACE IF NOT EXISTS rusted_invidious WITH REPLICATION = \
-            {'class' : 'SimpleStrategy', 'replication_factor' : 1}",
+            {'class' : 'SimpleStrategy', 'replication_factor' : 1};",
             &[],
         )
         .await;
@@ -54,52 +51,45 @@ impl DbManager {
             "CREATE TABLE IF NOT EXISTS rusted_invidious.videos (video_id ASCII primary key, updated_at timestamp, channel_id ASCII, title TEXT, \
                 likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genere_url ASCII, license ASCII, author_verified boolean, \
                 subcriber_count bigint, author_name TEXT, author_thumbnail_url ASCII, is_famliy_safe boolean, publish_date timestamp, \
-                formats TEXT, storyboard_spec_url ASCII, continuation_related TEXT, continuation_comments TEXT)",
+                formats TEXT, storyboard_spec_url ASCII, continuation_related TEXT, continuation_comments TEXT);",
             &[],
         )
         .await?;
         // Creates the users table
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.users (name TEXT, uuid UUID,created_at timestamp, password TEXT, token TEXT,feed_needs_update boolean, \
-                PRIMARY KEY(uuid, name)",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.users (uid UUID, name TEXT,created_at timestamp, password TEXT, access_token TEXT,feed_needs_update boolean, PRIMARY KEY((uid, feed_needs_update), name));",
             &[],
         )
         .await?;
 
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.username_uuid (name TEXT PRIMARY KEY, uuid UUID)",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.username_uuid (name TEXT PRIMARY KEY, uuid UUID);",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uuid UUID PRIMARY KEY, channel_id ASCII)",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uuid UUID PRIMARY KEY, channel_id ASCII);",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uuid UUID PRIMARY KEY, channel_id ASCII)",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_watched (uuid UUID PRIMARY KEY, video_id ASCII);",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_watched (uuid UUID PRIMARY KEY, video_id ASCII)",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.sessions (uuid UUID, session_id ASCII, issued timestamp, PRIMARY KEY(uuid, session_id));",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.sessions (uuid UUID, session_id ASCII, issued timestamp, PRIMARY KEY(uuid, session_id))",
-            &[],
-        )
-        .await?;
-        self.session
-        .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.channels (channel_id ASCII, updated_at timestamp, subscribed_at timestamp, author_name TEXT, PRIMARY KEY(channel_id))",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.channels (channel_id ASCII, updated_at timestamp, subscribed_at timestamp, author_name TEXT, PRIMARY KEY(channel_id));",
             &[],
         )
         .await?;
@@ -108,17 +98,29 @@ impl DbManager {
             "CREATE TABLE IF NOT EXISTS rusted_invidious.channel_videos (video_id ASCII, updated_at timestamp, channel_id ASCII, title TEXT, \
                 likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genere_url ASCII, license ASCII, author_verified boolean, \
                 subcriber_count bigint, author_name TEXT, author_thumbnail_url ASCII, is_famliy_safe boolean, publish_date timestamp, \
-                formats TEXT, storyboard_spec_url ASCII, live boolean, premiere_timestamp timestamp, PRIMARY KEY((channel_id), video_id, updated_at))",
+                formats TEXT, storyboard_spec_url ASCII, live boolean, premiere_timestamp timestamp, PRIMARY KEY((channel_id), video_id, updated_at));",
             &[],
         )
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.nonce (nonce TEXT, issued timestamp, PRIMARY KEY(nonce))",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.nonce (nonce TEXT, issued timestamp, PRIMARY KEY(nonce));",
             &[],
         )
         .await?;
         
+        Ok(())
+    }
+    pub async fn drop_database(&self)-> Result<(), QueryError>{
+        let result = self.session
+        .query(
+            "DROP KEYSPACE rusted_invidious",&[]
+        )
+        .await;
+        match result {
+            Ok(_) => tracing::event!(target:"db", Level::DEBUG, "Successfully created keyspace"),
+            Err(err) => return Err(err),
+        }
         Ok(())
     }
     /// gets a video from the database fails if there is no result
@@ -145,6 +147,4 @@ impl DbManager {
     pub async fn add_subscription(&self, channel_id: String, username: String) -> Result<bool, QueryError> {
         todo!()
     }
-    
-
 }
