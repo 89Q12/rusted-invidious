@@ -1,4 +1,4 @@
-use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::errors::{NewSessionError, QueryError}};
+use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::errors::{NewSessionError, QueryError}, IntoTypedRows};
 use tracing::Level;
 
 use super::models::video::Video;
@@ -174,7 +174,21 @@ impl DbManager {
     }
     /// gets a video from the database fails if there is no result
     pub async fn get_video(&self, video_id: String) -> Result<Video, QueryError> {
-        todo!()
+        let res = match self.session.execute(&self.prepared_statements.get(0).unwrap(), (video_id,)).await{
+            Ok(res) => res,
+            Err(err) => return Err(err),
+        };
+        let video: (Video,) = match res.rows {
+            Some(row) => match row.into_typed::<(Video,)>().next(){
+                Some(res) => match res{
+                    Ok(val) => val,
+                    Err(_) => todo!(),
+                },
+                None => todo!()
+            },
+            None => todo!(),
+        };
+        Ok(video.0)
     }
     /// gets a channel video from the database fails if there is no result
     pub async fn get_channe_video(&self, video_id: String, channel_id: String) -> Result<Video, QueryError> {
