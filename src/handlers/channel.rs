@@ -1,4 +1,5 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::Mutex;
 use axum::{response::{Response, Redirect}, Extension,extract::path::Path};
 use youtubei_rs::types::{channel::Tab, query_results::ChannelQuery};
 use crate::config::State;

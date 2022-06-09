@@ -1,4 +1,5 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::Mutex;
 use axum::{response::Redirect, Extension,extract::path::Path, response::Response};
 use crate::config::State;
 /// Handler for the root path.
