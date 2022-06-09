@@ -1,10 +1,21 @@
-use std::{sync::{Arc, Mutex}, collections::HashMap};
-use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}};
+use std::{sync::Arc, collections::HashMap, fmt::Debug};
+use axum::{response::{Response, Redirect, IntoResponse}, Extension,extract::{path::Path, Query}, http::StatusCode};
+use tokio::sync::Mutex;
+use youtubei_rs::query::{player, next_video_id};
 use crate::config::State;
 
 /// Handler for the /watch?v=id path and renders the watch page
-pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params): Query<HashMap<String, String>>){
-    todo!()
+pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params): Query<HashMap<String, String>>) -> Result<String, String> {
+    let video_id = params.get("v").unwrap();
+    let lock = state.lock().await;
+    let (player, next) = tokio::join!(player(video_id.to_owned(), "".to_string(), &lock.yt_client_config), next_video_id(video_id.to_string(), "".to_string(), &lock.yt_client_config));
+    match player{
+        Ok(pl) => Ok(pl.video_details.title),
+        Err(e) => match e{
+            youtubei_rs::types::error::Errors::RequestError(err) =>Err(err.message) ,
+            youtubei_rs::types::error::Errors::ParseError(err) => Err(err.message),
+        },
+    }
 }
 
 /// Handler for the paths /w/:id, /v/:id,/e/:id, /shorts/:id and /watch/:id it redirects to the /watch/v=id path
