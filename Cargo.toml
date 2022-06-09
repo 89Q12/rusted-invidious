@@ -13,7 +13,7 @@ axum ={version= "0.5", features = ["form","headers"]}
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.3", features = ["trace"] }
-youtubei-rs = "1.2.3"
+youtubei-rs = "1.2"
 askama = "0.11"
 envconfig = "0.10"
 scylla = "0.4"
