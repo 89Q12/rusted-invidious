@@ -1,6 +1,6 @@
 use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::{errors::{NewSessionError, QueryError}, query_result::FirstRowError}, IntoTypedRows, cql_to_rust::FromRowError};
 use tracing::Level;
-use super::models::video::Video;
+use super::models::{video::Video, channel_video::ChannelVideo};
 
 #[derive(Debug)]
 pub enum DbError {
@@ -200,23 +200,34 @@ impl DbManager {
         }
         }
     /// gets a channel video from the database fails if there is no result
-    pub async fn get_channe_video(&self, video_id: String, channel_id: String) -> Result<Video, QueryError> {
+    pub async fn get_channe_video(&self, video_id: String, channel_id: String) -> Result<ChannelVideo, DbError> {
+        let res = match self.session.execute(&self.prepared_statements.get(3).unwrap(), (video_id,)).await{
+            Ok(res) => res,
+            Err(err) => return Err(DbError::QueryError(err)),
+        };
+        let video: ChannelVideo = match res.first_row() {
+            Ok(row) => match row.into_typed::<ChannelVideo>(){
+                Ok(video) =>video,
+                Err(err) => return Err(DbError::FromRowError(err)),
+            },
+            Err(err) => return Err(DbError::FirstRowError(err)),
+        };
+        Ok(video)
+    }
+    /// gets a video from the database
+    pub async fn get_channel(&self, channel_id: String) -> Result<Video, DbError> {
         todo!()
     }
     /// gets a video from the database
-    pub async fn get_channel(&self, channel_id: String) -> Result<Video, QueryError> {
-        todo!()
-    }
-    /// gets a video from the database
-    pub async fn get_user(&self, username: String) -> Result<Video, QueryError> {
+    pub async fn get_user(&self, username: String) -> Result<Video, DbError> {
         todo!()
     }
     /// Add watched video to the database
-    pub async fn add_watched(&self, video_id: String) -> Result<bool, QueryError> {
+    pub async fn add_watched(&self, video_id: String) -> Result<bool, DbError> {
         todo!()
     }
     /// Add subscription to the database
-    pub async fn add_subscription(&self, channel_id: String, username: String) -> Result<bool, QueryError> {
+    pub async fn add_subscription(&self, channel_id: String, username: String) -> Result<bool, DbError> {
         todo!()
     }
 }
