@@ -1,8 +1,13 @@
-use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::errors::{NewSessionError, QueryError}, IntoTypedRows};
+use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::{errors::{NewSessionError, QueryError}, query_result::FirstRowError}, IntoTypedRows, cql_to_rust::FromRowError};
 use tracing::Level;
-
 use super::models::video::Video;
 
+#[derive(Debug)]
+pub enum DbError {
+    QueryError(QueryError),
+    FromRowError(FromRowError),
+    FirstRowError(FirstRowError),
+}
 pub struct DbManager {
     session: Session,
     prepared_statements: Vec<PreparedStatement>,
@@ -173,23 +178,27 @@ impl DbManager {
         Ok(())
     }
     /// gets a video from the database fails if there is no result
-    pub async fn get_video(&self, video_id: String) -> Result<Video, QueryError> {
+    pub async fn get_video(&self, video_id: String) -> Result<Video, DbError> {
         let res = match self.session.execute(&self.prepared_statements.get(0).unwrap(), (video_id,)).await{
             Ok(res) => res,
-            Err(err) => return Err(err),
+            Err(err) => return Err(DbError::QueryError(err)),
         };
-        let video: (Video,) = match res.rows {
-            Some(row) => match row.into_typed::<(Video,)>().next(){
-                Some(res) => match res{
-                    Ok(val) => val,
-                    Err(_) => todo!(),
-                },
-                None => todo!()
+        let video: Video = match res.first_row() {
+            Ok(row) => match row.into_typed::<Video>(){
+                Ok(video) =>video,
+                Err(err) => return Err(DbError::FromRowError(err)),
             },
-            None => todo!(),
+            Err(err) => return Err(DbError::FirstRowError(err)),
         };
-        Ok(video.0)
+        Ok(video)
     }
+    pub async fn insert_video(&self, video: Video){
+        match self.session.execute(&self.prepared_statements.get(6).unwrap(),
+        (video,)).await{
+            Ok(_) => print!("YAAAY"),
+            Err(err) => println!("{}",err),
+        }
+        }
     /// gets a channel video from the database fails if there is no result
     pub async fn get_channe_video(&self, video_id: String, channel_id: String) -> Result<Video, QueryError> {
         todo!()
