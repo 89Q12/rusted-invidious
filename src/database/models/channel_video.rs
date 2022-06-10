@@ -1,9 +1,9 @@
-use scylla::macros::{IntoUserType,FromUserType};
+use scylla::macros::{IntoUserType,FromUserType,FromRow};
 use scylla::cql_to_rust::FromCqlVal;
 use scylla::frame::value::Timestamp;
 
 /// Represents a video queried from the database
-#[derive(Debug,IntoUserType, FromUserType)]
+#[derive(Debug,IntoUserType, FromUserType,FromRow)]
 pub struct Video{
     channel_id: String,// Primary Key -> partition key
     video_id: String, // Primary Key -> clustering key
