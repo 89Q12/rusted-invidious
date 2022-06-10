@@ -1,6 +1,6 @@
 use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::{errors::{NewSessionError, QueryError}, query_result::FirstRowError}, IntoTypedRows, cql_to_rust::FromRowError};
 use tracing::Level;
-use super::models::{video::Video, channel_video::ChannelVideo};
+use super::models::{video::Video, channel_video::ChannelVideo, channel::Channel, user::User, username_uuid::{self, UsernameUuid}};
 
 #[derive(Debug)]
 pub enum DbError {
@@ -215,12 +215,47 @@ impl DbManager {
         Ok(video)
     }
     /// gets a video from the database
-    pub async fn get_channel(&self, channel_id: String) -> Result<Video, DbError> {
-        todo!()
+    pub async fn get_channel(&self, channel_id: String) -> Result<Channel, DbError> {
+        let res = match self.session.execute(&self.prepared_statements.get(4).unwrap(), (channel_id,)).await{
+            Ok(res) => res,
+            Err(err) => return Err(DbError::QueryError(err)),
+        };
+        let channel: Channel = match res.first_row() {
+            Ok(row) => match row.into_typed::<Channel>(){
+                Ok(channel) =>channel,
+                Err(err) => return Err(DbError::FromRowError(err)),
+            },
+            Err(err) => return Err(DbError::FirstRowError(err)),
+        };
+        Ok(channel)
     }
     /// gets a video from the database
-    pub async fn get_user(&self, username: String) -> Result<Video, DbError> {
-        todo!()
+    pub async fn get_user(&self, username: String) -> Result<User, DbError> {
+        let res = match self.session.execute(&self.prepared_statements.get(2).unwrap(), (&username,)).await{
+            Ok(res) => res,
+            Err(err) => return Err(DbError::QueryError(err)),
+        };
+        let uid: UsernameUuid = match res.first_row() {
+            Ok(row) => match row.into_typed::<UsernameUuid>(){
+                Ok(user) =>user,
+                Err(err) => return Err(DbError::FromRowError(err)),
+            },
+            Err(err) => return Err(DbError::FirstRowError(err)),
+        };
+
+
+        let res = match self.session.execute(&self.prepared_statements.get(1).unwrap(), (username,uid,)).await{
+            Ok(res) => res,
+            Err(err) => return Err(DbError::QueryError(err)),
+        };
+        let user: User = match res.first_row() {
+            Ok(row) => match row.into_typed::<User>(){
+                Ok(user) =>user,
+                Err(err) => return Err(DbError::FromRowError(err)),
+            },
+            Err(err) => return Err(DbError::FirstRowError(err)),
+        };
+        Ok(user)
     }
     /// Add watched video to the database
     pub async fn add_watched(&self, video_id: String) -> Result<bool, DbError> {
