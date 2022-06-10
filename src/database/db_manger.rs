@@ -1,4 +1,4 @@
-use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::{errors::{NewSessionError, QueryError}, query_result::FirstRowError}, IntoTypedRows, cql_to_rust::FromRowError};
+use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::{errors::{NewSessionError, QueryError}, query_result::FirstRowError}, IntoTypedRows, cql_to_rust::FromRowError, frame::value::Timestamp};
 use tracing::Level;
 use super::models::{video::Video, channel_video::ChannelVideo, channel::Channel, user::User, username_uuid::{self, UsernameUuid}};
 
@@ -200,8 +200,8 @@ impl DbManager {
         }
         }
     /// gets a channel video from the database fails if there is no result
-    pub async fn get_channe_video(&self, video_id: String, channel_id: String) -> Result<ChannelVideo, DbError> {
-        let res = match self.session.execute(&self.prepared_statements.get(3).unwrap(), (video_id,)).await{
+    pub async fn get_channe_video(&self, video_id: String, channel_id: String, updated_at: Timestamp) -> Result<ChannelVideo, DbError> {
+        let res = match self.session.execute(&self.prepared_statements.get(3).unwrap(), (video_id,channel_id, updated_at,)).await{
             Ok(res) => res,
             Err(err) => return Err(DbError::QueryError(err)),
         };
@@ -231,20 +231,13 @@ impl DbManager {
     }
     /// gets a video from the database
     pub async fn get_user(&self, username: String) -> Result<User, DbError> {
-        let res = match self.session.execute(&self.prepared_statements.get(2).unwrap(), (&username,)).await{
-            Ok(res) => res,
-            Err(err) => return Err(DbError::QueryError(err)),
-        };
-        let uid: UsernameUuid = match res.first_row() {
-            Ok(row) => match row.into_typed::<UsernameUuid>(){
-                Ok(user) =>user,
-                Err(err) => return Err(DbError::FromRowError(err)),
-            },
-            Err(err) => return Err(DbError::FirstRowError(err)),
+        let uid = match self.get_user_uid(&username).await {
+            Ok(value) => value,
+            Err(err) => return Err(err),
         };
 
 
-        let res = match self.session.execute(&self.prepared_statements.get(1).unwrap(), (username,uid,)).await{
+        let res = match self.session.execute(&self.prepared_statements.get(1).unwrap(), (uid,username,)).await{
             Ok(res) => res,
             Err(err) => return Err(DbError::QueryError(err)),
         };
@@ -257,12 +250,43 @@ impl DbManager {
         };
         Ok(user)
     }
+
+    async fn get_user_uid(&self, username: &String) ->  Result<UsernameUuid, DbError> {
+        let res = match self.session.execute(&self.prepared_statements.get(2).unwrap(), (username,)).await{
+            Ok(res) => res,
+            Err(err) => return Err(DbError::QueryError(err)),
+        };
+        let uid: UsernameUuid = match res.first_row() {
+            Ok(row) => match row.into_typed::<UsernameUuid>(){
+                Ok(user) =>user,
+                Err(err) => return Err(DbError::FromRowError(err)),
+            },
+            Err(err) => return Err(DbError::FirstRowError(err)),
+        };
+        Ok(uid)
+    }
     /// Add watched video to the database
-    pub async fn add_watched(&self, video_id: String) -> Result<bool, DbError> {
-        todo!()
+    pub async fn add_watched(&self, video_id: String,username: &String) -> Result<bool, DbError> {
+        let uid = match self.get_user_uid(username).await {
+            Ok(value) => value,
+            Err(value) => return Err(value),
+        };
+        match self.session.execute(&self.prepared_statements.get(13).unwrap(),
+        (uid,video_id,)).await{
+            Ok(_) => return Ok(true),
+            Err(err) => return Err(DbError::QueryError(err)),
+        }
     }
     /// Add subscription to the database
     pub async fn add_subscription(&self, channel_id: String, username: String) -> Result<bool, DbError> {
-        todo!()
+        let uid = match self.get_user_uid(&username).await {
+            Ok(value) => value,
+            Err(value) => return Err(value),
+        };
+        match self.session.execute(&self.prepared_statements.get(12).unwrap(),
+        (uid,channel_id,)).await{
+            Ok(_) => return Ok(true),
+            Err(err) => return Err(DbError::QueryError(err)),
+        }
     }
 }
