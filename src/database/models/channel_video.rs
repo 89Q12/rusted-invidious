@@ -4,7 +4,7 @@ use scylla::frame::value::Timestamp;
 
 /// Represents a video queried from the database
 #[derive(Debug,IntoUserType, FromUserType,FromRow)]
-pub struct Video{
+pub struct ChannelVideo{
     channel_id: String,// Primary Key -> partition key
     video_id: String, // Primary Key -> clustering key
     updated_at: Timestamp, 
