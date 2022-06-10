@@ -192,11 +192,11 @@ impl DbManager {
         };
         Ok(video)
     }
-    pub async fn insert_video(&self, video: Video){
+    pub async fn insert_video(&self, video: Video) -> bool{
         match self.session.execute(&self.prepared_statements.get(6).unwrap(),
         (video,)).await{
-            Ok(_) => print!("YAAAY"),
-            Err(err) => println!("{}",err),
+            Ok(_) =>  true,
+            Err(_) =>  false,
         }
         }
     /// gets a channel video from the database fails if there is no result
