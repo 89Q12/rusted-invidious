@@ -77,4 +77,5 @@ pub struct Preferences {
 pub struct State {
     pub yt_client_config: ClientConfig,
     pub db_manager: DbManager,
+    pub config: Config
 }
