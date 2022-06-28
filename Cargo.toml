@@ -13,9 +13,11 @@ axum ={version= "0.5", features = ["form","headers"]}
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.3", features = ["trace"] }
-youtubei-rs = "1.2"
-askama = "0.11"
-envconfig = "0.10"
+youtubei-rs = "1.3.4"
+serde_yaml = "0.8.24"
 scylla = "0.4"
 chrono= "0.4"
+fluent = "0.16.0"
+fluent-templates = { version = "0.7.1", features = ["tera"] }
+askama = "0.11"
 askama_axum = "0.1.0"
