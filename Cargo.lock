@@ -38,9 +38,23 @@ version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fb98f10f371286b177db5eeb9a6e5396609555686a35e1d4f7b9a9c6d8af0139"
 dependencies = [
- "askama_derive",
- "askama_escape",
+ "askama_derive 0.11.2",
+ "askama_escape 0.10.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "askama_shared",
+]
+
+[[package]]
+name = "askama"
+version = "0.11.2"
+source = "git+https://github.com/11Tuvork28/askama.git#03b4979b8d452cdcf95d74b4e37b54ba4d1ee431"
+dependencies = [
+ "askama_derive 0.12.0",
+ "askama_escape 0.10.3 (git+https://github.com/11Tuvork28/askama.git)",
+ "fluent-templates",
+ "humansize",
+ "num-traits",
+ "parking_lot",
+ "percent-encoding",
 ]
 
 [[package]]
@@ -49,7 +63,7 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1463e29c311d12424dce7d3ef3d064200c56da064e339c37c40478269eb7ea68"
 dependencies = [
- "askama",
+ "askama 0.11.1",
  "axum-core 0.1.2",
  "http",
  "http-body",
@@ -67,10 +81,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "askama_derive"
+version = "0.12.0"
+source = "git+https://github.com/11Tuvork28/askama.git#03b4979b8d452cdcf95d74b4e37b54ba4d1ee431"
+dependencies = [
+ "fluent-syntax",
+ "fluent-templates",
+ "mime",
+ "mime_guess",
+ "nom",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "syn",
+ "toml",
+]
+
+[[package]]
 name = "askama_escape"
 version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "619743e34b5ba4e9703bba34deac3427c72507c7159f5fd030aea8cac0cfe341"
+
+[[package]]
+name = "askama_escape"
+version = "0.10.3"
+source = "git+https://github.com/11Tuvork28/askama.git#03b4979b8d452cdcf95d74b4e37b54ba4d1ee431"
 
 [[package]]
 name = "askama_shared"
@@ -78,18 +114,13 @@ version = "0.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bf722b94118a07fcbc6640190f247334027685d4e218b794dbfe17c32bf38ed0"
 dependencies = [
- "askama_escape",
- "humansize",
+ "askama_escape 0.10.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "mime",
  "mime_guess",
  "nom",
- "num-traits",
- "percent-encoding",
  "proc-macro2",
  "quote",
- "serde",
  "syn",
- "toml",
 ]
 
 [[package]]
@@ -1271,9 +1302,9 @@ dependencies = [
 
 [[package]]
 name = "parking_lot"
-version = "0.12.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87f5ec2493a61ac0506c0f4199f99070cbe83857b0337006a30f3e6719b8ef58"
+checksum = "3742b2c103b9f06bc9fff0a37ff4912935851bee6d36f3c02bcc755bcfec228f"
 dependencies = [
  "lock_api",
  "parking_lot_core",
@@ -1589,12 +1620,13 @@ checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 name = "rusted-invidious"
 version = "0.1.0"
 dependencies = [
- "askama",
+ "askama 0.11.2",
  "askama_axum",
  "axum",
  "chrono",
  "fluent",
  "fluent-templates",
+ "parking_lot",
  "scylla",
  "serde",
  "serde_json",

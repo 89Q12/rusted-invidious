@@ -19,5 +19,6 @@ scylla = "0.4"
 chrono= "0.4"
 fluent = "0.16.0"
 fluent-templates = { version = "0.7.1", features = ["tera"] }
-askama = "0.11"
+askama = {git = "https://github.com/11Tuvork28/askama.git", features = ["localization"]}
 askama_axum = "0.1.0"
+parking_lot = "^0.12.1"
