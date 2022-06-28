@@ -11,5 +11,5 @@ pub struct Base<'a>{
     pub search_bar: Option<String>,
     pub current_page: String,
     #[locale]
-    loc: Locale<'a>,
+    pub loc: Locale<'a>,
 }
