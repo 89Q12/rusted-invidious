@@ -35,7 +35,7 @@ impl Config {
     /// Loads the configuration and parses it into a Config object, panics if the configuration file is invalid or missing.
     pub fn new() -> Config {
         let loaded_config = fs::read_to_string("config.yaml").unwrap();
-        serde_yaml::from_str(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
+        serde_yaml::from_str::<Config>(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
     }
 }
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -75,9 +75,9 @@ pub struct Preferences {
 
 impl Preferences {
     /// Loads the default preferences and parses it into a Preferences object, panics if the preferences file is invalid or missing.
-    pub fn new() -> Config {
+    pub fn new() -> Preferences {
         let loaded_config = fs::read_to_string("preferences.yaml").unwrap();
-        serde_yaml::from_str(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
+        serde_yaml::from_str::<Preferences>(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
     }
 }
 /// The state that is shared with all handlers
