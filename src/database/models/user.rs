@@ -10,3 +10,9 @@ pub struct User {
     token: String,
     feed_needs_update: bool,
 }
+
+impl User {
+    pub fn is_authenticated(&self) -> bool {
+        self.name.is_empty()
+    }
+}
