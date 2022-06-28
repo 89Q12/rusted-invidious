@@ -102,10 +102,10 @@ impl DbManager {
         // Creates the videos table
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.videos (video_id ASCII primary key, updated_at timestamp, channel_id ASCII, title TEXT, \
-                likes ASCII, view_count bigint,description TEXT, length_in_seconds bigint, genere ASCII, genre_url ASCII, license ASCII, author_verified boolean, \
-                subcriber_count bigint, author_name TEXT, author_thumbnail_url ASCII, is_famliy_safe boolean, publish_date timestamp, \
-                formats TEXT, storyboard_spec_url ASCII, continuation_related TEXT, continuation_comments TEXT);",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.videos (video_id TEXT primary key, updated_at timestamp, channel_id TEXT, title TEXT, \
+                likes TEXT, view_count TEXT,description TEXT, length_in_seconds TEXT, genere TEXT, genre_url TEXT, license TEXT, author_verified boolean, \
+                subcriber_count TEXT, author_name TEXT, author_thumbnail_url TEXT, is_famliy_safe boolean, publish_date TEXT, \
+                formats TEXT, storyboard_spec_url TEXT, continuation_related TEXT, continuation_comments TEXT);",
             &[],
         )
         .await?;
@@ -125,7 +125,7 @@ impl DbManager {
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uid UUID PRIMARY KEY, channel_id ASCII);",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uid UUID,subuuid UUID, channel_id ASCII PRIMARY KEY(uid, subuuid));",
             &[],
         )
         .await?;
@@ -198,7 +198,7 @@ impl DbManager {
             Ok(_) =>  true,
             Err(_) =>  false,
         }
-        }
+    }
     /// gets a channel video from the database fails if there is no result
     pub async fn get_channe_video(&self, video_id: String, channel_id: String, updated_at: Timestamp) -> Result<ChannelVideo, DbError> {
         let res = match self.session.execute(&self.prepared_statements.get(3).unwrap(), (video_id,channel_id, updated_at,)).await{
