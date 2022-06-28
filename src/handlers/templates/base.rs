@@ -7,10 +7,9 @@ askama::localization!(LOCALES);
 #[template(path = "base.html")]
 pub struct Base<'a>{
     title: String,
-    config: Config,
+    config: &'a Config,
     user: Option<User>,
     preferences: Preferences,
-    headers: Vec<String>,
     search_bar: Option<String>,
     current_page: String,
     #[locale]
