@@ -153,7 +153,7 @@ use_quic: false
 ## Accepted values: a string in the format "name1=value1; name2=value2..."
 ## Default: <none>
 ##
-cookies:
+cookies: ""
 
 ##
 ## Force connection to youtube over a specific IP family.
@@ -164,7 +164,7 @@ cookies:
 ## Accepted values: ipv4, ipv6
 ## Default: <none>
 ##
-force_resolve:
+force_resolve: ""
 
 
 # -----------------------------
@@ -179,7 +179,7 @@ force_resolve:
 ## Accepted values: a filesystem path or 'STDOUT'
 ## Default: STDOUT
 ##
-#output: STDOUT
+output: STDOUT
 
 ##
 ## Logging Verbosity. This is overridden if "-l LEVEL" or
@@ -279,24 +279,6 @@ captcha_enabled: true
 ## Default: [""]
 ##
 admins: [""]
-
-
-# -----------------------------
-#  Background jobs
-# -----------------------------
-
-##
-## Number of threads to use when crawling channel videos (during
-## subscriptions update).
-##
-## Notes:
-##  - Setting this to 0 will disable the channel videos crawl job.
-##  - This setting is overridden if "-c THREADS" or
-##    "--channel-threads=THREADS" are passed on the command line.
-##
-## Accepted values: a positive integer
-## Default: 1
-##
 channel_threads: 1
 
 ##
@@ -404,7 +386,7 @@ use_pubsub_feeds: false
 ## Accepted values: a string
 ## Default: <none>
 ##
-hmac_key:
+hmac_key: ""
 
 ##
 ## List of video IDs where the "download" widget must be
@@ -413,7 +395,7 @@ hmac_key:
 ## Accepted values: an array of string
 ## Default: <none>
 ##
-dmca_content:
+dmca_content: false
 
 ##
 ## Cache video annotations in the database.
