@@ -6,7 +6,7 @@ use youtubei_rs::types::client::ClientConfig;
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Config {
     pub db_host: String,
-    pub db_port: u16,
+    pub db_port: i32,
     pub db_keyspace: String,
     pub log_level: String,
     pub output: String,
@@ -22,7 +22,6 @@ pub struct Config {
     pub statistics_enabled: bool,
     pub admins: Vec<String>,
     pub external_port: String,
-    pub default_user_preferences: Preferences,
     pub dmca_content: bool,
     pub check_tables: String,
     pub hsts: bool,
@@ -35,7 +34,7 @@ impl Config {
     /// Loads the configuration and parses it into a Config object, panics if the configuration file is invalid or missing.
     pub fn new() -> Config {
         let loaded_config = fs::read_to_string("config.yaml").unwrap();
-        serde_yaml::from_str::<Config>(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
+        serde_yaml::from_str(&loaded_config).unwrap()
     }
 }
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -77,7 +76,7 @@ impl Preferences {
     /// Loads the default preferences and parses it into a Preferences object, panics if the preferences file is invalid or missing.
     pub fn new() -> Preferences {
         let loaded_config = fs::read_to_string("preferences.yaml").unwrap();
-        serde_yaml::from_str::<Preferences>(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
+        serde_yaml::from_str::<Preferences>(&loaded_config).unwrap()
     }
 }
 /// The state that is shared with all handlers
