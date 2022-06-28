@@ -1,12 +1,11 @@
 use axum::Extension;
-use fluent::{FluentResource, FluentBundle};
 use rusted_invidious::{routes::get_router, config::{Config, State}, logging::filters::construct_logging_filter, database::db_manger::DbManager};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use tower_http::trace::TraceLayer;
-use std::{net::SocketAddr, collections::HashMap};
+use std::net::SocketAddr;
 use tokio::sync::Mutex;
 use std::sync::Arc;
-use youtubei_rs::{utils::default_client_config, types::client::{ClientConfig, ClientTypes}};
+use youtubei_rs::utils::default_client_config;
 /// Main entry point for the web server:
 /// it setups logging, loads the configuration, inits the database api and starts the server
 #[tokio::main]
