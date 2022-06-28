@@ -1,5 +1,4 @@
 
-
 #Config parameters that are unsupported or changed
 - channel_threads => unsupported
 - db_name => db_keyspace
