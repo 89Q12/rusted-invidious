@@ -12,7 +12,7 @@ use youtubei_rs::{utils::default_client_config, types::client::{ClientConfig, Cl
 #[tokio::main]
 async fn main() {
     // TODO: implement configuration via env file
-    let config = Config::init();
+    let config = Config::new();
     tracing_subscriber::registry()
     .with(construct_logging_filter())
     .with(tracing_subscriber::fmt::layer())
