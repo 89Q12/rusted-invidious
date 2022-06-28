@@ -21,6 +21,7 @@
 - serves static files, cache busting via filenames that change via ci if files changed
 - discovery of instance playlists
 - play next button to create a temporary playlist
+- predict in cache via referer 
 
 
 ## Worker node
