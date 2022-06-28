@@ -3,7 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <%= yield_content "header" %>
+        {% for item in headers %}
+            item
+        {% endfor %}
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -19,94 +21,91 @@
         <script src="/js/_helpers.js"></script>
     </head>
 
-    <!--
-    locale = env.get("preferences").as(Preferences).locale
-    dark_mode = env.get("preferences").as(Preferences).dark_mode
-    % -->
-
-    <body class="<%= dark_mode.blank? ? "no" : dark_mode %>-theme">
-        <span style="display:none" id="dark_mode_pref"><%= env.get("preferences").as(Preferences).dark_mode %></span>
+    <body class="{{ preferences.dark_mode }}-theme">
+        <span style="display:none" id="dark_mode_pref">{{ preferences.dark_mode }}</span>
         <div class="pure-g">
             <div class="pure-u-1 pure-u-md-2-24"></div>
             <div class="pure-u-1 pure-u-md-20-24" id="contents">
                 <div class="pure-g navbar h-box">
-                    <% if navbar_search %>
+                    {% match search_bar %}
+                    {% when Some with (val) %}
                         <div class="pure-u-1 pure-u-md-4-24">
                             <a href="/" class="index-link pure-menu-heading">Invidious</a>
                         </div>
                         <div class="pure-u-1 pure-u-md-12-24 searchbar">
-                            <% autofocus = false %><%= rendered "components/search_box" %>
+                           {{ val }}
                         </div>
-                    <% end %>
+                    {% when None %}
+                   {% endmatch %}
 
                     <div class="pure-u-1 pure-u-md-8-24 user-field">
-                        <% if env.get? "user" %>
+                        {% match user %}
+                        {% when Some with (user) %}
                             <div class="pure-u-1-4">
-                                <a id="toggle_theme" href="/toggle_theme?referer=<%= env.get?("current_page") %>" class="pure-menu-heading">
-                                    <% if env.get("preferences").as(Preferences).dark_mode == "dark" %>
+                                <a id="toggle_theme" href="/toggle_theme?referer={{ current_page }}" class="pure-menu-heading">
+                                    {%  if preferences.dark_mode == "dark"  %}
                                         <i class="icon ion-ios-sunny"></i>
-                                    <% else %>
+                                   {%  else  %}
                                         <i class="icon ion-ios-moon"></i>
-                                    <% end %>
+                                   {% endif %}
                                 </a>
                             </div>
                             <div class="pure-u-1-4">
-                                <a id="notification_ticker" title="<%= translate(locale, "Subscriptions") %>" href="/feed/subscriptions" class="pure-menu-heading">
-                                    <% notification_count = env.get("user").as(Invidious::User).notifications.size %>
-                                    <% if notification_count > 0 %>
-                                        <span id="notification_count"><%= notification_count %></span> <i class="icon ion-ios-notifications"></i>
-                                    <% else %>
+                                <a id="notification_ticker" title="{{ localize("Subscriptions") }}" href="/feed/subscriptions" class="pure-menu-heading">
+                                   {%  if user.notification_count > 0  %}
+                                        <span id="notification_count">{{ user.notification_count }}</span> <i class="icon ion-ios-notifications"></i>
+                                   {%  else  %}
                                         <i class="icon ion-ios-notifications-outline"></i>
-                                    <% end %>
+                                   {% endif %}
                                 </a>
                             </div>
                             <div class="pure-u-1-4">
-                                <a title="<%= translate(locale, "Preferences") %>" href="/preferences?referer=<%= env.get?("current_page") %>" class="pure-menu-heading">
+                                <a title="//{{ localize("Preferences") }}" href="/preferences?referer={{ current_page }}" class="pure-menu-heading">
                                     <i class="icon ion-ios-cog"></i>
                                 </a>
                             </div>
-                            <% if env.get("preferences").as(Preferences).show_nick %>
+                           {%  if preferences.show_nick  %}
                                 <div class="pure-u-1-4">
-                                    <span id="user_name"><%= env.get("user").as(Invidious::User).email %></span>
+                                    <span id="user_name">{{ user.name }}</span>
                                 </div>
-                            <% end %>
+                           {% endif  %}
                             <div class="pure-u-1-4">
-                                <form action="/signout?referer=<%= env.get?("current_page") %>" method="post">
-                                    <input type="hidden" name="csrf_token" value="<%= HTML.escape(env.get?("csrf_token").try &.as(String) || "") %>">
+                                <form action="/signout?referer={{ current_page }}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ user.csrf_token }}">
                                     <a class="pure-menu-heading" href="#">
-                                        <input style="all:unset" type="submit" value="<%= translate(locale, "Log out") %>">
+                                        <input style="all:unset" type="submit" value="{{ localize("Log out") }}">
                                     </a>
                                 </form>
                             </div>
-                        <% else %>
+                       {% when None %}
                             <div class="pure-u-1-3">
-                                <a id="toggle_theme" href="/toggle_theme?referer=<%= env.get?("current_page") %>" class="pure-menu-heading">
-                                    <% if env.get("preferences").as(Preferences).dark_mode == "dark" %>
+                                <a id="toggle_theme" href="/toggle_theme?referer={{ current_page }}" class="pure-menu-heading">
+                                   {%  if preferences.dark_mode == "dark"  %}
                                         <i class="icon ion-ios-sunny"></i>
-                                    <% else %>
+                                   {% else  %}
                                         <i class="icon ion-ios-moon"></i>
-                                    <% end %>
+                                   {% endif %}
                                 </a>
                             </div>
                             <div class="pure-u-1-3">
-                                <a title="<%= translate(locale, "Preferences") %>" href="/preferences?referer=<%= env.get?("current_page") %>" class="pure-menu-heading">
+                                <a title="{{ localize("Preferences") }}" href="/preferences?referer={{ current_page }}" class="pure-menu-heading">
                                     <i class="icon ion-ios-cog"></i>
                                 </a>
                             </div>
-                            <% if config.login_enabled %>
+                           {%  if config.login_enabled  %}
                                 <div class="pure-u-1-3">
-                                    <a href="/login?referer=<%= env.get?("current_page") %>" class="pure-menu-heading">
-                                        <%= translate(locale, "Log in") %>
+                                    <a href="/login?referer={{ current_page }}" class="pure-menu-heading">
+                                        {{ localize(preferences.locale, "Log in")  }}
                                     </a>
                                 </div>
-                            <% end %>
-                        <% end %>
+                            {% endif %}
+                        {% endmatch %}
                     </div>
                 </div>
 
-                {% if config.banner %}
+                {% if !config.banner.is_empty() %}
                     <div class="h-box">
-                        <h3>{f config.banner }}</h3>
+                        <h3>{{ config.banner }}</h3>
                     </div>
                 {% endif %}
 
@@ -117,39 +116,38 @@
                         <div class="pure-u-1 pure-u-md-1-3">
                             <span>
                                 <i class="icon ion-logo-github"></i>
-                                {% if config.modified_source_code_url %}
-                                <a href="https://github.com/iv-org/invidious"><%= translate(locale, "footer_original_source_code") %></a>&nbsp;/
-                                <a href="<%f config.modified_source_code_url %>"><%= translate(locale, "footer_modfied_source_code") %></a>
+                                {% if !config.modified_source_code_url.is_empty() %}
+                                <a href="https://github.com/iv-org/invidious">{{ localize("footer_original_source_code") }}</a>&nbsp;/
+                                <a href="{{config.modified_source_code_url }}">{{ localize("footer_modfied_source_code") }}</a>
                                 {% else %}
-                                <a href="https://github.com/iv-org/invidious"><%= translate(locale, "footer_source_code") %></a>
+                                <a href="https://github.com/iv-org/invidious">{{ localize("footer_source_code") }}</a>
                                 {% endif %}
                             </span>
                             <span>
                                 <i class="icon ion-ios-paper"></i>
-                                <a href="https://github.com/iv-org/documentation"><%= translate(locale, "footer_documentation") %></a>
+                                <a href="https://github.com/iv-org/documentation">{{ localize("footer_documentation") }}</a>
                             </span>
                         </div>
 
                         <div class="pure-u-1 pure-u-md-1-3">
                             <span>
-                                <a href="https://github.com/iv-org/invidious/blob/master/LICENSE"><%= translate(locale, "Released under the AGPLv3 on Github.") %></a>
+                                <a href="https://github.com/iv-org/invidious/blob/master/LICENSE">{{ localize("Released under the AGPLv3 on Github.") }}</a>
                             </span>
                             <span>
                                 <i class="icon ion-logo-javascript"></i>
-                                <a rel="jslicense" href="/licenses"><%= translate(locale, "View JavaScript license information.") %></a>
+                                <a rel="jslicense" href="/licenses">{{ localize("View JavaScript license information.") }}</a>
                             </span>
                             <span>
                                 <i class="icon ion-ios-paper"></i>
-                                <a href="/privacy"><%= translate(locale, "View privacy policy.") %></a>
+                                <a href="/privacy">{{ localize("View privacy policy.") }}</a>
                             </span>
                         </div>
 
                         <div class="pure-u-1 pure-u-md-1-3">
                             <span>
                                 <i class="icon ion-ios-wallet"></i>
-                                <a href="https://invidious.io/donate/"><%= translate(locale, "footer_donate_page") %></a>
+                                <a href="https://invidious.io/donate/">{{ localize("footer_donate_page") }}</a>
                             </span>
-                            <span><%= translate(locale, "Current version: ") %> <%= CURRENT_VERSION %>-<%= CURRENT_COMMIT %> @ <%= CURRENT_BRANCH %></span>
                         </div>
                     </div>
                 </footer>
@@ -159,15 +157,17 @@
         </div>
         <script src="/js/handlers.js"></script>
         <script src="/js/themes.js"></script>
-        {% if user.is_authenticated() %}
+        {% match user %}
+        {% when Some with (user) %}
             <script src="/js/sse.js"></script>
             <script id="notification_data" type="application/json">
             {
-                "upload_text": { localize(locale, "`x` uploaded a video") }
-                "live_upload_text": { localize(locale, "`x` is live") }
+                "upload_text": { localize("`x` uploaded a video") }
+                "live_upload_text": { localize("`x` is live") }
             }
             </script>
             <script src="/js/notifications.js"></script>
-        {% endif %}
+        {% when None %}
+        {% endmatch %}
     </body>
 </html>
