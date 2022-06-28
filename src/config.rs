@@ -1,7 +1,7 @@
 use crate::database::db_manger::DbManager;
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, fs};
-use youtubei_rs::types::{client::ClientConfig, query_results::BrowseResult};
+use std::fs;
+use youtubei_rs::types::client::ClientConfig;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Config {
@@ -73,6 +73,13 @@ pub struct Preferences {
     pub save_player_pos: bool,
 }
 
+impl Preferences {
+    /// Loads the default preferences and parses it into a Preferences object, panics if the preferences file is invalid or missing.
+    pub fn new() -> Config {
+        let loaded_config = fs::read_to_string("preferences.yaml").unwrap();
+        serde_yaml::from_str(&serde_yaml::to_string(&loaded_config).unwrap()).unwrap()
+    }
+}
 /// The state that is shared with all handlers
 pub struct State {
     pub yt_client_config: ClientConfig,
