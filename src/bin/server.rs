@@ -28,6 +28,7 @@ async fn main() {
     let shared_state = Arc::new(Mutex::new(State{
         yt_client_config:default_client_config(),
         db_manager,
+        config
     }));
 
 
