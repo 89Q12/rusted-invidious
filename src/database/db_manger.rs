@@ -1,6 +1,6 @@
 use scylla::{Session, prepared_statement::PreparedStatement, SessionBuilder, transport::{errors::{NewSessionError, QueryError}, query_result::FirstRowError}, IntoTypedRows, cql_to_rust::FromRowError, frame::value::Timestamp};
 use tracing::Level;
-use super::models::{video::Video, channel_video::ChannelVideo, channel::Channel, user::User, username_uuid::{self, UsernameUuid}};
+use super::models::{video::Video, channel_video::ChannelVideo, channel::Channel, user::DBUser, username_uuid::{self, UsernameUuid}};
 
 #[derive(Debug)]
 pub enum DbError {
@@ -230,7 +230,7 @@ impl DbManager {
         Ok(channel)
     }
     /// gets a video from the database
-    pub async fn get_user(&self, username: String) -> Result<User, DbError> {
+    pub async fn get_user(&self, username: String) -> Result<DBUser, DbError> {
         let uid = match self.get_user_uid(&username).await {
             Ok(value) => value,
             Err(err) => return Err(err),
@@ -241,8 +241,8 @@ impl DbManager {
             Ok(res) => res,
             Err(err) => return Err(DbError::QueryError(err)),
         };
-        let user: User = match res.first_row() {
-            Ok(row) => match row.into_typed::<User>(){
+        let user: DBUser = match res.first_row() {
+            Ok(row) => match row.into_typed::<DBUser>(){
                 Ok(user) =>user,
                 Err(err) => return Err(DbError::FromRowError(err)),
             },
