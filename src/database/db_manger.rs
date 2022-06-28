@@ -125,7 +125,7 @@ impl DbManager {
         .await?;
         self.session
         .query(
-            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uid UUID,subuuid UUID, channel_id ASCII PRIMARY KEY(uid, subuuid));",
+            "CREATE TABLE IF NOT EXISTS rusted_invidious.user_subscriptions (uid UUID,subuuid UUID, channel_id ASCII, PRIMARY KEY(uid, subuuid));",
             &[],
         )
         .await?;
