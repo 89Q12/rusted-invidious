@@ -1,414 +1,414 @@
-#########################################
-#
-#  Default user preferences
-#
-#########################################
+# -----------------------------
+#  Internationalization
+# -----------------------------
 
 ##
-## NOTE: All the settings below define the default user
-## preferences. They will apply to ALL users connecting
-## without a preferences cookie (so either on the first
-## connection to the instance or after clearing the
-## browser's cookies).
+## Default user interface language (locale).
 ##
+## Note: When hosting a public instance, overriding the
+## default (english) is not recommended, as it may
+## people using other languages.
+##
+## Accepted values:
+##   ar      (Arabic)
+##   da      (Danish)
+##   de      (German)
+##   en-US   (english, US)
+##   el      (Greek)
+##   eo      (Esperanto)
+##   es      (Spanish)
+##   fa      (Persian)
+##   fi      (Finnish)
+##   fr      (French)
+##   he      (Hebrew)
+##   hr      (Hungarian)
+##   id      (Indonesian)
+##   is      (Icelandic)
+##   it      (Italian)
+##   ja      (Japanese)
+##   nb-NO   (Norwegian, Bokmål)
+##   nl      (Dutch)
+##   pl      (Polish)
+##   pt-BR   (Portuguese, Brazil)
+##   pt-PT   (Portuguese, Portugal)
+##   ro      (Romanian)
+##   ru      (Russian)
+##   sv      (Swedish)
+##   tr      (Turkish)
+##   uk      (Ukrainian)
+##   zh-CN   (Chinese, China)  (a.k.a "Simplified Chinese")
+##   zh-TW   (Chinese, Taiwan) (a.k.a "Traditional Chinese")
+##
+## Default: en-US
+##
+locale: en-US
 
-default_user_preferences:
+##
+## Default geographical location for content.
+##
+## Accepted values:
+##   AE, AR, AT, AU, AZ, BA, BD, BE, BG, BH, BO, BR, BY, CA, CH, CL, CO, CR,
+##   CY, CZ, DE, DK, DO, DZ, EC, EE, EG, ES, FI, FR, GB, GE, GH, GR, GT, HK,
+##   HN, HR, HU, ID, IE, IL, IN, IQ, IS, IT, JM, JO, JP, KE, KR, KW, KZ, LB,
+##   LI, LK, LT, LU, LV, LY, MA, ME, MK, MT, MX, MY, NG, NI, NL, NO, NP, NZ,
+##   OM, PA, PE, PG, PH, PK, PL, PR, PT, PY, QA, RO, RS, RU, SA, SE, SG, SI,
+##   SK, SN, SV, TH, TN, TR, TW, TZ, UA, UG, US, UY, VE, VN, YE, ZA, ZW
+##
+## Default: US
+##
+region: US
 
-  # -----------------------------
-  #  Internationalization
-  # -----------------------------
-
-  ##
-  ## Default user interface language (locale).
-  ##
-  ## Note: When hosting a public instance, overriding the
-  ## default (english) is not recommended, as it may
-  ## people using other languages.
-  ##
-  ## Accepted values:
-  ##   ar      (Arabic)
-  ##   da      (Danish)
-  ##   de      (German)
-  ##   en-US   (english, US)
-  ##   el      (Greek)
-  ##   eo      (Esperanto)
-  ##   es      (Spanish)
-  ##   fa      (Persian)
-  ##   fi      (Finnish)
-  ##   fr      (French)
-  ##   he      (Hebrew)
-  ##   hr      (Hungarian)
-  ##   id      (Indonesian)
-  ##   is      (Icelandic)
-  ##   it      (Italian)
-  ##   ja      (Japanese)
-  ##   nb-NO   (Norwegian, Bokmål)
-  ##   nl      (Dutch)
-  ##   pl      (Polish)
-  ##   pt-BR   (Portuguese, Brazil)
-  ##   pt-PT   (Portuguese, Portugal)
-  ##   ro      (Romanian)
-  ##   ru      (Russian)
-  ##   sv      (Swedish)
-  ##   tr      (Turkish)
-  ##   uk      (Ukrainian)
-  ##   zh-CN   (Chinese, China)  (a.k.a "Simplified Chinese")
-  ##   zh-TW   (Chinese, Taiwan) (a.k.a "Traditional Chinese")
-  ##
-  ## Default: en-US
-  ##
-  locale: en-US
-
-  ##
-  ## Default geographical location for content.
-  ##
-  ## Accepted values:
-  ##   AE, AR, AT, AU, AZ, BA, BD, BE, BG, BH, BO, BR, BY, CA, CH, CL, CO, CR,
-  ##   CY, CZ, DE, DK, DO, DZ, EC, EE, EG, ES, FI, FR, GB, GE, GH, GR, GT, HK,
-  ##   HN, HR, HU, ID, IE, IL, IN, IQ, IS, IT, JM, JO, JP, KE, KR, KW, KZ, LB,
-  ##   LI, LK, LT, LU, LV, LY, MA, ME, MK, MT, MX, MY, NG, NI, NL, NO, NP, NZ,
-  ##   OM, PA, PE, PG, PH, PK, PL, PR, PT, PY, QA, RO, RS, RU, SA, SE, SG, SI,
-  ##   SK, SN, SV, TH, TN, TR, TW, TZ, UA, UG, US, UY, VE, VN, YE, ZA, ZW
-  ##
-  ## Default: US
-  ##
-  region: US
-
-  ##
-  ## Top 3 preferred languages for video captions.
-  ##
-  ## Note: overriding the default (no preferred
-  ## caption language) is not recommended, in order
-  ## to not penalize people using other languages.
-  ##
-  ## Accepted values: a three-entries array.
-  ## Each entry can be one of:
-  ##   "English", "English (auto-generated)",
-  ##   "Afrikaans", "Albanian", "Amharic", "Arabic",
-  ##   "Armenian", "Azerbaijani", "Bangla", "Basque",
-  ##   "Belarusian", "Bosnian", "Bulgarian", "Burmese",
-  ##   "Catalan", "Cebuano", "Chinese (Simplified)",
-  ##   "Chinese (Traditional)", "Corsican", "Croatian",
-  ##   "Czech", "Danish", "Dutch", "Esperanto", "Estonian",
-  ##   "Filipino", "Finnish", "French", "Galician", "Georgian",
-  ##   "German", "Greek", "Gujarati", "Haitian Creole", "Hausa",
-  ##   "Hawaiian", "Hebrew", "Hindi", "Hmong", "Hungarian",
-  ##   "Icelandic", "Igbo", "Indonesian", "Irish", "Italian",
-  ##   "Japanese", "Javanese", "Kannada", "Kazakh", "Khmer",
-  ##   "Korean", "Kurdish", "Kyrgyz", "Lao", "Latin", "Latvian",
-  ##   "Lithuanian", "Luxembourgish", "Macedonian",
-  ##   "Malagasy", "Malay", "Malayalam", "Maltese", "Maori",
-  ##   "Marathi", "Mongolian", "Nepali", "Norwegian Bokmål",
-  ##   "Nyanja", "Pashto", "Persian", "Polish", "Portuguese",
-  ##   "Punjabi", "Romanian", "Russian", "Samoan",
-  ##   "Scottish Gaelic", "Serbian", "Shona", "Sindhi",
-  ##   "Sinhala", "Slovak", "Slovenian", "Somali",
-  ##   "Southern Sotho", "Spanish", "Spanish (Latin America)",
-  ##   "Sundanese",  "Swahili", "Swedish", "Tajik", "Tamil",
-  ##   "Telugu", "Thai", "Turkish", "Ukrainian", "Urdu",
-  ##   "Uzbek", "Vietnamese", "Welsh", "Western Frisian",
-  ##   "Xhosa", "Yiddish", "Yoruba", "Zulu"
-  ##
-  ## Default: ["", "", ""]
-  ##
-  captions: ["", "", ""]
+##
+## Top 3 preferred languages for video captions.
+##
+## Note: overriding the default (no preferred
+## caption language) is not recommended, in order
+## to not penalize people using other languages.
+##
+## Accepted values: a three-entries array.
+## Each entry can be one of:
+##   "English", "English (auto-generated)",
+##   "Afrikaans", "Albanian", "Amharic", "Arabic",
+##   "Armenian", "Azerbaijani", "Bangla", "Basque",
+##   "Belarusian", "Bosnian", "Bulgarian", "Burmese",
+##   "Catalan", "Cebuano", "Chinese (Simplified)",
+##   "Chinese (Traditional)", "Corsican", "Croatian",
+##   "Czech", "Danish", "Dutch", "Esperanto", "Estonian",
+##   "Filipino", "Finnish", "French", "Galician", "Georgian",
+##   "German", "Greek", "Gujarati", "Haitian Creole", "Hausa",
+##   "Hawaiian", "Hebrew", "Hindi", "Hmong", "Hungarian",
+##   "Icelandic", "Igbo", "Indonesian", "Irish", "Italian",
+##   "Japanese", "Javanese", "Kannada", "Kazakh", "Khmer",
+##   "Korean", "Kurdish", "Kyrgyz", "Lao", "Latin", "Latvian",
+##   "Lithuanian", "Luxembourgish", "Macedonian",
+##   "Malagasy", "Malay", "Malayalam", "Maltese", "Maori",
+##   "Marathi", "Mongolian", "Nepali", "Norwegian Bokmål",
+##   "Nyanja", "Pashto", "Persian", "Polish", "Portuguese",
+##   "Punjabi", "Romanian", "Russian", "Samoan",
+##   "Scottish Gaelic", "Serbian", "Shona", "Sindhi",
+##   "Sinhala", "Slovak", "Slovenian", "Somali",
+##   "Southern Sotho", "Spanish", "Spanish (Latin America)",
+##   "Sundanese",  "Swahili", "Swedish", "Tajik", "Tamil",
+##   "Telugu", "Thai", "Turkish", "Ukrainian", "Urdu",
+##   "Uzbek", "Vietnamese", "Welsh", "Western Frisian",
+##   "Xhosa", "Yiddish", "Yoruba", "Zulu"
+##
+## Default: ["", "", ""]
+##
+captions: ["", "", ""]
 
 
-  # -----------------------------
-  #  Interface
-  # -----------------------------
+# -----------------------------
+#  Interface
+# -----------------------------
 
-  ##
-  ## Enable/Disable dark mode.
-  ##
-  ## Accepted values: true, false
-  ## Default: <none>
-  ##
-  dark_mode:
+##
+## Enable/Disable dark mode.
+##
+## Accepted values: true, false
+## Default: <none>
+##
+dark_mode:
 
-  ##
-  ## Enable/Disable thin mode (no video thumbnails).
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  thin_mode: false
+##
+## Enable/Disable thin mode (no video thumbnails).
+##
+## Accepted values: true, false
+## Default: false
+##
+thin_mode: false
 
-  ##
-  ## List of feeds available on the home page.
-  ##
-  ## Note: "Subscriptions" and "Playlists" are only visible
-  ## when the user is logged in.
-  ##
-  ## Accepted values: A list of strings
-  ## Each entry can be one of: "Popular", "Trending",
-  ##    "Subscriptions", "Playlists"
-  ##
-  ## Default: ["Popular", "Trending", "Subscriptions", "Playlists"]  (show all feeds)
-  ##
-  feed_menu: ["Popular", "Trending", "Subscriptions", "Playlists"]
+##
+## List of feeds available on the home page.
+##
+## Note: "Subscriptions" and "Playlists" are only visible
+## when the user is logged in.
+##
+## Accepted values: A list of strings
+## Each entry can be one of: "Popular", "Trending",
+##    "Subscriptions", "Playlists"
+##
+## Default: ["Popular", "Trending", "Subscriptions", "Playlists"]  (show all feeds)
+##
+feed_menu: ["Popular", "Trending", "Subscriptions", "Playlists"]
 
-  ##
-  ## Default feed to display on the home page.
-  ##
-  ## Note: setting this option to "Popular" has no
-  ## effect when 'popular_enabled' is set to false.
-  ##
-  ## Accepted values: Popular, Trending, Subscriptions, Playlists, <none>
-  ## Default: Popular
-  ##
-  default_home: Popular
+##
+## Default feed to display on the home page.
+##
+## Note: setting this option to "Popular" has no
+## effect when 'popular_enabled' is set to false.
+##
+## Accepted values: Popular, Trending, Subscriptions, Playlists, <none>
+## Default: Popular
+##
+default_home: Popular
 
-  ##
-  ## Default number of results to display per page.
-  ##
-  ## Note: this affects invidious-generated pages only, such
-  ## as watch history and subscription feeds. Playlists, search
-  ## results and channel videos depend on the data returned by
-  ## the Youtube API.
-  ##
-  ## Accepted values: any positive integer
-  ## Default: 40
-  ##
-  max_results: 40
+##
+## Default number of results to display per page.
+##
+## Note: this affects invidious-generated pages only, such
+## as watch history and subscription feeds. Playlists, search
+## results and channel videos depend on the data returned by
+## the Youtube API.
+##
+## Accepted values: any positive integer
+## Default: 40
+##
+max_results: 40
 
-  ##
-  ## Show/hide annotations.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  annotations: false
+##
+## Show/hide annotations.
+##
+## Accepted values: true, false
+## Default: false
+##
+annotations: false
 
-  ##
-  ## Show/hide annotation.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  annotations_subscribed: false
+##
+## Show/hide annotation.
+##
+## Accepted values: true, false
+## Default: false
+##
+annotations_subscribed: false
 
-  ##
-  ## Type of comments to display below video.
-  ##
-  ## Accepted values: a two-entries array.
-  ## Each entry can be one of: "youtube", "reddit", ""
-  ##
-  ## Default: ["youtube", ""]
-  ##
-  comments: ["youtube", ""]
+##
+## Type of comments to display below video.
+##
+## Accepted values: a two-entries array.
+## Each entry can be one of: "youtube", "reddit", ""
+##
+## Default: ["youtube", ""]
+##
+comments: ["youtube", ""]
 
-  ##
-  ## Default player style.
-  ##
-  ## Accepted values: invidious, youtube
-  ## Default: invidious
-  ##
-  player_style: invidious
+##
+## Default player style.
+##
+## Accepted values: invidious, youtube
+## Default: invidious
+##
+player_style: invidious
 
-  ##
-  ## Show/Hide the "related videos" sidebar when
-  ## watching a video.
-  ##
-  ## Accepted values: true, false
-  ## Default: true
-  ##
-  related_videos: true
-
-
-  # -----------------------------
-  #  Video player behavior
-  # -----------------------------
-
-  ##
-  ## Automatically play videos on page load.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  autoplay: false
-
-  ##
-  ## Automatically load the "next" video (either next in
-  ## playlist or proposed) when the current video ends.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  continue: false
-
-  ##
-  ## Autoplay next video by default.
-  ##
-  ## Note: Only effective if 'continue' is set to true.
-  ##
-  ## Accepted values: true, false
-  ## Default: true
-  ##
-  continue_autoplay: true
-
-  ##
-  ## Play videos in Audio-only mode by default.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  listen: false
-
-  ##
-  ## Loop videos automatically.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  video_loop: false
+##
+## Show/Hide the "related videos" sidebar when
+## watching a video.
+##
+## Accepted values: true, false
+## Default: true
+##
+related_videos: true
 
 
-  # -----------------------------
-  #  Video playback settings
-  # -----------------------------
+# -----------------------------
+#  Video player behavior
+# -----------------------------
 
-  ##
-  ## Default video quality.
-  ##
-  ## Accepted values: dash, hd720, medium, small
-  ## Default: hd720
-  ##
-  quality: hd720
+##
+## Automatically play videos on page load.
+##
+## Accepted values: true, false
+## Default: false
+##
+autoplay: false
 
-  ##
-  ## Default dash video quality.
-  ##
-  ## Note: this setting only takes effet if the
-  ## 'quality' parameter is set to "dash".
-  ##
-  ## Accepted values:
-  ##    auto, best, 4320p, 2160p, 1440p, 1080p,
-  ##    720p, 480p, 360p, 240p, 144p, worst
-  ## Default: auto
-  ##
-  quality_dash: auto
+##
+## Automatically load the "next" video (either next in
+## playlist or proposed) when the current video ends.
+##
+## Accepted values: true, false
+## Default: false
+##
+load_next: false
 
-  ##
-  ## Default video playback speed.
-  ##
-  ## Accepted values: 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0
-  ## Default: 1.0
-  ##
-  speed: 1.0
+##
+## Autoplay next video by default.
+##
+## Note: Only effective if 'continue' is set to true.
+##
+## Accepted values: true, false
+## Default: true
+##
+continue_autoplay: true
 
-  ##
-  ## Default volume.
-  ##
-  ## Accepted values: 0-100
-  ## Default: 100
-  ##
-  volume: 100
+##
+## Play videos in Audio-only mode by default.
+##
+## Accepted values: true, false
+## Default: false
+##
+listen: false
 
-  ##
-  ## Allow 360° videos to be played.
-  ##
-  ## Note: This feature requires a WebGL-enabled browser.
-  ##
-  ## Accepted values: true, false
-  ## Default: true
-  ##
-  vr_mode: true
-
-  # -----------------------------
-  #  Subscription feed
-  # -----------------------------
-
-  ##
-  ## In the "Subscription" feed, only show the latest video
-  ## of each channel the user is subscribed to.
-  ##
-  ## Note: when combined with 'unseen_only', the latest unseen
-  ## video of each channel will be displayed instead of the
-  ## latest by date.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  latest_only: false
-
-  ##
-  ## Enable/Disable user subscriptions desktop notifications.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  notifications_only: false
-
-  ##
-  ## In the "Subscription" feed, Only show the videos that the
-  ## user haven't watched yet (i.e which are not in their watch
-  ## history).
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  unseen_only: false
-
-  ##
-  ## Default sorting parameter for subscription feeds.
-  ##
-  ## Accepted values:
-  ##   'alphabetically'
-  ##   'alphabetically - reverse'
-  ##   'channel name'
-  ##   'channel name - reverse'
-  ##   'published'
-  ##   'published - reverse'
-  ##
-  ## Default: published
-  ##
-  sort: published
+##
+## Loop videos automatically.
+##
+## Accepted values: true, false
+## Default: false
+##
+video_loop: false
 
 
-  # -----------------------------
-  #  Miscellaneous
-  # -----------------------------
+# -----------------------------
+#  Video playback settings
+# -----------------------------
 
-  ##
-  ## Proxy videos through instance by default.
-  ##
-  ## Warning: As most users won't change this setting in their
-  ## preferences, defaulting  to true will significantly
-  ## increase the instance's network usage, so make sure that
-  ## your server's connection can handle it.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  local: false
+##
+## Default video quality.
+##
+## Accepted values: dash, hd720, medium, small
+## Default: hd720
+##
+quality: hd720
 
-  ##
-  ## Show the connected user's nick at the top right.
-  ##
-  ## Accepted values: true, false
-  ## Default: true
-  ##
-  show_nick: true
+##
+## Default dash video quality.
+##
+## Note: this setting only takes effet if the
+## 'quality' parameter is set to "dash".
+##
+## Accepted values:
+##    auto, best, 4320p, 2160p, 1440p, 1080p,
+##    720p, 480p, 360p, 240p, 144p, worst
+## Default: auto
+##
+quality_dash: auto
 
-  ##
-  ## Automatically redirect to a random instance when the user uses
-  ## any "switch invidious instance" link (For videos, it's the plane
-  ## icon, next to "watch on youtube" and "listen"). When set to false,
-  ## the user is sent to https://redirect.invidious.io instead, where
-  ## they can manually select an instance.
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  automatic_instance_redirect: false
-  
-  ##
-  ## Show the entire video description by default (when set to 'false',
-  ## only the first few lines of the description are shown and a
-  ## "show more" button allows to expand it).
-  ##
-  ## Accepted values: true, false
-  ## Default: false
-  ##
-  extend_desc: false
+##
+## Default video playback speed.
+##
+## Accepted values: 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0
+## Default: 1.0
+##
+speed: 1.0
+
+##
+## Default volume.
+##
+## Accepted values: 0-100
+## Default: 100
+##
+volume: 100
+
+##
+## Allow 360° videos to be played.
+##
+## Note: This feature requires a WebGL-enabled browser.
+##
+## Accepted values: true, false
+## Default: true
+##
+vr_mode: true
+
+# -----------------------------
+#  Subscription feed
+# -----------------------------
+
+##
+## In the "Subscription" feed, only show the latest video
+## of each channel the user is subscribed to.
+##
+## Note: when combined with 'unseen_only', the latest unseen
+## video of each channel will be displayed instead of the
+## latest by date.
+##
+## Accepted values: true, false
+## Default: false
+##
+latest_only: false
+
+##
+## Enable/Disable user subscriptions desktop notifications.
+##
+## Accepted values: true, false
+## Default: false
+##
+notifications_only: false
+
+##
+## In the "Subscription" feed, Only show the videos that the
+## user haven't watched yet (i.e which are not in their watch
+## history).
+##
+## Accepted values: true, false
+## Default: false
+##
+unseen_only: false
+
+##
+## Default sorting parameter for subscription feeds.
+##
+## Accepted values:
+##   'alphabetically'
+##   'alphabetically - reverse'
+##   'channel name'
+##   'channel name - reverse'
+##   'published'
+##   'published - reverse'
+##
+## Default: published
+##
+sort: published
+
+
+# -----------------------------
+#  Miscellaneous
+# -----------------------------
+
+##
+## Proxy videos through instance by default.
+##
+## Warning: As most users won't change this setting in their
+## preferences, defaulting  to true will significantly
+## increase the instance's network usage, so make sure that
+## your server's connection can handle it.
+##
+## Accepted values: true, false
+## Default: false
+##
+local: false
+
+##
+## Show the connected user's nick at the top right.
+##
+## Accepted values: true, false
+## Default: true
+##
+show_nick: true
+
+##
+## Automatically redirect to a random instance when the user uses
+## any "switch invidious instance" link (For videos, it's the plane
+## icon, next to "watch on youtube" and "listen"). When set to false,
+## the user is sent to https://redirect.invidious.io instead, where
+## they can manually select an instance.
+##
+## Accepted values: true, false
+## Default: false
+##
+automatic_instance_redirect: false
+
+##
+## Show the entire video description by default (when set to 'false',
+## only the first few lines of the description are shown and a
+## "show more" button allows to expand it).
+##
+## Accepted values: true, false
+## Default: false
+##
+extend_desc: false
+
+##
+## Wether a watch_history should be crated or not
+##
+## Accepted values: true, false
+## Default: false
+##
+watch_history: false
+
+##
+## Wether to save the current video position or not
+##
+## Accepted values: true, false
+## Default: false
+##
+save_player_pos: true
