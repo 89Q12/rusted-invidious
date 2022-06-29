@@ -1,5 +1,5 @@
 live= زنده,
-shared_ago=  پیش به اشتراک گذاشته شده,
+shared_upload_date= ${x} پیش به اشتراک گذاشته شده,
 unsubscribe= لغو اشتراک,
 subscribe= مشترک شدن,
 view_channel_on_youtube= دیدن کانال در یوتیوب,
@@ -15,7 +15,7 @@ new_password= گذرواژه تازه,
 new_passwords_must_match= گذارواژه های تازه باید باهم همخوانی داشته باشند,
 cannot_change_password_for_google_accounts= نمیتوان گذرواژه را برای حساب های کاربری گوگل تغییر داد,
 authorize_token= توکن دسترسی؟,
-authorize_token_for= توکن دسترسی برای؟,
+authorize_token_for_= توکن دسترسی برای ${x}؟,
 yes= بله,
 no= خیر,
 import_and_export_data= درون‌برد و برون‌برد داده,
@@ -91,8 +91,8 @@ only_show_latest_unwatched_video_from_channel=تنها نمایش آخرین و�
 preferences_unseen_only_label= تنها نمایش ویدیو های تماشا نشده: ,
 preferences_notifications_only_label= تنها نمایش اعلان ها (اگر وجود داشته باشد) ,
 enable_web_notifications= فعال کردن اعلان های وب,
-_uploaded_a_video=  یک ویدیو بارگذاری کرد,
-_is_live=  زنده است,
+upload_text= ${x} یک ویدیو بارگذاری کرد,
+live_upload_text= ${x} زنده است,
 preferences_category_data= ترجیحات داده,
 clear_watch_history= پاک‌کردن تاریخچه تماشا,
 importexport_data= وارد کردن/خارج کردن داده,
@@ -129,13 +129,13 @@ public= عمومی,
 unlisted= لیست نشده,
 private= خصوصی,
 view_all_playlists= نمایش همه سیاهه‌های پخش,
-updated_ago= بروز شده پیش,
-delete_playlist= حذف سیاههٔ پخش؟,
+updated_upload_date= بروز شده ${x} پیش,
+delete_playlist_= حذف سیاههٔ پخش ${x}؟,
 delete_playlist= حذف سیاههٔ پخش,
 create_playlist= ایجاد سیاههٔ پخش,
 title= عنوان,
 playlist_privacy= حریم خصوصی سیاههٔ پخش,
-editing_playlist= تغییر سیاههٔ پخش,
+editing_playlist_= تغییر سیاههٔ پخش ${x},
 show_more= نمایش بیش‌تر,
 show_less= نمایش کم‌تر,
 watch_on_youtube= تماشا در یوتیوب,
@@ -149,14 +149,14 @@ wilson_score=امتیاز ویلسون: ,
 engagement=نامزدی: ,
 whitelisted_regions=مناطق لیست سفید: ,
 blacklisted_regions=مناطق لیست سیاه: ,
-shared= به اشتراک گذاشته شده,
-premieres_in= برای اولین بار در,
-premieres= برای اولین بار,
+shared_= به اشتراک گذاشته شده ${x},
+premieres_in_= برای اولین بار در ${x},
+premieres_= برای اولین بار ${x},
 hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in_mind_they_may_take_a_bit_longer_to_load= سلام! مثل اینکه تو جاوا اسکریپت رو خاموش کرده ای. اینجا کلیک کن تا نظرات را ببینی، این رو یادت باشه که ممکنه بارگذاری اونها کمی طول بکشه.,
 view_youtube_comments= نمایش نظرات یوتیوب,
 view_more_comments_on_reddit= نمایش نظرات بیشتر در ردیت,
-[^0_9]|^1[^0_9]|$= نمایش نظرات,
-= نمایش نظرات
+view_comments= نمایش ${x} نظرات,
+= نمایش ${x} نظرات
 view_reddit_comments= نمایش نظرات ردیت,
 hide_replies= مخفی کردن پاسخ ها,
 show_replies= نمایش پاسخ ها,
@@ -175,13 +175,13 @@ please_sign_in_using_log_in_with_google= لطفا با استفاده از 'ور
 password_cannot_be_empty= گذرواژه نمیتواند خالی باشد,
 password_cannot_be_longer_than_55_characters= گذر واژه نمیتواند از ۵۵ کاراکتر بیشتر باشد,
 please_log_in= لطفا وارد شوید,
-invidious_private_feed_for= خوراک خصوصی زشت برای,
-channel=: کانال:,
+invidious_private_feed_for_= خوراک خصوصی زشت برای ${x},
+channel=${x}: کانال: ${x},
 deleted_or_invalid_channel= کانال نا معتبر یا پاک شده است,
 this_channel_does_not_exist= این کانال وجود ندارد.,
 could_not_get_channel_info= نمیتوان اطلاعات کانال را دریافت کرد.,
 could_not_fetch_comments= نمیتوان نظرات را دریافت کرد,
-_ago=  پیش,
+upload_date= ${x} پیش,
 load_more= بارگذاری بیشتر,
 could_not_create_mix= نمیتوان میکس ساخت.,
 empty_playlist= سیاههٔ پخش خالی,
@@ -261,7 +261,7 @@ maori= مائوری,
 marathi= مراتی,
 mongolian= مغولی,
 nepali= نپالی,
-norwegian_bokmål= بوکمل,
+norwegian= بوکمل,
 nyanja= چوایی,
 pashto= پشتو,
 persian= فارسی,
@@ -315,11 +315,11 @@ news= اخبار,
 movies= فیلم‌ها,
 download= بارگیری,
 download_as=بارگیری به عنوان: ,
-%a_%b_%_d_%y= %A %B %-d، %Y,
+WTF= %A %B %-d، %Y,
 edited= (ویرایش شده),
 youtube_comment_permalink= پیوست ثابت نظرات یوتیوب,
 permalink= پیوست ثابت,
-_marked_it_with_a_=  نشان گذاری شده با یک ❤,
+like= ${x} نشان گذاری شده با یک ❤,
 audio_mode= حالت صدا,
 video_mode= حالت ویدیو,
 videos= ویدیو ها,
@@ -377,11 +377,11 @@ footer_donate_page= کمک مالی,
 footer_source_code= کد منبع,
 footer_modfied_source_code= کد منبع ویرایش شده,
 none= هیچ‌کدام,
-videoinfo_started_streaming_x_ago= پخش جریانی پیش آغاز شد,
+videoinfo_started_streaming_xupload_date= پخش جریانی ${x} پیش آغاز شد,
 videoinfo_watch_on_youtube= تماشا در یوتیوب,
 videoinfo_youtube_embed_link= توکار,
 videoinfo_invidious_embed_link= پیوند توکار,
-download_subtitles= زیرنویس‌ها - (.vtt),
+download_subtitles= زیرنویس‌ها - ${x} (.vtt),
 video_unavailable= ویدئو دردسترس نیست,
 preferences_save_player_pos_label= ذخیره زمان کنونی ویدئو: ,
 search_filters_features_option_purchased= خریداری شده,
