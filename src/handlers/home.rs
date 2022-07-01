@@ -10,12 +10,13 @@ use super::{templates::base::Base, utils::render};
 /// Ideally this should be redirect the user to the configured home path
 /// e.g. /feed/popular or serve search page I guess but this could be changed
 pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>)-> Response {
+    let lock = state.lock().await;
     // TODO: implement
     let base = Base{
         title: "invidious".to_string(),
-        config: &state.lock().await.config,
+        config: &lock.config,
         user: None,
-        preferences: Preferences::new(),
+        preferences: &lock.preferences,
         search_bar: None,
         current_page: "/".to_string(),
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
