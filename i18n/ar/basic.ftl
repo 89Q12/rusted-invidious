@@ -1,5 +1,5 @@
 live= مُباشِر,
-shared_upload_date= تمَّ رفع المقطع المرئيّ مُنذ ${x},
+shared_upload_date= تمَّ رفع المقطع المرئيّ مُنذ { $x },
 unsubscribe= إلغاء الاشتراك,
 subscribe= الإشتراك,
 view_channel_on_youtube= زيارة القناة على موقع يوتيوب,
@@ -91,8 +91,8 @@ only_show_latest_unwatched_video_from_channel=فقط أظهر آخر فيديو 
 preferences_unseen_only_label= فقط أظهر الذي لم يتم رؤيته: ,
 preferences_notifications_only_label= إظهار الإشعارات فقط (إذا كان هناك أي): ,
 enable_web_notifications= تفعيل إشعارات المتصفح,
-upload_text= ${x} رفع فيديو,
-live_upload_text= ${x} في بث مباشر,
+upload_text= { $x } رفع فيديو,
+live_upload_text= { $x } في بث مباشر,
 preferences_category_data= إعدادات التفضيلات,
 clear_watch_history= حذف سجل المشاهدة,
 importexport_data= إضافة\\استخراج البيانات,
@@ -129,13 +129,13 @@ public= عام,
 unlisted= غير مصنف,
 private= خاص,
 view_all_playlists= عرض جميع قوائم التشغيل,
-updated_upload_date= تم تحديثه منذ ${x},
-delete_playlist_= حذف قائمة التشغيل ${x}؟,
+updated_upload_date= تم تحديثه منذ { $x },
+delete_playlist_= حذف قائمة التشغيل { $x }؟,
 delete_playlist= حذف قائمة التغشيل,
 create_playlist= إنشاء قائمة تشغيل,
 title= العنوان,
 playlist_privacy= إعدادات الخصوصية,
-editing_playlist_= تعديل قائمة التشغيل ${x},
+editing_playlist_= تعديل قائمة التشغيل { $x },
 show_more= إظهار المزيد,
 show_less= عرض اقل,
 watch_on_youtube= مشاهدة الفيديو على اليوتيوب,
@@ -149,13 +149,13 @@ wilson_score=درجة ويلسون: ,
 engagement=نسبة المشاركة: ,
 whitelisted_regions=الدول المسموح فيها هذا الفيديو: ,
 blacklisted_regions=الدول المحظور فيها هذا الفيديو: ,
-shared_= شارك منذ ${x},
-premieres_in_= يعرض فى ${x},
-premieres_= يعرض ${x},
+shared_= شارك منذ { $x },
+premieres_in_= يعرض فى { $x },
+premieres_= يعرض { $x },
 hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in_mind_they_may_take_a_bit_longer_to_load= أهلًا! يبدو أن جافاسكريبت معطلٌ لديك. اضغط هنا لعرض التعليقات، وَضَع في اعتبارك أنها ستأخذ وقتًا أطول للتحميل.,
 view_youtube_comments= عرض تعليقات اليوتيوب,
 view_more_comments_on_reddit= عرض المزيد من التعليقات على\\من موقع Reddit,
-view_comments= عرض ${x} تعليقات,
+view_comments= عرض { $x } تعليقات,
 view_reddit_comments= عرض تعليقات ريدإت Reddit,
 hide_replies= إخفاء الردود,
 show_replies= عرض الردود,
@@ -175,12 +175,12 @@ password_cannot_be_empty= لا يمكن أن تكون كلمة السر فارغ
 password_cannot_be_longer_than_55_characters= يجب أن لا تتعدى كلمة السر 55 حرفًا,
 please_log_in= الرجاء تسجيل الدخول,
 invidious_private_feed_for_= تغذية Invidious خاصة ل 'x',
-channel=${x}: قناة:${x},
+channel={ $x }: قناة:{ $x },
 deleted_or_invalid_channel= قناة ممسوحة او غير صالحة,
 this_channel_does_not_exist= هذه القناة غير موجودة.,
 could_not_get_channel_info= لم يستطع الحصول على معلومات القناة.,
 could_not_fetch_comments= لم يتمكن من إحضار التعليقات,
-upload_date= ${x} منذ,
+upload_date= { $x } منذ,
 load_more= عرض المزيد,
 could_not_create_mix= تعذر إنشاء مزيج.,
 empty_playlist= قائمة التشغيل فارغة,
@@ -318,7 +318,7 @@ WTF= %A %-d %B %Y,
 edited= (معدّل),
 youtube_comment_permalink= رابط التعليق على اليوتيوب,
 permalink= الرابط,
-like= ${x} أعجب بهذا,
+like= { $x } أعجب بهذا,
 audio_mode= الوضع الصوتي,
 video_mode= وضع الفيديو,
 videos= الفيديوهات,
@@ -382,7 +382,7 @@ preferences_quality_dash_option_240p= 240p,
 preferences_quality_dash_option_144p= 144p,
 search_filters_features_option_purchased= تم شراؤها,
 none= لاشيء,
-videoinfo_started_streaming_xupload_date= بدأ البث منذ ${x},
+videoinfo_started_streaming_xupload_date= بدأ البث منذ { $x },
 videoinfo_watch_on_youtube= مشاهدة على يوتيوب,
 videoinfo_youtube_embed_link= مضمن,
 videoinfo_invidious_embed_link= رابط مضمن,
@@ -418,13 +418,13 @@ crash_page_before_reporting= قبل الإبلاغ عن خطأ، تأكد من �
 french_auto_generated= الفرنسية (مُنشأة تلقائيًا),
 portuguese_auto_generated= البرتغالية (تم إنشاؤه تلقائيًا),
 turkish_auto_generated= التركية (تم إنشاؤها تلقائيًا),
-crash_page_refresh= حاول <a href:\${x}\> تحديث الصفحة </a>,
-crash_page_switch_instance= حاول <a href:\${x}\> استخدام مثيل آخر </a>,
+crash_page_refresh= حاول <a href:\{ $x }\> تحديث الصفحة </a>,
+crash_page_switch_instance= حاول <a href:\{ $x }\> استخدام مثيل آخر </a>,
 korean_auto_generated= كوري (تم إنشاؤه تلقائيًا),
 spanish_mexico= الإسبانية (المكسيك),
 vietnamese_auto_generated= فيتنامي (تم إنشاؤه تلقائيًا),
-crash_page_report_issue= إذا لم يساعد أي مما سبق، يرجى فتح <a href:\${x}\> مشكلة جديدة على GitHub </a> (ويفضل أن يكون باللغة الإنجليزية) وتضمين النص التالي في رسالتك (لا تترجم هذا النص):,
-crash_page_read_the_faq= قراءة <a href:\${x}\> الأسئلة المتكررة (الأسئلة الشائعة) </a>,
+crash_page_report_issue= إذا لم يساعد أي مما سبق، يرجى فتح <a href:\{ $x }\> مشكلة جديدة على GitHub </a> (ويفضل أن يكون باللغة الإنجليزية) وتضمين النص التالي في رسالتك (لا تترجم هذا النص):,
+crash_page_read_the_faq= قراءة <a href:\{ $x }\> الأسئلة المتكررة (الأسئلة الشائعة) </a>,
 preferences_watch_history_label= تمكين سجل المشاهدة: ,
 english_united_kingdom= الإنجليزية (المملكة المتحدة),
 cantonese_hong_kong= الكانتونية (هونغ كونغ),
@@ -438,5 +438,5 @@ japanese_auto_generated= اليابانية (مُنشأة تلقائيًا),
 portuguese_brazil= البرتغالية (البرازيل),
 russian_auto_generated= الروسية (منشأة تلقائيا),
 spanish_spain= الإسبانية (إسبانيا),
-crash_page_search_issue= بحثت عن <a href:\${x}\> المشكلات الموجودة على GitHub </a>,
+crash_page_search_issue= بحثت عن <a href:\{ $x }\> المشكلات الموجودة على GitHub </a>,
 search_filters_title= معامل الفرز
