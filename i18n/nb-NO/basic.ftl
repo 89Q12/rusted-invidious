@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Vis YouTube-kommentarer,
 view_more_comments_on_reddit= Vis flere kommenterer på Reddit,
 view_comments= Vis ${x} kommentarer,
-= Vis ${x} kommentarer
 view_reddit_comments= Vis Reddit-kommentarer,
 hide_replies= Skjul svar,
 show_replies= Vis svar,

@@ -147,7 +147,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Skoða YouTube ummæli,
 view_more_comments_on_reddit= Skoða fleiri ummæli á Reddit,
 view_comments= Skoða ${x} ummæli,
-= Skoða ${x} ummæli
 view_reddit_comments= Skoða Reddit ummæli,
 hide_replies= Fela svör,
 show_replies= Sýna svör,

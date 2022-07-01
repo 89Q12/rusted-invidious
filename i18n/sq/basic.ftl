@@ -352,7 +352,6 @@ preferences_region_label= Vend lënde: ,
 view_youtube_comments= Shihni komente Youtube,
 view_more_comments_on_reddit= Shihni më tepër komente në Reddit,
 view_comments= Shihni ${x} komente,
-= Shihni ${x} komente
 view_reddit_comments= Shihni komente Reddit,
 hide_replies= Fshihi përgjigjet,
 show_replies= Shfaq përgjigje,

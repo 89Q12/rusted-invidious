@@ -155,7 +155,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Wyświetl komentarze z YouTube,
 view_more_comments_on_reddit= Wyświetl więcej komentarzy na Reddicie,
 view_comments= Wyświetl ${x} komentarzy,
-= Wyświetl ${x} komentarzy
 view_reddit_comments= Wyświetl komentarze z Redditta,
 hide_replies= Ukryj odpowiedzi,
 show_replies= Pokaż odpowiedzi,

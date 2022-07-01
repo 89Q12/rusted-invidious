@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Prikaži YouTube komentare,
 view_more_comments_on_reddit= Prikaži još komentara na Redditu,
 view_comments= Prikaži ${x} komentara.([^.,0-9]|^)1([^.,0-9]|$),
-= Prikaži ${x} komentara
 view_reddit_comments= Prikaži Reddit komentare,
 hide_replies= Sakrij odgovore,
 show_replies= Prikaži odgovore,

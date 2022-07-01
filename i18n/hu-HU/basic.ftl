@@ -150,7 +150,6 @@ premieres_= ${x} lesz a premierje,
 hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in_mind_they_may_take_a_bit_longer_to_load= Helló! Úgy tűnik a JavaScript ki van kapcsolva a böngészőben. Ide kattintva lehet olvasni a hozzászólásokat, de a betöltésük így kicsit több időbe telik.,
 view_youtube_comments= YouTube-on lévő hozzászólások olvasása,
 view_more_comments_on_reddit= A többi hozzászólás olvasása Redditen,
-= ${x} hozzászólás olvasása,
 view_comments= ${x} hozzászólás olvasása
 view_reddit_comments= Redditen lévő hozzászólások olvasása,
 hide_replies= Válaszok elrejtése,

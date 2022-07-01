@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= 檢視 YouTube 留言,
 view_more_comments_on_reddit= 在 Reddit 上檢視更多留言,
 view_comments= 檢視 ${x} 則留言,
-= 檢視 ${x} 則留言
 view_reddit_comments= 檢視 Reddit 留言,
 hide_replies= 隱藏回覆,
 show_replies= 顯示回覆,

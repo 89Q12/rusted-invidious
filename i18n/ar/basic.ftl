@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= عرض تعليقات اليوتيوب,
 view_more_comments_on_reddit= عرض المزيد من التعليقات على\\من موقع Reddit,
 view_comments= عرض ${x} تعليقات,
-= عرض ${x} تعليقات
 view_reddit_comments= عرض تعليقات ريدإت Reddit,
 hide_replies= إخفاء الردود,
 show_replies= عرض الردود,

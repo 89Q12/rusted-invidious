@@ -210,7 +210,6 @@ incorrect_password= Pasahitza gaizki,
 playlist_does_not_exist= Zerrenda ez da existitzen.,
 preferences_category_misc= Askotariko lehentasunak,
 view_comments= 'x' iruzkina ikusi,
-= 'x' iruzkinak ikusi
 report_statistics=Estatistikak adierazi: ,
 preferences_max_results_label= Jotzeko bideo zerrendaren luzera: ,
 subscriptions= Harpidetzak,

@@ -242,7 +242,6 @@ wilson_score=Wilson Score: ,
 family_friendly_= 가족 친화적입니까? ,
 quota_exceeded_try_again_in_a_few_hours= 한도량을 초과했습니다. 몇 시간 후에 다시 시도하세요,
 view_comments= ${x} 개의 댓글 보기,
-= ${x} 개의 댓글 보기
 haitian_creole= 아이티 크레올어,
 gujarati= 구자라트어,
 esperanto= 에스페란토(에스페란토어),

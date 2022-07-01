@@ -154,7 +154,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Visa YouTube-kommentarer,
 view_more_comments_on_reddit= Visa flera kommentarer på Reddit,
 view_comments= Visa ${x} kommentarer,
-= Visa ${x} kommentarer
 view_reddit_comments= Visa Reddit-kommentarer,
 hide_replies= Dölj svar,
 show_replies= Visa svar,

@@ -112,7 +112,6 @@ premieres_= Premiere ${x},
 view_youtube_comments= Oglej si YouTube komentarje,
 view_more_comments_on_reddit= Prikaži več komentarjev na Reddit,
 view_comments= Poglej ${x} komentar,
-= Poglej ${x} komentarjev
 quota_exceeded_try_again_in_a_few_hours= Kvota je presežena, poskusi znova čez nekaj ur,
 unable_to_log_in_make_sure_two_factor_authentication_authenticator_or_sms_is_turned_on= Ne morem se prijaviti, preveri, ali je vklopljeno dvofaktorsko preverjanje pristnosti (avtentikator ali SMS).,
 please_sign_in_using_log_in_with_google= Prijavi se z uporabo »Prijava z Googlom«,

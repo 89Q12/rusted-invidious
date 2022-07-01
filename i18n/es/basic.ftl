@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Ver los comentarios de YouTube,
 view_more_comments_on_reddit= Ver más comentarios en Reddit,
 view_comments= Ver ${x} comentarios,
-= Ver ${x} comentarios
 view_reddit_comments= Ver los comentarios de Reddit,
 hide_replies= Ocultar las respuestas,
 show_replies= Mostrar las respuestas,

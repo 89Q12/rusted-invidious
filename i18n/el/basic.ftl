@@ -147,7 +147,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Προβολή σχολίων από το YouTube,
 view_more_comments_on_reddit= Προβολή περισσότερων σχολίων στο Reddit,
 view_comments= Προβολή ${x} σχολίων,
-= Προβολή ${x} σχολίων
 view_reddit_comments= Προβολή σχολίων από το Reddit,
 hide_replies= Απόκρυψη απαντήσεων,
 show_replies= Προβολή απαντήσεων,

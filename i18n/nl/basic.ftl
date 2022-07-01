@@ -151,7 +151,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= YouTube-reacties tonen,
 view_more_comments_on_reddit= Meer reacties bekijken op Reddit,
 view_comments= ${x} reacties tonen,
-= ${x} reacties tonen
 view_reddit_comments= Reddit-reacties tonen,
 hide_replies= Antwoorden verbergen,
 show_replies= Antwoorden tonen,

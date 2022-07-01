@@ -123,7 +123,6 @@ incorrect_password= Palavra-chave incorreta,
 show_replies= Mostrar respostas,
 hide_replies= Ocultar respostas,
 view_reddit_comments= Ver comentários do Reddit,
-= Ver ${x} comentários,
 view_comments= Ver ${x} comentários
 view_more_comments_on_reddit= Ver mais comentários no Reddit,
 view_youtube_comments= Ver comentários do YouTube,

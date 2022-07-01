@@ -192,7 +192,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= YouTube टिप्पणियाँ देखें,
 view_more_comments_on_reddit= Reddit पर अधिक टिप्पणियाँ देखें,
 view_comments= ${x} टिप्पणी देखें,
-= ${x} टिप्पणियाँ देखें
 view_reddit_comments= Reddit पर टिप्पणियाँ,
 hide_replies= जवाब छिपाएँ,
 show_replies= जवाब दिखाएँ,

@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Vidi komentojn de JuTubo,
 view_more_comments_on_reddit= Vidi pli komentoj en Reddit,
 view_comments= Vidi ${x} komentojn,
-= Vidi ${x} komentojn
 view_reddit_comments= Vidi komentojn de Reddit,
 hide_replies= Kaŝi respondojn,
 show_replies= Montri respondojn,

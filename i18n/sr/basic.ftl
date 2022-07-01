@@ -177,7 +177,6 @@ premieres_in_= Premera u ${x},
 premieres_= Premere u ${x},
 hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in_mind_they_may_take_a_bit_longer_to_load= Hej! Izgleda da ste onemogućili JavaScript. Kliknite ovde da vidite komentare, čuvajte na umu da ovo može da potraje duže dok se ne učitaju.,
 view_comments= Prikaži ${x} komentar,
-= Prikaži ${x} komentara
 view_reddit_comments= Prikaži Reddit komentare,
 unable_to_log_in_make_sure_two_factor_authentication_authenticator_or_sms_is_turned_on= Neuspešna prijava, proverite da li ste upalili dvofaktornu autentikaciju (Autentikator ili SMS).,
 captcha_is_a_required_field= CAPTCHA je obavezno polje,

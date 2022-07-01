@@ -147,7 +147,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Vedeți comentariile de pe YouTube,
 view_more_comments_on_reddit= Vedeți mai multe comentarii pe Reddit,
 view_comments= Afișați ${x} comentarii,
-= Afișați ${x} comentarii
 view_reddit_comments= Afișați comentariile de pe Reddit,
 hide_replies= Ascundeți replicile,
 show_replies= Afișați replicile,

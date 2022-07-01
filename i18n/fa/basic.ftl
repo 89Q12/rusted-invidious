@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= نمایش نظرات یوتیوب,
 view_more_comments_on_reddit= نمایش نظرات بیشتر در ردیت,
 view_comments= نمایش ${x} نظرات,
-= نمایش ${x} نظرات
 view_reddit_comments= نمایش نظرات ردیت,
 hide_replies= مخفی کردن پاسخ ها,
 show_replies= نمایش پاسخ ها,

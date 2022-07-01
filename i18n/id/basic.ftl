@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Lihat komentar YouTube,
 view_more_comments_on_reddit= Lihat lebih banyak komentar di Reddit,
 view_comments= Lihat${x} komentar,
-= Lihat${x} komentar
 view_reddit_comments= Lihat komentar Reddit,
 hide_replies= Sembunyikan balasan,
 show_replies= Lihat balasan,

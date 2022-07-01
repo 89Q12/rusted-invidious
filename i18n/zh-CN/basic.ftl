@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= 查看 YouTube 评论,
 view_more_comments_on_reddit= 在 Reddit 查看更多评论,
 view_comments= 查看 ${x} 条评论,
-= 查看 ${x} 条评论
 view_reddit_comments= 查看 Reddit 评论,
 hide_replies= 隐藏回复,
 show_replies= 显示回复,

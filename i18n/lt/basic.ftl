@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Žiūrėti YouTube komentarus,
 view_more_comments_on_reddit= Žiūrėti daugiau komentarų Reddit,
 view_comments= Žiūrėti ${x} komentarus,
-= Žiūrėti ${x} komentarus
 view_reddit_comments= Žiūrėti Reddit komentarus,
 hide_replies= Slėpti atsakymus,
 show_replies= Rodyti atsakymus,

@@ -147,7 +147,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Переглянути коментарі з YouTube,
 view_more_comments_on_reddit= Переглянути більше коментарів на Reddit,
 view_comments= Переглянути ${x} коментар / коментарів / коментаря,
-= Переглянути ${x} коментар / коментарів / коментаря
 view_reddit_comments= Переглянути коментарі з Reddit,
 hide_replies= Сховати відповіді,
 show_replies= Показати відповіді,

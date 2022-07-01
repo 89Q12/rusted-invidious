@@ -251,7 +251,6 @@ search_filters_date_option_today= Данас,
 WTF= %A %B %-d, %Y,
 preferences_locale_label= Језик: ,
 persian= Перзијски,
-= Прикажи ${x} коментара,
 view_comments= Прикажи ${x} коментар
 search_filters_type_option_channel= Канал,
 haitian_creole= Хаићански Креолски,

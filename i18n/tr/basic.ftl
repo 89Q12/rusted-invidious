@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= YouTube yorumlarını görüntüle,
 view_more_comments_on_reddit= Reddit'te daha fazla yorum görüntüle,
 view_comments= ${x} yorumu görüntüle,
-= ${x} yorumu görüntüle
 view_reddit_comments= Reddit yorumlarını görüntüle,
 hide_replies= Cevapları gizle,
 show_replies= Cevapları göster,

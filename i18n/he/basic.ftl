@@ -124,7 +124,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= הצגת התגובות מ־YouTube,
 view_more_comments_on_reddit= להצגת תגובות נוספות ב־Reddit,
 view_comments= הצגת ${x} תגובות.([^.,0-9]|^)1([^.,0-9]|$),
-= הצגת ${x} תגובות
 view_reddit_comments= להצגת התגובות ב־Reddit,
 hide_replies= הסתרת תגובות,
 show_replies= הצגת תגובות,

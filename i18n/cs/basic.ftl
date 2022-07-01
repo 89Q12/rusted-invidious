@@ -400,7 +400,6 @@ wilson_score=Skóre Wilson: ,
 shared_= Zveřejněno ${x},
 premieres_in_= Premiéra za ${x},
 view_comments= Zobrazit ${x} komentář,
-= Zobrazit ${x} komentářů
 unable_to_log_in_make_sure_two_factor_authentication_authenticator_or_sms_is_turned_on= Nepodařilo se přihlásit, ujistěte se, že je povoleno dvoufázové ověřování (autentifikátor nebo SMS).,
 login_failed_this_may_be_because_two_factor_authentication_is_not_turned_on_for_your_account= Přihlášení selhalo. Toto se může stát, když není na vašem účtu povolené dvoufázové ověřování.,
 could_not_get_channel_info= Nepodařilo se získat informace o kanálu.,

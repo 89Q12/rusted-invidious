@@ -155,7 +155,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= Näytä YouTube-kommentit,
 view_more_comments_on_reddit= Katso lisää kommentteja Redditissä,
 view_comments= Katso ${x} kommentti,
-= Katso ${x} kommenttia
 view_reddit_comments= Katso Reddit-kommentit,
 hide_replies= Piilota vastaukset,
 show_replies= Näytä vastaukset,

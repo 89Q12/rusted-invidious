@@ -156,7 +156,6 @@ hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in
 view_youtube_comments= YouTube のコメントを見る,
 view_more_comments_on_reddit= Reddit でコメントをもっと見る,
 view_comments= ${x} 件のコメントを見る,
-= ${x} 件のコメントを見る
 view_reddit_comments= Reddit のコメントを見る,
 hide_replies= 返信を非表示,
 show_replies= 返信を表示,
