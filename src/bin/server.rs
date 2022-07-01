@@ -1,5 +1,5 @@
 use axum::Extension;
-use rusted_invidious::{routes::get_router, config::{Config, State}, logging::filters::construct_logging_filter, database::db_manger::DbManager};
+use rusted_invidious::{routes::get_router, config::{Config, State, Preferences}, logging::filters::construct_logging_filter, database::db_manger::DbManager};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use tower_http::trace::TraceLayer;
 use std::net::SocketAddr;
@@ -17,7 +17,7 @@ async fn main() {
     .with(tracing_subscriber::fmt::layer())
     .init();
 
-    let mut db_manager = DbManager::new("192.168.100.100:19042", None).await.unwrap();
+    let mut db_manager = DbManager::new("172.17.0.1:19042", None).await.unwrap();
     
     //db_manager.drop_database().await.unwrap();
     db_manager.init_database().await.unwrap();
@@ -27,13 +27,14 @@ async fn main() {
     let shared_state = Arc::new(Mutex::new(State{
         yt_client_config:default_client_config(),
         db_manager,
-        config
+        config,
+        preferences: Preferences::new()
     }));
 
 
     let app = get_router().layer(TraceLayer::new_for_http()).layer(Extension(shared_state));
     
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([172, 17, 0, 1], 3000));
 
     tracing::debug!("listening on {}", addr);
     axum::Server::bind(&addr)
