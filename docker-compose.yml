@@ -1,0 +1,86 @@
+version: "3.7"
+
+services:
+  # Scally
+  scylla-manager:
+    image: scylladb/scylla-manager
+    networks:
+      public:
+    depends_on:
+      - scylla-manager-db
+
+  scylla-manager-db:
+    image: scylladb/scylla
+    volumes:
+      - scylla_manager_db_data:/var/lib/scylla
+    networks:
+      public:
+    command: --smp 1 --memory 100M
+
+  scylla:
+    build:
+      context: .
+    image: scylladb/scylla
+    volumes:
+      - scylla_data:/var/lib/scylla
+    networks:
+      public:
+        ipv4_address: 192.168.100.100
+    command: --smp 1 --memory 1G
+
+  minio:
+    image: minio/minio
+    volumes:
+      - minio_data:/data
+    networks:
+      public:
+    ports:
+      - "9001:9000"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data
+  # Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+    # To learn about configuring Kafka for access across networks see
+    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  # Dev only
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./assets:/usr/share/nginx/html/:ro
+
+volumes:
+  minio_data:
+  scylla_data:
+  scylla_manager_db_data:
+
+networks:
+  public:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/24
