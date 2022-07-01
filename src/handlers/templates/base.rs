@@ -7,7 +7,7 @@ pub struct Base<'a>{
     pub title: String,
     pub config: &'a Config,
     pub user: Option<User>,
-    pub preferences: Preferences,
+    pub preferences: &'a Preferences,
     pub search_bar: Option<String>,
     pub current_page: String,
     #[locale]
