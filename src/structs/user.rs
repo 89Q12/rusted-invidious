@@ -3,3 +3,8 @@ pub struct User{
     pub name: String,
     pub notification_count: i32,
 }
+impl User {
+    pub fn get_playlists(&self) -> Vec<String> {
+        todo!()
+    }
+}
