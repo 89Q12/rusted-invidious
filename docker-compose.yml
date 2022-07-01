@@ -4,8 +4,6 @@ services:
   # Scally
   scylla-manager:
     image: scylladb/scylla-manager
-    networks:
-      public:
     depends_on:
       - scylla-manager-db
 
@@ -13,27 +11,22 @@ services:
     image: scylladb/scylla
     volumes:
       - scylla_manager_db_data:/var/lib/scylla
-    networks:
-      public:
     command: --smp 1 --memory 100M
 
   scylla:
     build:
       context: .
     image: scylladb/scylla
+    ports:
+      - 19042:19042
     volumes:
       - scylla_data:/var/lib/scylla
-    networks:
-      public:
-        ipv4_address: 192.168.100.100
     command: --smp 1 --memory 1G
 
   minio:
     image: minio/minio
     volumes:
       - minio_data:/data
-    networks:
-      public:
     ports:
       - "9001:9000"
     environment:
@@ -68,22 +61,13 @@ services:
   # Dev only
   nginx:
     image: nginx
+    ports:
+      - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./assets:/usr/share/nginx/html/assets:ro
-    networks:
-      public:
-        ipv4_address: 192.168.100.102
 
 volumes:
   minio_data:
   scylla_data:
   scylla_manager_db_data:
-
-networks:
-  public:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.100.0/24
