@@ -1,4 +1,4 @@
-use crate::database::db_manger::DbManager;
+use rusted_invidious_types::database::db_manager::DbManager;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use youtubei_rs::types::client::ClientConfig;

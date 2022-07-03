@@ -1,5 +1,6 @@
 use axum::Extension;
-use rusted_invidious::{routes::get_router, config::{Config, State, Preferences}, logging::filters::construct_logging_filter, database::db_manger::DbManager};
+use rusted_invidious_types::database::db_manager::DbManager;
+use rusted_invidious::{routes::get_router, config::{Config, State, Preferences}, logging::filters::construct_logging_filter};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use tower_http::trace::TraceLayer;
 use std::net::SocketAddr;
