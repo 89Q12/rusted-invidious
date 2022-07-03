@@ -1,7 +1,7 @@
 ## Job Manger
 - api to register new channel jobs
 - open sockets to workers to push new jobs
-- round coubin
+- Round Robin
 - worker nodes register themselfes 
 - gives out jobs to worker nodes with shard id 
 - crawlse database for jobs on start and receives new when a channel gets subscribed
