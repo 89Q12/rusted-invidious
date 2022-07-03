@@ -2,14 +2,14 @@
 {% block content %}
 
 {% block header %}
-<meta name="thumbnail" content="{{ thumbnail }}">
-<meta name="description" content="{{ HTML.escape(video.short_description) }}">
+<meta name="thumbnail" content="{{ video.thumbnail }}">
+<meta name="description" content="{{ video.short_description }}">
 <meta name="keywords" content="{{ video.keywords.join(",") }}">
 <meta property="og:site_name" content="Invidious">
 <meta property="og:url" content="{{ HOST_URL }}/watch?v={{ video.id }}">
 <meta property="og:title" content="{{ video.title }}">
 <meta property="og:image" content="/vi/{{ video.id }}/maxres.jpg">
-<meta property="og:description" content="{{ HTML.escape(video.short_description) }}">
+<meta property="og:description" content="{{ video.short_description }}">
 <meta property="og:type" content="video.other">
 <meta property="og:video:url" content="{{ HOST_URL }}/embed/{{ video.id }}">
 <meta property="og:video:secure_url" content="{{ HOST_URL }}/embed/{{ video.id }}">
@@ -20,7 +20,7 @@
 <meta name="twitter:site" content="@omarroth1">
 <meta name="twitter:url" content="{{ HOST_URL }}/watch?v={{ video.id }}">
 <meta name="twitter:title" content="{{ video.title }}">
-<meta name="twitter:description" content="{{ HTML.escape(video.short_description) }}">
+<meta name="twitter:description" content="{{ video.short_description }}">
 <meta name="twitter:image" content="{{ HOST_URL }}/vi/{{ video.id }}/maxres.jpg">
 <meta name="twitter:player" content="{{ HOST_URL }}/embed/{{ video.id }}">
 <meta name="twitter:player:width" content="1280">
@@ -49,11 +49,11 @@ we're going to need to do it here in order to allow for translations.
     <h1>
         {{ video.title }}
         {% if params.listen %}
-            <a title="{{localize("video_mode")}}" href="/watch?{{ env.params.query }}&listen=0">
+            <a title="{{localize("video_mode")}}" href="/watch?v={{ video.id }}&listen=0">
                 <i class="icon ion-ios-videocam"></i>
             </a>
         {% else %}
-            <a title="{{localize("audio_mode")}}" href="/watch?{{ env.params.query }}&listen=1">
+            <a title="{{localize("audio_mode")}}" href="/watch?v={{ video.id }}&listen=1">
                 <i class="icon ion-md-headset"></i>
             </a>
         {% endif %}
@@ -85,7 +85,7 @@ we're going to need to do it here in order to allow for translations.
                 (<a href="https://www.youtube.com/embed/{{ video.id }}">{{ localize("videoinfo_youtube_embed_link") }}</a>)
             </span>
             <p id="watch-on-another-invidious-instance">
-            {% if env.get("preferences").as(Preferences).automatic_instance_redirect%}
+            {% if preferences.automatic_instance_redirect%}
                 <a href="/redirect?referer={{ env.get?("current_page") }}">{{ localize("switch_invidious_instance") }}</a>
             {% else %}
                 <a href="https://redirect.invidious.io{{ env.request.resource }}">{{ localize("switch_invidious_instance") }}</a>
@@ -93,17 +93,6 @@ we're going to need to do it here in order to allow for translations.
             </p>
             <p id="embed-link">
                 <a href="{{ embed_link }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
-            </p>
-            <p id="annotations">
-                {% if params.annotations %}
-                    <a href="/watch?{{ env.params.query }}&iv_load_policy=3">
-                        {{ localize("hide_annotations") }}
-                    </a>
-                {% else %}
-                    <a href="/watch?{{ env.params.query }}&iv_load_policy=1">
-                        {{localize("show_annotations")}}
-                    </a>
-                {% endif %}
             </p>
             {% if user %}
                 {% let playlists = user.get_playlists() %}
@@ -132,7 +121,6 @@ we're going to need to do it here in order to allow for translations.
                     <script src="/js/playlist_widget.js?v={{ Time.utc.to_unix_ms }}"></script>
                 {% endif %}
             {% endif %}
-            {{ Invidious::Frontend::WatchPage.download_widget(locale, video, video_assets) }}
             <p id="views"><i class="icon ion-ios-eye"></i> {{ number_with_separator(video.views) }}</p>
             <p id="likes"><i class="icon ion-ios-thumbs-up"></i> {{ number_with_separator(video.likes) }}</p>
             <p id="dislikes"></p>
@@ -161,7 +149,7 @@ we're going to need to do it here in order to allow for translations.
             {% endif %}
         </div>
     </div>
-    <div class="pure-u-1 {% if params.related_videos || plid %}pure-u-lg-3-5{% else %}pure-u-md-4-5{% endif %}">
+    <div class="pure-u-1 {% if video.related_videos || plid %}pure-u-lg-3-5{% else %}pure-u-md-4-5{% endif %}">
         <div class="h-box">
             <a href="/channel/{{ video.ucid }}" style="display:block;width:fit-content;width:-moz-fit-content">
                 <div class="channel-profile">
@@ -172,7 +160,7 @@ we're going to need to do it here in order to allow for translations.
                 </div>
             </a>
             {% let sub_count_text = video.sub_count_text %}
-            {% block subscribe_widget %}{% endblock subscribe_widget %}
+            {{ subscribe_widget }}
             <p id="published-date">
                 {% if video.premiere_timestamp > Time.utc %}
                     <b>{{ localize("premieres_", x: video.premiere_timestamp) }}</b>
@@ -197,7 +185,7 @@ we're going to need to do it here in order to allow for translations.
                     {{ comment_html }}
                 {% else %}
                     <noscript>
-                        <a href="/watch?{{ env.params.query }}&nojs=1">
+                        <a href="/watch?{{ video.id }}&nojs=1">
                             {{ localize("hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in_mind_they_may_take_a_bit_longer_to_load") }}
                         </a>
                     </noscript>
@@ -205,12 +193,12 @@ we're going to need to do it here in order to allow for translations.
             </div>
         </div>
     </div>
-    {% if params.related_videos || plid %}
+    {% if video.related_videos || plid %}
         <div class="pure-u-1 pure-u-lg-1-5">
             {% if plid %}
                 <div id="playlist" class="h-box"></div>
             {% endif %}
-            {% if params.related_videos %}
+            {% if video.related_videos %}
                 <div class="h-box">
                     {% if !video.related_videos.empty? %}
                         <div {% if plid %}style="display:none"{% endif %}>
@@ -221,23 +209,23 @@ we're going to need to do it here in order to allow for translations.
                             <hr>
                         </div>
                     {% endif %}
-                    {% for rv in video.related %}
+                    {% for rv in video.related_videos %}
                         {% if rv.id %}
                             <a href="/watch?v={{ rv.id }}">
-                                {% if !env.get("preferences").as(Preferences).thin_mode %}
+                                {% if !preferencesthin_mode %}
                                     <div class="thumbnail">
-                                        <img loading="lazy" class="thumbnail" src="/vi/{{ rv["id"] }}/mqdefault.jpg">
+                                        <img loading="lazy" class="thumbnail" src="/vi/{{ rv.id }}/mqdefault.jpg">
                                         <p class="length">{{ rv.length_seconds }}</p>
                                     </div>
                                 {% endif %}
-                                <p style="width:100%">{{ rv["title"] }}</p>
+                                <p style="width:100%">{{ rv.title }}</p>
                             </a>
                             <h5 class="pure-g">
                                 <div class="pure-u-14-24">
-                                    {% if rv["ucid"]? %}
-                                        <b style="width:100%"><a href="/channel/{{ rv["ucid"] }}">{{ rv["video.author"]? }}{% if rv["author_verified"]? == "true" %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</a></b>
+                                    {% if rv.ucid %}
+                                        <b style="width:100%"><a href="/channel/{{ rv.long_byline_text.run[0].navigation_endpoint.unwrap().browse_endpoint.unwrap().browse_id }}">{{ rv.long_byline_text.run[0].text }}{% if rv.author_verified == "true" %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</a></b>
                                     {% else %}
-                                        <b style="width:100%">{{ rv["video.author"]? }}{% if rv["author_verified"]? == "true" %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</b>
+                                        <b style="width:100%">{{ rv.author }}{% if rv.author_verified == "true" %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</b>
                                     {% endif %}
                                 </div>
                                 <div class="pure-u-10-24" style="text-align:right">
