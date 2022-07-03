@@ -20,6 +20,8 @@ The project consists of multiple services:
 This project also uses:
 - Kafka for communicating internally between services and possible add futures features
 - Scylla for the database as its suited to run on a Kubernetes cluster
+
+A more detailed description can be found at [here](https://github.com/11Tuvork28/rusted-invidious/blob/main/notes.md)
 # Config parameters that are unsupported or changed
 - channel_threads => unsupported
 - db_name => db_keyspace
