@@ -1,8 +1,8 @@
 # About
-Rusted-invidious is a fork or rather a rewrite of invidious which is an privacy focuse front-end for YouTube.
+Rusted-invidious is a fork or rather a rewrite of invidious which is an privacy focused front-end for YouTube.
 More information about the original project can be found at http://github.com/iv-org/invidious
 
-This project aims to improve on it and to be node aware from the ground up wich means its meant to be ran on a Kubernetes cluster. It also aims to be completely compitable with the current API of invidious, configs files aren't the same but a migration tool will be provided(TBD).
+This project aims to improve on it and to be node aware from the ground up which means its meant to be ran on a Kubernetes cluster. It also aims to be completely compitable with the current API of invidious, configs files aren't the same but a migration tool will be provided(TBD).
 
 If you're looking for a simpler solution, please consider using [invidious](http://github.com/iv-org/invidious) as this project is heavy when hosted on one machine.
 
@@ -15,7 +15,7 @@ The project consists of multiple services:
 - [Notification service](https://github.com/11Tuvork28/rusted-invidious-notifications/)
 - [Channel feed refresh service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
 - The main app aka this repository
-- (TBD)Job management wich manages each instance of the [Channel feed refresh service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
+- (TBD)Job management which manages each instance of the [Channel feed refresh service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
 - (TBD)Proxy for the public api and images, this is intended to ran on servers spread around the world to provide exellent latencies.
 
 This project also uses:
