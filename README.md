@@ -9,6 +9,7 @@ If you're looking for a simpler solution, please consider using [invidious](http
 That said this project is still in the gamma version and far away from useable.
 # Local development
 For local development you can the provided docker-compose file to start all services necessary for it to run but currently it DOES NOT COMPILE.
+You may want to edited the nginx config file to fit your needs.
 # Structure
 The project consists of multiple services:
 - [Notification service](https://github.com/11Tuvork28/rusted-invidious-notifications/)
