@@ -1,5 +1,7 @@
 use askama::{Template, Locale};
 
+use crate::structs::Video::Video;
+
 use super::base::Base;
 
 #[derive(Template)] // this will generate the code...
@@ -9,4 +11,5 @@ pub struct Watch<'a>{
     #[locale]
     loc: Locale<'a>,
     _parent: Base<'a>,
+    video: Video
 }
