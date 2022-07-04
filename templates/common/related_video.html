@@ -11,7 +11,9 @@
     <div class="pure-u-14-24">
         {% match rv.owner_badges %}
         {% when Some with (badges) %}
-            {% let author_verified = youtubei-rs::utils::get_author_verified(badges.get(0).unwrap()) %}
+            // Added when newest version is released 
+            // youtubei_rs::utils::get_author_verified(badges.get(0).unwrap())
+            {% let author_verified = true %}
         {% when None %}
             {% let author_verified = false %}
         {% endmatch %}
