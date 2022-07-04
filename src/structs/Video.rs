@@ -30,5 +30,6 @@ pub struct Video{
     pub wilson_score: String,
     pub rating: String,
     pub is_family_friendly: bool,
-
+    pub projection_type: String,
+    pub is_vr: bool
 }
