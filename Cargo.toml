@@ -17,7 +17,8 @@ youtubei-rs = "1.3.4"
 serde_yaml = "0.8.24"
 fluent = "0.16.0"
 fluent-templates = { version = "0.7.1", features = ["tera"] }
-askama = {git = "https://github.com/11Tuvork28/askama.git", features = ["localization"]}
+askama = {git = "https://github.com/11Tuvork28/askama.git", features = ["localization","serde-json"]}
 askama_axum = "0.1.0"
 parking_lot = "^0.12.1"
-rusted-invidious-types = { git = "https://github.com/11Tuvork28/rusted-invidious-types.git" }
+rusted-invidious-types = { git = "https://github.com/11Tuvork28/rusted-invidious-shared.git" }
+chrono = "0.4.19"

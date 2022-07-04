@@ -55,6 +55,8 @@ dependencies = [
  "num-traits",
  "parking_lot",
  "percent-encoding",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -1623,6 +1625,7 @@ dependencies = [
  "askama 0.11.2",
  "askama_axum",
  "axum",
+ "chrono",
  "fluent",
  "fluent-templates",
  "parking_lot",
@@ -1639,8 +1642,8 @@ dependencies = [
 
 [[package]]
 name = "rusted-invidious-types"
-version = "0.1.0"
-source = "git+https://github.com/11Tuvork28/rusted-invidious-types.git#53b1cb24818ae00bc83e75b81aed25619dda8b0d"
+version = "0.1.1"
+source = "git+https://github.com/11Tuvork28/rusted-invidious-shared.git#b5716d90058c9b6cc98965a70d581b11dcaec0f6"
 dependencies = [
  "chrono",
  "scylla",
