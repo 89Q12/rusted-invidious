@@ -1,5 +1,5 @@
 use askama::{Template, Locale};
-use crate::{config::{Config, Preferences}, structs::user::User};
+use crate::{config::{Config, Preferences}, structs::{user::User, template_context::TemplateContext}};
 
 #[derive(Template)] // this will generate the code...
 #[template(path = "base.html")]
@@ -12,4 +12,5 @@ pub struct Base<'a>{
     pub current_page: String,
     #[locale]
     pub loc: Locale<'a>,
+    pub params: TemplateContext
 }
