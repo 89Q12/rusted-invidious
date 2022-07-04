@@ -1,7 +1,7 @@
-<a href="/watch?v={{ rv.id }}">
+<a href="/watch?v={{ rv.video_id }}">
     {% if !preferences.thin_mode %}
         <div class="thumbnail">
-            <img loading="lazy" class="thumbnail" src="/vi/{{ rv.id }}/mqdefault.jpg">
+            <img loading="lazy" class="thumbnail" src="/vi/{{ rv.video_id }}/mqdefault.jpg">
             <p class="length">{{ rv.length_seconds }}</p>
         </div>
     {% endif %}
