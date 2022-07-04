@@ -9,7 +9,6 @@ pub struct Base<'a>{
     pub user: Option<User>,
     pub preferences: &'a Preferences,
     pub search_bar: Option<String>,
-    pub current_page: String,
     #[locale]
     pub loc: Locale<'a>,
     pub params: TemplateContext

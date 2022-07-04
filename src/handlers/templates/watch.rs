@@ -15,5 +15,6 @@ pub struct Watch<'a> {
     video: Video,
     streaming_data: StreamingData,
     playlist: Option<Playlist>,
+    comment_html: String,
 }
 
