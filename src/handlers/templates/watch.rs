@@ -1,4 +1,5 @@
 use askama::{Template, Locale};
+use youtubei_rs::types::misc::StreamingData;
 
 use crate::structs::Video::Video;
 
@@ -11,5 +12,6 @@ pub struct Watch<'a>{
     #[locale]
     loc: Locale<'a>,
     _parent: Base<'a>,
-    video: Video
+    video: Video,
+    streaming_data: StreamingData,
 }
