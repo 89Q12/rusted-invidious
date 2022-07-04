@@ -42,8 +42,9 @@ we're going to need to do it here in order to allow for translations.
 {% endblock header %}
 
 
+
 <div id="player-container" class="h-box">
-    {% block player %}{% endblock player %}
+    {% include player %}
 </div>
 <div class="h-box">
     <h1>
@@ -178,7 +179,7 @@ we're going to need to do it here in order to allow for translations.
                 </div>
             </a>
             {% let sub_count_text = video.sub_count_text %}
-            {% include 'common/subscribe_widget' %}
+            {% include 'common/subscribe_widget.html' %}
             <p id="published-date">
                 {% if video.premiere_timestamp > Time.utc %}
                     <b>{{ localize("premieres_", x: video.premiere_timestamp) }}</b>
@@ -186,7 +187,8 @@ we're going to need to do it here in order to allow for translations.
                     <b>{{ localize("shared_", x: video.published) }}</b>
                 {% endif %}
             </p>
-            <div id="description-box"> <!-- Description -->
+            <div id="description-box"> 
+                <!-- Description -->
                 {% if video.description.size < 200 || params.extend_desc%}
                     <div id="descriptionWrapper">{{ video.description_html }}</div>
                 {% else %}
@@ -215,45 +217,21 @@ we're going to need to do it here in order to allow for translations.
         {% if plid %}
             <div id="playlist" class="h-box"></div>
         {% endif %}
-        {% if video.related_videos %}
-            <div class="h-box">
-                {% if !video.related_videos.empty? %}
-                    <div {% if plid %}style="display:none"{% endif %}>
-                        <div class="pure-control-group">
-                            <label for="continue">{{ localize("preferences_continue_label") }}</label>
-                            <input name="continue" id="continue" type="checkbox" {% if params.continue %}checked{% endif %}>
-                        </div>
-                        <hr>
-                    </div>
-                {% endif %}
-                {% for rv in video.related_videos %}
-                    {% if rv.id %}
-                        <a href="/watch?v={{ rv.id }}">
-                            {% if !preferencesthin_mode %}
-                                <div class="thumbnail">
-                                    <img loading="lazy" class="thumbnail" src="/vi/{{ rv.id }}/mqdefault.jpg">
-                                    <p class="length">{{ rv.length_seconds }}</p>
-                                </div>
-                            {% endif %}
-                            <p style="width:100%">{{ rv.title }}</p>
-                        </a>
-                        <h5 class="pure-g">
-                            <div class="pure-u-14-24">
-                                {% if rv.ucid %}
-                                    <b style="width:100%"><a href="/channel/{{ rv.long_byline_text.run[0].navigation_endpoint.unwrap().browse_endpoint.unwrap().browse_id }}">{{ rv.long_byline_text.run[0].text }}{% if rv.author_verified == "true" %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</a></b>
-                                {% else %}
-                                    <b style="width:100%">{{ rv.author }}{% if rv.author_verified == "true" %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</b>
-                                {% endif %}
-                            </div>
-                            <div class="pure-u-10-24" style="text-align:right">
-                                <b class="width:100%">{{
-                                    localize("generic_views_count", x: rv.view_count)
-                                }}</b>
-                            </div>
-                        </h5>
-                    {% endif %}
-                {% endfor%}
+        <div class="h-box">
+        {% if video.related_videos.is_empty() %}
+            <div {% if plid %}style="display:none"{% endif %}>
+                <div class="pure-control-group">
+                    <label for="continue">{{ localize("preferences_continue_label") }}</label>
+                    <input name="continue" id="continue" type="checkbox" {% if params.continue %}checked{% endif %}>
+                </div>
+                <hr>
             </div>
+        {% else %}
+        {% for rv in video.related_videos %}
+            {% if rv.id %}
+                {% include 'common/related_video.html' %}
+            {% endif %}
+        {% endfor%}
         {% endif %}
     </div>
 </div>
