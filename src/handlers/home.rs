@@ -18,8 +18,8 @@ pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>)-> Response {
         user: None,
         preferences: &lock.preferences,
         search_bar: None,
-        current_page: "/".to_string(),
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
+        params: todo!(),
     };
     render(base.render())
 }
