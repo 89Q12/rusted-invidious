@@ -32,5 +32,5 @@ pub struct Video{
     pub is_family_friendly: bool,
     pub projection_type: String,
     pub is_vr: bool,
-    pub comments_count: i32,
+    pub comments_count: String,
 }
