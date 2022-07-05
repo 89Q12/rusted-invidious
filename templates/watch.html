@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% block content %}
 
 {% block header %}
 <meta name="thumbnail" content="{{ video.thumbnail }}">
@@ -40,7 +39,7 @@ we're going to need to do it here in order to allow for translations.
 }
 </style>
 {% endblock header %}
-
+{% block content %}
 <script id="video_data" type="application/json">
     {
     "id": {{ video.id }},
@@ -57,7 +56,7 @@ we're going to need to do it here in order to allow for translations.
     "youtube_comments_text": {{ localize("view_youtube_comments") }},
     "reddit_comments_text": {{ localize("view_reddit_comments") }},
     "reddit_permalink_text": {{ localize("view_more_comments_on_reddit") }},
-    "comments_text": {{ localize("view_comments", x: video.comments_count) }},
+    "comments_text": {{ localize("view_comments", x: video.comments_count.clone()) }},
     "hide_replies_text": {{ localize("hide_replies") }},
     "show_replies_text": {{ localize("show_replies") }},
     "params":  params ,
@@ -110,7 +109,7 @@ we're going to need to do it here in order to allow for translations.
     {% endmatch %}
     {% if video.live_now %}
         <h3>
-            {{ localize("videoinfo_started_streaming_xupload_date",  x: video.premiere_timestamp.as_ref().unwrap().clone()) }}
+            {{ localize("videoinfo_started_streaming_xupload_date",  x: "".to_string()) }}
         </h3>
     {% endif %}
 </div>
@@ -257,7 +256,7 @@ we're going to need to do it here in order to allow for translations.
         {% else %}
             {% for rv in video.related_videos %}
                 {% if !rv.video_id.is_empty() %}
-                    {% include "common/related_video.html" %}
+
                 {% endif %}
             {% endfor%}
         {% endif %}
