@@ -13,7 +13,7 @@ axum ={version= "0.5", features = ["form","headers"]}
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.3", features = ["trace"] }
-youtubei-rs = {git = "https://github.com/11Tuvork28/youtubei-rs.git", version = "1.4.5"}
+youtubei-rs = {git = "https://github.com/11Tuvork28/youtubei-rs.git"}
 serde_yaml = "0.8.24"
 fluent = "0.16.0"
 fluent-templates = { version = "0.7.1", features = ["tera"] }
