@@ -9,11 +9,11 @@ use super::base::Base;
 #[template(path = "watch.html")]
 pub struct Watch<'a> {
     #[locale]
-    loc: Locale<'a>,
-    _parent: Base<'a>,
-    video: Video,
-    streaming_data: StreamingData,
-    playlist: Option<Playlist>,
-    comment_html: String,
+    pub loc: Locale<'a>,
+    pub _parent: Base<'a>,
+    pub video: Video,
+    pub streaming_data: StreamingData,
+    pub playlist: Option<Playlist>,
+    pub comment_html: String,
 }
 
