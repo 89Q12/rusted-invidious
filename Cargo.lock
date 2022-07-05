@@ -2669,9 +2669,9 @@ dependencies = [
 
 [[package]]
 name = "youtubei-rs"
-version = "1.3.4"
+version = "1.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a74638c4f5a98ead77fef055fbb43791f0129e399967ae4045ef1fe37251033"
+checksum = "b74995d5e5d20096ae5efc66757d86b332dbf974093aec025c7d82fa06e96a98"
 dependencies = [
  "reqwest",
  "serde",
