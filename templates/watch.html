@@ -130,7 +130,6 @@ we're going to need to do it here in order to allow for translations.
             <p id="embed-link">
                 <a href="/embed/{{video.id}}?{{ params.query_params.join("&") }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
             </p>
-            {
             {% match user %}
             {% when Some with (user_unwraped) %}
                 {% let playlists = user_unwraped.get_playlists() %}
@@ -256,7 +255,7 @@ we're going to need to do it here in order to allow for translations.
         {% else %}
             {% for rv in video.related_videos %}
                 {% if !rv.video_id.is_empty() %}
-
+                    {% include "common/related_video.html" %}
                 {% endif %}
             {% endfor%}
         {% endif %}
