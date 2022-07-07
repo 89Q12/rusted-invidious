@@ -35,14 +35,27 @@ pub fn string_to_body(str: String) -> Response
     .unwrap();
 }
 pub fn build_params(request: &Request<Body>) -> TemplateContext{
-    TemplateContext{
-        continue_autoplay: request.uri().query().unwrap().contains("continue=1"),
-        autoplay: request.uri().query().unwrap().contains("autoplay=1"),
-        listen: request.uri().query().unwrap().contains("listen=1"),
-        query_params: request.uri().query().unwrap().split("&").map(|str| str.to_string()).collect::<Vec<String>>(),
-        current_page: request.uri().path().to_string(),
-        nojs: request.uri().query().unwrap().contains("nojs=1"),
+    match request.uri().query(){
+        Some(val) => {
+            TemplateContext{
+                continue_autoplay: val.contains("continue=1"),
+                autoplay: request.uri().query().unwrap().contains("autoplay=1"),
+                listen: val.contains("listen=1"),
+                query_params: val.split("&").map(|str| str.to_string()).collect::<Vec<String>>(),
+                current_page: request.uri().path().to_string(),
+                nojs: val.contains("nojs=1"),
+            }
+        },
+        None =>  TemplateContext{
+            continue_autoplay: false,
+            autoplay: false,
+            query_params: Vec::new(),
+            listen: false,
+            current_page:  request.uri().path().to_string(),
+            nojs: false,
+        },
     }
+
 }
 /// Function to find the differences between 2 vectors
 /// https://stackoverflow.com/questions/63557089/is-there-a-built-in-function-to-compute-the-difference-of-two-sets
