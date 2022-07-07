@@ -1,0 +1,64 @@
+<a href="/watch?v={{ rv.video_id }}">
+    {% if !preferences.thin_mode %}
+        <div class="thumbnail">
+            <img loading="lazy" class="thumbnail" src="/vi/{{ rv.video_id }}/mqdefault.jpg">
+            {% match rv.length_text %}
+                {% when Some with (text) %}
+                    <p class="length">{{ text.simple_text }}</p>
+                {% when None %}
+            {% endmatch %}
+        </div>
+    {% endif %}
+    {% match rv.title.runs.as_ref() %}
+        {% when Some with (text) %}
+            <p style="width:100%">{{ text.get(0).unwrap().text }}</p>
+        {% when None %}
+            {% match rv.title.simple_text %}
+                {% when Some with (text) %}
+                    <p style="width:100%">{{ text }}</p>
+                {% when None %}
+            {% endmatch %}
+    {% endmatch %}
+</a>
+<h5 class="pure-g">
+    <div class="pure-u-14-24">
+        {% if rv.long_byline_text.runs.get(0).unwrap().navigation_endpoint.as_ref().unwrap().browse_endpoint.is_some() %}
+            <b style="width:100%"><a href="/channel/{{ rv.long_byline_text.runs.get(0).unwrap().navigation_endpoint.as_ref().unwrap().browse_endpoint.as_ref().unwrap().browse_id }}">{{ rv.long_byline_text.runs.get(0).unwrap().text }}
+            {% match rv.owner_badges %}
+                {% when Some with (badges) %}
+                    {% let author_verified = youtubei_rs::utils::get_author_verified(badges.get(0).unwrap().metadata_badge_renderer) %}
+                    {% if author_verified %}
+                    <i class="icon ion ion-md-checkmark-circle"></i>
+                    {% endif %}
+                {% when None %}
+                    {% let author_verified = false %}
+                    {% if author_verified %}
+                        <i class="icon ion ion-md-checkmark-circle"></i>
+                    {% endif %}
+            {% endmatch %}
+            </b>
+        {% else %}
+            <b style="width:100%">{{ rv.long_byline_text.runs.get(0).unwrap().text }}&nbsp;
+                {% match rv.owner_badges %}
+                {% when Some with (badges) %}
+                    {% let author_verified = youtubei_rs::utils::get_author_verified(badges.get(0).unwrap().metadata_badge_renderer) %}
+                    {% if author_verified %}
+                        <i class="icon ion ion-md-checkmark-circle"></i>
+                    {% endif %}
+                {% when None %}
+                    {% let author_verified = false %}
+                    {% if author_verified %}
+                        <i class="icon ion ion-md-checkmark-circle"></i>
+                    {% endif %}
+                {% endmatch %}
+            </b>
+        {% endif %}
+    </div>
+    <div class="pure-u-10-24" style="text-align:right">
+        {% match rv.short_view_count_text.simple_text %}
+            {% when Some with (text) %}
+                <b class="width:100%">{{ text.clone() }}</b>
+            {% when None %}
+        {% endmatch %}
+    </div>
+</h5>

@@ -1,15 +1,19 @@
-use askama::{Template, Locale};
+use askama::{Locale, Template};
+use youtubei_rs::types::misc::StreamingData;
 
-use crate::structs::Video::Video;
+use crate::structs::{Playlist::Playlist, Video::Video};
 
 use super::base::Base;
 
 #[derive(Template)] // this will generate the code...
 #[template(path = "watch.html")]
-pub struct Watch<'a>{
-    title: String,
+pub struct Watch<'a> {
     #[locale]
-    loc: Locale<'a>,
-    _parent: Base<'a>,
-    video: Video
+    pub loc: Locale<'a>,
+    pub _parent: Base<'a>,
+    pub video: Video,
+    pub streaming_data: StreamingData,
+    pub playlist: Option<Playlist>,
+    pub comment_html: String,
 }
+
