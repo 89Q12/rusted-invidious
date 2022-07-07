@@ -6,6 +6,5 @@ pub struct TemplateContext{
     pub query_params: Vec<String>,
     pub listen: bool,
     pub current_page: String,
-    pub extend_desc: bool,
     pub nojs: bool,
 }

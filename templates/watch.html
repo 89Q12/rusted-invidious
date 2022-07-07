@@ -215,7 +215,7 @@ we're going to need to do it here in order to allow for translations.
             </p>
             <div id="description-box"> 
                 <!-- Description -->
-                {% if video.description.len() < 200 || params.extend_desc %}
+                {% if video.description.len() < 200 || preferences.extend_desc %}
                     <div id="descriptionWrapper">{{ video.description }}</div>
                 {% else %}
                     <input id="descexpansionbutton" type="checkbox"/>
