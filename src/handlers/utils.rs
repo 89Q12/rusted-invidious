@@ -41,7 +41,6 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
         listen: request.uri().query().unwrap().contains("listen=1"),
         query_params: request.uri().query().unwrap().split("&").map(|str| str.to_string()).collect::<Vec<String>>(),
         current_page: request.uri().path().to_string(),
-        extend_desc: false,
         nojs: request.uri().query().unwrap().contains("nojs=1"),
     }
 }
