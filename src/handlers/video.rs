@@ -19,7 +19,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     tracing::event!(target: "web_handlers", Level::TRACE, "Joining async calls");
     let (player_res, next_res) = tokio::join!(player_call, next_call);
     tracing::event!(target: "web_handlers", Level::TRACE, "Finished joining async calls");
-    let mut player= match player_res {
+    let player= match player_res {
         Ok(player) =>match player.playability_status.status.as_str(){
             // TODO: Better way to handle errors
             "ERROR" => return string_to_body(StatusCode::NOT_FOUND.to_string()),
@@ -75,7 +75,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     }else{
         false
     };
-    let mut category = String::from("");
+    let mut category: Option<String> = None;
     let license: Option<String> = if let Some(rows) = &secondary_video_renderer.metadata_row_container.metadata_row_container_renderer.rows{
         let mut return_str = None;
         for row in rows.iter(){
@@ -89,7 +89,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
                 
             };
             if matched_row.title.simple_text.as_str() == "Category"{
-                category.push_str(&matched_row.clone().title.simple_text);
+                category = Some(matched_row.clone().title.simple_text);
                 return_str = None;
                 break;
             }
@@ -107,13 +107,13 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         short_description: player.video_details.short_description,
         title: player.video_details.title,
         is_listed: player.video_details.is_private,
-        reason: None,
+        reason: None, // Implement
         premiere_timestamp: None,
         live_now: player.video_details.is_live_content,
         views: player.video_details.view_count,
         likes: get_likes(&next),
-        genre_url: None,
-        genre: Some(category),
+        genre_url: None,// Implement?? But I'm not sure since its only one license and we could just set it static tho we could also get the category url if the video has a category
+        genre: category,
         license,
         ucid: player.video_details.channel_id.clone(),
         related_videos,
