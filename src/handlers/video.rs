@@ -5,7 +5,7 @@ use tokio::sync::Mutex;
 use tracing::Level;
 use youtubei_rs::{query::{player, next_video_id, resolve}, types::video::{VideoPrimaryInfoRenderer, VideoSecondaryInfoRenderer}, types::misc::Format};
 use youtubei_rs::utils::*;
-use crate::{config::State, structs::{Video::Video, player::Player}};
+use crate::{config::State, structs::{Video::Video, player::Player}, handlers::utils::proxyfi_url};
 use super::{utils::{result_to_body, string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
 
 askama::localization!(LOCALES);
@@ -101,7 +101,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     let mut audio_streams: Vec<_> = player.streaming_data.formats.iter().filter(|format| format.mime_type.contains("audio")).collect();
     audio_streams.append(&mut player.streaming_data.adaptive_formats.iter().filter(|format| format.mime_type.contains("audio")).collect());
     let video = Video{
-        thumbnail: player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(),
+        thumbnail: proxyfi_url(player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(), &state.lock().await.config),
         id: player.video_details.video_id,
         keywords: player.video_details.keywords.unwrap_or_default(),
         short_description: player.video_details.short_description,
@@ -118,7 +118,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         ucid: player.video_details.channel_id.clone(),
         related_videos,
         allowed_regions: player.microformat.player_microformat_renderer.available_countries,
-        author_thumbnail: get_owner_thumbnail(&next),
+        author_thumbnail: proxyfi_url(get_owner_thumbnail(&next), &state.lock().await.config),
         author_id: player.video_details.channel_id.clone(),
         author: player.video_details.author,
         author_verified,
