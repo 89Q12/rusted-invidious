@@ -59,7 +59,8 @@ we're going to need to do it here in order to allow for translations.
     "comments_text": "{{ localize("view_comments", x: video.comments_count.clone()) }}",
     "hide_replies_text": "{{ localize("hide_replies") }}",
     "show_replies_text": "{{ localize("show_replies") }}",
-    "preferences": "preferences",
+    "preferences": {{  serde_json::to_value(preferences).unwrap()|json|safe }},
+    "params": {{ serde_json::to_value(params).unwrap()|json|safe }},
     {% match video.premiere_timestamp %}
         {% when Some with (timestamp) %}
             "premiere_timestamp": "{{ timestamp }}",
