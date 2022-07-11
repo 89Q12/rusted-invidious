@@ -1,6 +1,7 @@
 use std::collections::{HashSet, HashMap};
 use axum::{http::{StatusCode, Request},response::Response, body::{self, Body}};
-use crate::structs::template_context::TemplateContext;
+use crate::{structs::template_context::TemplateContext, config::Config};
+use regex::Regex;
 
 pub fn render(html_str: Result<String, askama::Error>) -> Response { 
     return Response::builder()
@@ -51,11 +52,13 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
                     params_map.insert(key.to_string(), value.to_string());
                 }
             });
+            let params_string =  params.join("&");
             TemplateContext{
                 continue_autoplay: val.contains("continue=1"),
                 autoplay: request.uri().query().unwrap().contains("autoplay=1"),
                 listen: val.contains("listen=1"),
-                current_page: request.uri().path().to_string()+ &params.join("&"),
+                current_page: request.uri().path().to_string()+ &params_string,
+                query_params: params_string,
                 nojs: val.contains("nojs=1"),
                 local:val.contains("local=1"),
                 controls: val.contains("controls=1"),
@@ -69,7 +72,8 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
             continue_autoplay: false,
             autoplay: false,
             listen: false,
-            current_page:  request.uri().path().to_string(),
+            query_params: "".to_string(),
+            current_page: request.uri().path().to_string(),
             nojs: false,
             local: false,
             controls: false,
@@ -84,4 +88,12 @@ pub fn vect_difference(v1: &Vec<String>, v2: &Vec<&str>) -> Vec<String> {
     let s1: HashSet<String> = v1.iter().cloned().collect();
     let s2: HashSet<String> = v2.iter().cloned().map(|str| str.to_string()).collect();
     (&s1 - &s2).iter().cloned().collect()
+}
+
+/// Function to convert youtube url into our proxied urls
+pub fn proxyfi_url(url: String, config: &Config) -> String {
+    let proxy_domain = "https://proxy.".to_owned()+ &config.domain; // Could be changed to support custom a proxy_domain
+    let url = url.replace("https://","");
+    let re = Regex::new(r"(\S+\.(com)?)").unwrap();
+    re.replace(&url,proxy_domain).to_string()
 }
