@@ -93,7 +93,6 @@ pub fn vect_difference(v1: &Vec<String>, v2: &Vec<&str>) -> Vec<String> {
 /// Function to convert youtube url into our proxied urls
 pub fn proxyfi_url(url: String, config: &Config) -> String {
     let proxy_domain = "https://proxy.".to_owned()+ &config.domain; // Could be changed to support custom a proxy_domain
-    let url = url.replace("https://","");
-    let re = Regex::new(r"(\S+\.(com)?)").unwrap();
+    let re = Regex::new(r"(.*\.)?[a-zA-Z]+\.com").unwrap();
     re.replace(&url,proxy_domain).to_string()
 }
