@@ -1,4 +1,4 @@
-use youtubei_rs::types::{video::CompactVideoRenderer, misc::{Format, StreamingData}};
+use youtubei_rs::types::{video::CompactVideoRenderer};
 
 pub struct Video{
     pub thumbnail: String,
