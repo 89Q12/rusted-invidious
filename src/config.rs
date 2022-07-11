@@ -26,6 +26,8 @@ pub struct Config {
     pub check_tables: String,
     pub hsts: bool,
     pub disable_proxy: bool,
+    pub disable_dash: bool,
+    pub disable_livestreams: bool,
     pub port: String,
     pub host_binding: String,
 }
