@@ -5,7 +5,7 @@
     {% if params.controls %}controls{% endif %}>
     <!-- TODO: research into hlsvp-->
     {% if player.hls_manifest_url.is_some() && !config.disable_livestreams %}
-        <source src="{{  player.hlsvp }}{% if params.local %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
+        <source src="{{  player.hls_manifest_url.unwrap() }}{% if params.local %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
     {% else %}
         {% if params.listen %}
             {% for (pos, stream) in player.audio_streams.iter().enumerate() %}
