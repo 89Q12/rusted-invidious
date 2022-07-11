@@ -1,5 +1,7 @@
-use chrono::Utc;
+use serde::{Deserialize, Serialize};
 
+
+#[derive(Serialize, Deserialize)]
 pub struct TemplateContext{
     pub continue_autoplay: bool,
     pub autoplay: bool,
