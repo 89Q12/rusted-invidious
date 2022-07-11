@@ -1,8 +1,5 @@
 use std::collections::{HashSet, HashMap};
-
 use axum::{http::{StatusCode, Request},response::Response, body::{self, Body}};
-use serde::de::value;
-
 use crate::structs::template_context::TemplateContext;
 
 pub fn render(html_str: Result<String, askama::Error>) -> Response { 
@@ -58,8 +55,7 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
                 continue_autoplay: val.contains("continue=1"),
                 autoplay: request.uri().query().unwrap().contains("autoplay=1"),
                 listen: val.contains("listen=1"),
-                query_params: params,
-                current_page: request.uri().path().to_string(),
+                current_page: request.uri().path().to_string()+ &params.join("&"),
                 nojs: val.contains("nojs=1"),
                 local:val.contains("local=1"),
                 controls: val.contains("controls=1"),
@@ -72,7 +68,6 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
         None =>  TemplateContext{
             continue_autoplay: false,
             autoplay: false,
-            query_params: Vec::new(),
             listen: false,
             current_page:  request.uri().path().to_string(),
             nojs: false,
