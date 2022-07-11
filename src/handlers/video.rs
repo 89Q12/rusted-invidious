@@ -1,12 +1,12 @@
-use std::{sync::Arc, collections::HashMap, fmt::Debug};
+use std::{sync::Arc, collections::HashMap};
 use askama::{langid, Template};
-use axum::{response::{Response, Redirect, IntoResponse, Html}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, middleware::Next, body::Body};
+use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, body::Body};
 use tokio::sync::Mutex;
 use tracing::Level;
-use youtubei_rs::{query::{player, next_video_id, resolve}, types::video::{VideoPrimaryInfoRenderer, VideoSecondaryInfoRenderer}, types::misc::Format};
+use youtubei_rs::{query::{player, next_video_id, resolve}, types::video::VideoSecondaryInfoRenderer};
 use youtubei_rs::utils::*;
 use crate::{config::State, structs::{Video::Video, player::Player}, handlers::utils::proxyfi_url};
-use super::{utils::{result_to_body, string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
+use super::{utils::{string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
 
 askama::localization!(LOCALES);
 /// Handler for the /watch?v=id path and renders the watch page
