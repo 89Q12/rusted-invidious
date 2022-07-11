@@ -1,65 +1,50 @@
-<video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ thumbnail }}"
-    id="player" class="on-video_player video-js player-style-{{ params.player_style  }}"
-    {% if params.autoplay %}autoplay{% endif %}
-    {% if params.video_loop %}loop{% endif %}
+<video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ video.thumbnail }}"
+    id="player" class="on-video_player video-js player-style-{{ preferences.player_style }}"
+    {% if preferences.autoplay %}autoplay{% endif %}
+    {% if preferences.video_loop %}loop{% endif %}
     {% if params.controls %}controls{% endif %}>
-    {% if (hlsvp = video.hls_manifest_url) && !CONFIG.disabled?("livestreams") %}
-        <source src="{{  hlsvp.request_target }}{% if params.local %}?local=true{% end %}" type="application/x-mpegURL" label="livestream">
+    <!-- TODO: research into hlsvp-->
+    {% if player.hls_manifest_url.is_some() && !config.disable_livestreams %}
+        <source src="{{  player.hlsvp }}{% if params.local %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
     {% else %}
         {% if params.listen %}
-            {% audio_streams.each_with_index do |fmt, i|
-                src_url  = "/latest_version?id=#{{ video.id }}&itag=#{{ fmt["itag"] }}"
-                src_url += "&local=true" if params.local
-                bitrate = fmt["bitrate"]
-                mimetype = HTML.escape(fmt["mimeType"].as_s)
-                selected = i == 0 ? true : false
-            %}
-                <source src="{{ src_url }}" type='{{ mimetype }}' label="{{ bitrate }}k" selected="{{ selected  }}">
-                {% if !params.local && !CONFIG.disabled?("local") %}
-                <source src="{{ src_url }}&local=true" type='{{ mimetype }}' hidequalityoption="true">
-                {% end %}
-            {% end %}
-        {% endif %}
-            {% if params.quality == "dash" %}
-                <source src="/api/manifest/dash/id/{{ video.id %}?local=true&unique_res=1" type='application/dash+xml' label="dash">
+            {% for (pos, stream) in player.audio_streams.iter().enumerate() %}
+                {% let selected = pos == 0 %}
+                <source src="/latest_version?id=#{{ video.id }}&itag=#{{ stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
+            {% endfor %}
+        {% else %}
+            {% if preferences.quality == "dash" %}
+                <source src="/api/manifest/dash/id/{{ video.id }}?local=true&unique_res=1" type="application/dash+xml" label="dash">
             {% endif %}
 
-            {%
-            fmt_stream.reject! { |f| f["itag"] == 17 }
-            fmt_stream.sort_by! {|f| params.quality == f["quality"] ? 0 : 1 }
-            fmt_stream.each_with_index do |fmt, i|
-                src_url  = "/latest_version?id=#{video.id}&itag=#{fmt["itag"]}"
-                src_url += "&local=true" if params.local
-                quality = fmt["quality"]
-                mimetype = HTML.escape(fmt["mimeType"].as_s)
-                selected = params.quality ? (params.quality == quality) : (i == 0)
-            %}
-                <source src="{{ src_url %}" type="{{ mimetype  }}" label="{{ quality  }}" selected="{{ selected  }}">
-                {% if !params.local && !CONFIG.disabled?("local") %}
-                    <source src="{{ src_url %}&local=true" type="{{ mimetype  }}" hidequalityoption="true">
+            {% for (index, stream) in player.formats.iter().enumerate() %}
+                {% if stream.itag != 17 %}
+                    {% let quality = stream.quality %}
+                    {% let mimetype = stream.mime_type %}
+                    {% let selected = preferences.quality == quality || index == 0 %}
+                
+                    <source src="/latest_version?id=#{{video.id}}&itag=#{{stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ mimetype }}" label="{{ quality  }}" selected="{{ selected  }}">
                 {% endif %}
-            {% endif %}
+            {% endfor %}
+
+            {% for caption in player.preferred_captions.iter() %}
+                <track kind="captions" src="/api/v1/captions/{{ video.id }}?label={{ caption.name.simple_text  }}" label="{{  caption.name.simple_text  }}">
+            {% endfor %}
+
+            {% for caption in player.captions.iter() %}
+                <track kind="captions" src="/api/v1/captions/{{ video.id }}?label={{ caption.name.simple_text  }}" label="{{  caption.name.simple_text }}">
+            {% endfor %}
         {% endif %}
-
-        {% preferred_captions.each do |caption| %}
-            <track kind="captions" src="/api/v1/captions/{{ video.id }}?label={{ caption.name  }}" label="{{  caption.name  }}">
-        {% end %}
-
-        {% captions.each do |caption| %}
-            <track kind="captions" src="/api/v1/captions/{{ video.id }}?label={{ caption.name  }}" label="{{  caption.name  }}">
-        {% end %}
     {% endif %}
 </video>
 
 <script id="player_data" type="application/json">
-{{
 {
-    "aspect_ratio" => aspect_ratio,
-    "title" => video.title,
-    "description" => HTML.escape(video.short_description),
-    "thumbnail" => thumbnail,
-    "preferred_caption_found" => !preferred_captions.empty?
-}.to_pretty_json
-%}
+    "aspect_ratio": {{ player.aspect_ratio }},
+    "title": {{ video.title }},
+    "description": {{ video.short_description }},
+    "thumbnail": {{ video.thumbnail }},
+    "preferred_caption_found": {{ !player.preferred_captions.is_empty() }}
+}
 </script>
-<script src="/assests/js/player.js?v={{ ASSET_COMMIT  }}"></script>
+<script src="/assets/js/player.js"></script>
