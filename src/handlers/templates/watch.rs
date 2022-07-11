@@ -11,7 +11,7 @@ pub struct Watch<'a> {
     pub loc: Locale<'a>,
     pub _parent: Base<'a>,
     pub video: Video,
-    pub player: Player,
+    pub player: Player<'a>,
     pub playlist: Option<Playlist>,
     pub comment_html: String,
 }
