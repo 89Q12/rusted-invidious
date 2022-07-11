@@ -56,12 +56,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
             _ => return None,
         }
     }).collect::<Vec<_>>();
-    let primary_video_renderer: &VideoPrimaryInfoRenderer = next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().results.results.contents.iter().filter_map(|item| {
-        return match item{
-            youtubei_rs::types::misc::NextContents::VideoPrimaryInfoRenderer(vpr) =>Some(vpr),
-            _ => None
-        };
-    }).collect::<Vec<_>>().get(0).unwrap();
+
     let secondary_video_renderer: &VideoSecondaryInfoRenderer = next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().results.results.contents.iter().filter_map(|item| {
         return match item{
             youtubei_rs::types::misc::NextContents::VideoSecondaryInfoRenderer(vpr) =>Some(vpr),
@@ -131,9 +126,6 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         description: get_description(&next),
         published: player.microformat.player_microformat_renderer.publish_date,
         length_seconds: player.video_details.length_seconds,
-        engagement: "".to_string(), // Unsupported for now.
-        wilson_score: "".to_string(),// Unsupported for now.
-        rating: "".to_string(),// Unsupported for now.
         is_family_friendly: player.microformat.player_microformat_renderer.is_family_safe,
         projection_type: "".to_string(),// Unsupported for now.
         is_vr: false,// Unsupported for now.

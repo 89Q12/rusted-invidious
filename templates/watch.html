@@ -128,7 +128,7 @@ we're going to need to do it here in order to allow for translations.
             {% endif %}
             </p>
             <p id="embed-link">
-                <a href="/embed/{{video.id}}?{{ params.query_params.join("&") }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
+                <a href="/embed/{{video.id}}?{{ params.query_params }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
             </p>
             {% match user %}
             {% when Some with (user_unwraped) %}
@@ -183,10 +183,9 @@ we're going to need to do it here in order to allow for translations.
                     <p id="license">{{ localize("license") }}{{ license }}</p>
                 {% when None %}
             {% endmatch %}
-            <p id="family_friendly">{{ localize("family_friendly_") }} {{ video.is_family_friendly }}</p>
-            <p id="wilson">{{ localize("wilson_score") }}{{ video.wilson_score }}</p>
-            <p id="rating"></p>
-            <p id="engagement">{{ localize("engagement") }}{{ video.engagement }}%</p>
+            <p id="wilson" style="display: none; visibility: hidden;"></p>
+            <p id="rating" style="display: none; visibility: hidden;"></p>
+            <p id="engagement" style="display: none; visibility: hidden;"></p>
             {% if video.allowed_regions.len() !=249 %}
                 <p id="allowed_regions">
                     {{ localize("whitelisted_regions") }}{{ video.allowed_regions.join(", ") }}
