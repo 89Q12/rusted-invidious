@@ -42,38 +42,38 @@ we're going to need to do it here in order to allow for translations.
 {% block content %}
 <script id="video_data" type="application/json">
     {
-    "id": {{ video.id }},
-    "genre": {% match video.genre %} {% when Some with (genre) %}{{ genre }}{% when None %}null{% endmatch %},
+    "id": "{{ video.id }}",
+    "genre": {% match video.genre %} {% when Some with (genre) %}"{{ genre }}"{% when None %}null{% endmatch %},
     {% match playlist %}
         {% when Some with (pl) %}
-            "index": {{  pl.continuation }},
-            "plid": {{pl.plid }},
+            "index": "{{  pl.continuation }}",
+            "plid": "{{pl.plid }}",
         {% when None %}
     {% endmatch %}
-    "length_seconds": {{ video.length_seconds }},
+    "length_seconds": "{{ video.length_seconds }}",
     "play_next":  {{ !video.related_videos.is_empty() && !playlist.is_some() && params.continue_autoplay }},
-    "next_video": {{ video.related_videos.get(0).unwrap().video_id }},
-    "youtube_comments_text": {{ localize("view_youtube_comments") }},
-    "reddit_comments_text": {{ localize("view_reddit_comments") }},
-    "reddit_permalink_text": {{ localize("view_more_comments_on_reddit") }},
-    "comments_text": {{ localize("view_comments", x: video.comments_count.clone()) }},
-    "hide_replies_text": {{ localize("hide_replies") }},
-    "show_replies_text": {{ localize("show_replies") }},
-    "params":  params ,
-    "preferences": preferences,
+    "next_video": "{{ video.related_videos.get(0).unwrap().video_id }}",
+    "youtube_comments_text": "{{ localize("view_youtube_comments") }}",
+    "reddit_comments_text": "{{ localize("view_reddit_comments") }}",
+    "reddit_permalink_text": "{{ localize("view_more_comments_on_reddit") }}",
+    "comments_text": "{{ localize("view_comments", x: video.comments_count.clone()) }}",
+    "hide_replies_text": "{{ localize("hide_replies") }}",
+    "show_replies_text": "{{ localize("show_replies") }}",
+    "preferences": {{  serde_json::to_value(preferences).unwrap()|json|safe }},
+    "params": {{ serde_json::to_value(params).unwrap()|json|safe }},
     {% match video.premiere_timestamp %}
         {% when Some with (timestamp) %}
-            "premiere_timestamp": {{ timestamp }},
+            "premiere_timestamp": "{{ timestamp }}",
         {% when None %}
     {% endmatch %}
     "vr": {{ video.is_vr }},
-    "projection_type": {{ video.projection_type  }},
+    "projection_type": "{{ video.projection_type  }}"
     }
 </script>
 
 
 <div id="player-container" class="h-box">
-
+    {% include "common/player.html" %}
 </div>
 <div class="h-box">
     <h1>
@@ -128,7 +128,7 @@ we're going to need to do it here in order to allow for translations.
             {% endif %}
             </p>
             <p id="embed-link">
-                <a href="/embed/{{video.id}}?{{ params.query_params.join("&") }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
+                <a href="/embed/{{video.id}}?{{ params.query_params }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
             </p>
             {% match user %}
             {% when Some with (user_unwraped) %}
@@ -183,10 +183,9 @@ we're going to need to do it here in order to allow for translations.
                     <p id="license">{{ localize("license") }}{{ license }}</p>
                 {% when None %}
             {% endmatch %}
-            <p id="family_friendly">{{ localize("family_friendly_") }} {{ video.is_family_friendly }}</p>
-            <p id="wilson">{{ localize("wilson_score") }}{{ video.wilson_score }}</p>
-            <p id="rating"></p>
-            <p id="engagement">{{ localize("engagement") }}{{ video.engagement }}%</p>
+            <p id="wilson" style="display: none; visibility: hidden;"></p>
+            <p id="rating" style="display: none; visibility: hidden;"></p>
+            <p id="engagement" style="display: none; visibility: hidden;"></p>
             {% if video.allowed_regions.len() !=249 %}
                 <p id="allowed_regions">
                     {{ localize("whitelisted_regions") }}{{ video.allowed_regions.join(", ") }}
@@ -199,7 +198,7 @@ we're going to need to do it here in order to allow for translations.
             <a href="/channel/{{ video.ucid }}" style="display:block;width:fit-content;width:-moz-fit-content">
                 <div class="channel-profile">
                     {% if !video.author_thumbnail.is_empty() %}
-                        <img src="/ggpht{{ video.author_thumbnail }}">
+                        <img src="{{ video.author_thumbnail }}">
                     {% endif %}
                     <span id="channel-name">{{ video.author }}{% if video.author_verified %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</span>
                 </div>

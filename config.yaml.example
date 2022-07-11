@@ -83,6 +83,17 @@ host_binding: 0.0.0.0
 domain:
 
 ##
+## Domain name under which the the proxy instance is hosted. This is
+## used to craft absolute URLs to the proxy (e.g in the url for thumbnails).
+## The domain MUST be defined since you"re running a prox anyway.
+## If not and you don't want to than please use the original project.
+##
+## Accepted values: a fully qualified domain name (FQDN) + protocol (e.g "https://proxy.example.com") if http is used it can be left out
+## Default: proxy.localhost
+##
+proxy_domain: proxy.localhost
+
+##
 ## Tell Invidious that it is behind a proxy that provides only
 ## HTTPS, so all links must use the https:// scheme. This
 ## setting MUST be set to true if invidious is behind a
@@ -108,13 +119,15 @@ hsts: true
 # -----------------------------
 
 ##
-## Disable proxying server-wide. Can be disable as a whole, or
+## Disable proxying server-wide for different things. Can be disable as a whole, or
 ## only for a single function.
 ##
-## Accepted values: true, false, dash, livestreams, downloads, local
+## Accepted values: true, false
 ## Default: false
 ##
 disable_proxy: false
+disable_dash: false
+disable_livestreams: false
 
 ##
 ## Size of the HTTP pool used to connect to youtube. Each
@@ -416,12 +429,3 @@ cache_annotations: false
 ## Default: <none>
 ##
 modified_source_code_url: ""
-
-##
-## Determines if the search box should be focused on page load. 
-## The default is false to keep it more inline with the original UI.
-##
-## Accepted values: true, false
-## Default: false
-##
-autofocus_search_box: false

@@ -1,15 +1,16 @@
-use std::{sync::Arc, collections::HashMap, fmt::Debug};
+use std::{sync::Arc, collections::HashMap};
 use askama::{langid, Template};
-use axum::{response::{Response, Redirect, IntoResponse, Html}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, middleware::Next, body::Body};
+use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, body::Body};
 use tokio::sync::Mutex;
 use tracing::Level;
-use youtubei_rs::{query::{player, next_video_id, resolve}, types::video::{VideoPrimaryInfoRenderer, VideoSecondaryInfoRenderer}};
+use youtubei_rs::{query::{player, next_video_id, resolve}, types::video::VideoSecondaryInfoRenderer};
 use youtubei_rs::utils::*;
-use crate::{config::State, structs::Video::Video};
-use super::{utils::{result_to_body, string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
+use crate::{config::State, structs::{Video::Video, player::Player}, handlers::utils::proxyfi_url};
+use super::{utils::{string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
 
 askama::localization!(LOCALES);
 /// Handler for the /watch?v=id path and renders the watch page
+/// TODO clean up, reduce smell
 pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params): Query<HashMap<String, String>>,request: Request<Body>) -> Response {
     tracing::event!(target: "web_handlers", Level::DEBUG, "entering watch handler");
     let lock = state.lock().await;
@@ -19,7 +20,11 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     let (player_res, next_res) = tokio::join!(player_call, next_call);
     tracing::event!(target: "web_handlers", Level::TRACE, "Finished joining async calls");
     let player= match player_res {
-        Ok(player) =>player,
+        Ok(player) =>match player.playability_status.status.as_str(){
+            // TODO: Better way to handle errors
+            "ERROR" => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            _ => player
+        },
         Err(err) => match err {
             youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
             youtubei_rs::types::error::Errors::ParseError(_) => {
@@ -51,12 +56,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
             _ => return None,
         }
     }).collect::<Vec<_>>();
-    let primary_video_renderer: &VideoPrimaryInfoRenderer = next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().results.results.contents.iter().filter_map(|item| {
-        return match item{
-            youtubei_rs::types::misc::NextContents::VideoPrimaryInfoRenderer(vpr) =>Some(vpr),
-            _ => None
-        };
-    }).collect::<Vec<_>>().get(0).unwrap();
+
     let secondary_video_renderer: &VideoSecondaryInfoRenderer = next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().results.results.contents.iter().filter_map(|item| {
         return match item{
             youtubei_rs::types::misc::NextContents::VideoSecondaryInfoRenderer(vpr) =>Some(vpr),
@@ -69,14 +69,13 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
                 _ => "".to_string()
             },
             _ => "".to_string(),
-        None => "".to_string(),
     };
     let author_verified = if let Some(badges) = &secondary_video_renderer.owner.video_owner_renderer.badges{
         get_author_verified(&&badges.get(0).unwrap().metadata_badge_renderer)
     }else{
         false
     };
-    let mut category;
+    let mut category: Option<String> = None;
     let license: Option<String> = if let Some(rows) = &secondary_video_renderer.metadata_row_container.metadata_row_container_renderer.rows{
         let mut return_str = None;
         for row in rows.iter(){
@@ -90,7 +89,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
                 
             };
             if matched_row.title.simple_text.as_str() == "Category"{
-                category = matched_row.clone();
+                category = Some(matched_row.clone().title.simple_text);
                 return_str = None;
                 break;
             }
@@ -99,25 +98,28 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     }else{
         None
     };
+    let mut audio_streams: Vec<_> = player.streaming_data.formats.iter().filter(|format| format.mime_type.contains("audio")).collect();
+    audio_streams.append(&mut player.streaming_data.adaptive_formats.iter().filter(|format| format.mime_type.contains("audio")).collect());
+    let lock = state.lock().await;
     let video = Video{
-        thumbnail: player.video_details.thumbnail.thumbnails.get(0).unwrap().url.clone(),
+        thumbnail: proxyfi_url(player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(),&lock.config),
         id: player.video_details.video_id,
         keywords: player.video_details.keywords.unwrap_or_default(),
         short_description: player.video_details.short_description,
         title: player.video_details.title,
         is_listed: player.video_details.is_private,
-        reason: None,
+        reason: None, // Implement
         premiere_timestamp: None,
         live_now: player.video_details.is_live_content,
         views: player.video_details.view_count,
         likes: get_likes(&next),
-        genre_url: None,
-        genre: Some(player.microformat.player_microformat_renderer.category),
+        genre_url: None,// Implement?? But I'm not sure since its only one license and we could just set it static tho we could also get the category url if the video has a category
+        genre: category,
         license,
         ucid: player.video_details.channel_id.clone(),
         related_videos,
         allowed_regions: player.microformat.player_microformat_renderer.available_countries,
-        author_thumbnail: get_owner_thumbnail(&next),
+        author_thumbnail: proxyfi_url(get_owner_thumbnail(&next),&lock.config),
         author_id: player.video_details.channel_id.clone(),
         author: player.video_details.author,
         author_verified,
@@ -125,15 +127,32 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         description: get_description(&next),
         published: player.microformat.player_microformat_renderer.publish_date,
         length_seconds: player.video_details.length_seconds,
-        engagement: "".to_string(), // Unsupported for now.
-        wilson_score: "".to_string(),// Unsupported for now.
-        rating: "".to_string(),// Unsupported for now.
         is_family_friendly: player.microformat.player_microformat_renderer.is_family_safe,
         projection_type: "".to_string(),// Unsupported for now.
         is_vr: false,// Unsupported for now.
         comments_count,
     };
+    drop(lock);
+    // Merge formats into one vec
+    let mut formats =  player.streaming_data.formats.iter().filter(|format| !format.mime_type.contains("audio")).collect::<Vec<_>>();
+    let mut adaptive_formats = player.streaming_data.adaptive_formats.iter().filter(|format| !format.mime_type.contains("audio")).collect::<Vec<_>>();
+    formats.append(&mut adaptive_formats);
     let lock = state.lock().await;
+    let captions = match player.captions{
+        Some(captions) => captions.player_captions_tracklist_renderer.caption_tracks,
+        None => Vec::with_capacity(0),
+    };
+    let preferred_captions = captions.iter().filter(|track|lock.preferences.captions.contains(&track.name.simple_text)).collect();
+
+
+    let player_struct = Player{
+        formats: &player.streaming_data.formats,
+        audio_streams,
+        captions: &captions,
+        preferred_captions: preferred_captions,
+        hls_manifest_url: None, // FIXME - should be  player.streaming_data.hls_manifest_url
+        aspect_ratio: "16:9",
+    };
     let base = Base{
         title: "invidious".to_string(),
         config: &lock.config,
@@ -146,8 +165,8 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
         _parent: base,
         video,
-        streaming_data: player.streaming_data,
         playlist: None,
+        player: player_struct,
         comment_html: "".to_string(),
     };
     render(watch.render())
