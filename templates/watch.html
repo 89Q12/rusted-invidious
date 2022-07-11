@@ -198,7 +198,7 @@ we're going to need to do it here in order to allow for translations.
             <a href="/channel/{{ video.ucid }}" style="display:block;width:fit-content;width:-moz-fit-content">
                 <div class="channel-profile">
                     {% if !video.author_thumbnail.is_empty() %}
-                        <img src="/ggpht{{ video.author_thumbnail }}">
+                        <img src="{{ video.author_thumbnail }}">
                     {% endif %}
                     <span id="channel-name">{{ video.author }}{% if video.author_verified %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</span>
                 </div>
