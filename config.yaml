@@ -418,12 +418,3 @@ cache_annotations: false
 ## Default: <none>
 ##
 modified_source_code_url: ""
-
-##
-## Determines if the search box should be focused on page load. 
-## The default is false to keep it more inline with the original UI.
-##
-## Accepted values: true, false
-## Default: false
-##
-autofocus_search_box: false
