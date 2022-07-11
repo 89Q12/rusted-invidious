@@ -38,10 +38,10 @@
 
 <script id="player_data" type="application/json">
 {
-    "aspect_ratio": {{ player.aspect_ratio }},
-    "title": {{ video.title }},
-    "description": {{ video.short_description }},
-    "thumbnail": {{ video.thumbnail }},
+    "aspect_ratio": {{ player.aspect_ratio|json|safe }},
+    "title": {{ video.title|json|safe }},
+    "description": {{ video.short_description|json|safe }},
+    "thumbnail": {{ video.thumbnail|json|safe }},
     "preferred_caption_found": {{ !player.preferred_captions.is_empty() }}
 }
 </script>
