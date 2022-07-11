@@ -44,6 +44,8 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
                 query_params: val.split("&").map(|str| str.to_string()).collect::<Vec<String>>(),
                 current_page: request.uri().path().to_string(),
                 nojs: val.contains("nojs=1"),
+                local:val.contains("local=1"),
+                controls: val.contains("controls=1"),
             }
         },
         None =>  TemplateContext{
@@ -53,6 +55,8 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
             listen: false,
             current_page:  request.uri().path().to_string(),
             nojs: false,
+            local: false,
+            controls: false,
         },
     }
 

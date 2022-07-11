@@ -42,38 +42,38 @@ we're going to need to do it here in order to allow for translations.
 {% block content %}
 <script id="video_data" type="application/json">
     {
-    "id": {{ video.id }},
-    "genre": {% match video.genre %} {% when Some with (genre) %}{{ genre }}{% when None %}null{% endmatch %},
+    "id": "{{ video.id }}",
+    "genre": {% match video.genre %} {% when Some with (genre) %}"{{ genre }}"{% when None %}null{% endmatch %},
     {% match playlist %}
         {% when Some with (pl) %}
-            "index": {{  pl.continuation }},
-            "plid": {{pl.plid }},
+            "index": "{{  pl.continuation }}",
+            "plid": "{{pl.plid }}",
         {% when None %}
     {% endmatch %}
-    "length_seconds": {{ video.length_seconds }},
+    "length_seconds": "{{ video.length_seconds }}",
     "play_next":  {{ !video.related_videos.is_empty() && !playlist.is_some() && params.continue_autoplay }},
-    "next_video": {{ video.related_videos.get(0).unwrap().video_id }},
-    "youtube_comments_text": {{ localize("view_youtube_comments") }},
-    "reddit_comments_text": {{ localize("view_reddit_comments") }},
-    "reddit_permalink_text": {{ localize("view_more_comments_on_reddit") }},
-    "comments_text": {{ localize("view_comments", x: video.comments_count.clone()) }},
-    "hide_replies_text": {{ localize("hide_replies") }},
-    "show_replies_text": {{ localize("show_replies") }},
-    "params":  params ,
-    "preferences": preferences,
+    "next_video": "{{ video.related_videos.get(0).unwrap().video_id }}",
+    "youtube_comments_text": "{{ localize("view_youtube_comments") }}",
+    "reddit_comments_text": "{{ localize("view_reddit_comments") }}",
+    "reddit_permalink_text": "{{ localize("view_more_comments_on_reddit") }}",
+    "comments_text": "{{ localize("view_comments", x: video.comments_count.clone()) }}",
+    "hide_replies_text": "{{ localize("hide_replies") }}",
+    "show_replies_text": "{{ localize("show_replies") }}",
+    "preferences": {{  serde_json::to_value(preferences).unwrap()|json|safe }},
+    "params": {{ serde_json::to_value(params).unwrap()|json|safe }},
     {% match video.premiere_timestamp %}
         {% when Some with (timestamp) %}
-            "premiere_timestamp": {{ timestamp }},
+            "premiere_timestamp": "{{ timestamp }}",
         {% when None %}
     {% endmatch %}
     "vr": {{ video.is_vr }},
-    "projection_type": {{ video.projection_type  }},
+    "projection_type": "{{ video.projection_type  }}"
     }
 </script>
 
 
 <div id="player-container" class="h-box">
-
+    {% include "common/player.html" %}
 </div>
 <div class="h-box">
     <h1>
