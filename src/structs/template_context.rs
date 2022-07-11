@@ -7,4 +7,6 @@ pub struct TemplateContext{
     pub listen: bool,
     pub current_page: String,
     pub nojs: bool,
+    pub local: bool,
+    pub controls: bool
 }
