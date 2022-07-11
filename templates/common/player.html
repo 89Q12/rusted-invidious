@@ -5,7 +5,7 @@
     {% if params.controls %}controls{% endif %}>
     <!-- TODO: research into hlsvp-->
     {% if player.hls_manifest_url.is_some() && !config.disable_livestreams %}
-        <source src="{{  player.hls_manifest_url.unwrap() }}{% if params.local %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
+        <source src="{{  player.hls_manifest_url.as_ref().unwrap() }}{% if params.local %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
     {% else %}
         {% if params.listen %}
             {% for (pos, stream) in player.audio_streams.iter().enumerate() %}
@@ -19,11 +19,9 @@
 
             {% for (index, stream) in player.formats.iter().enumerate() %}
                 {% if stream.itag != 17 %}
-                    {% let quality = stream.quality %}
-                    {% let mimetype = stream.mime_type %}
-                    {% let selected = preferences.quality == quality || index == 0 %}
+                    {% let selected = preferences.quality == stream.quality || index == 0 %}
                 
-                    <source src="/latest_version?id=#{{video.id}}&itag=#{{stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ mimetype }}" label="{{ quality  }}" selected="{{ selected  }}">
+                    <source src="/latest_version?id=#{{video.id}}&itag=#{{stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
                 {% endif %}
             {% endfor %}
 
