@@ -1,6 +1,7 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 
 use axum::{http::{StatusCode, Request},response::Response, body::{self, Body}};
+use serde::de::value;
 
 use crate::structs::template_context::TemplateContext;
 
@@ -37,15 +38,35 @@ pub fn string_to_body(str: String) -> Response
 pub fn build_params(request: &Request<Body>) -> TemplateContext{
     match request.uri().query(){
         Some(val) => {
+            let mut params_map: HashMap<String, String> = HashMap::new();
+            let params = val.split("&").map(|str| str.to_string()).collect::<Vec<String>>();
+            params.iter().for_each(|p| {
+                let split_param: Vec<String> = p.split("=").map(|str| str.to_string()).collect();
+                let key =  match split_param.get(0){
+                    Some(key) => key,
+                    None => "",
+                };
+                let value = match split_param.get(1) {
+                    Some(value) => value,
+                    None => "",
+                };
+                if !key.is_empty() && !value.is_empty() {
+                    params_map.insert(key.to_string(), value.to_string());
+                }
+            });
             TemplateContext{
                 continue_autoplay: val.contains("continue=1"),
                 autoplay: request.uri().query().unwrap().contains("autoplay=1"),
                 listen: val.contains("listen=1"),
-                query_params: val.split("&").map(|str| str.to_string()).collect::<Vec<String>>(),
+                query_params: params,
                 current_page: request.uri().path().to_string(),
                 nojs: val.contains("nojs=1"),
                 local:val.contains("local=1"),
                 controls: val.contains("controls=1"),
+                search_query: match params_map.get("q"){
+                    Some(val) => Some(val.to_string()),
+                    None => None,
+                }
             }
         },
         None =>  TemplateContext{
@@ -57,6 +78,7 @@ pub fn build_params(request: &Request<Body>) -> TemplateContext{
             nojs: false,
             local: false,
             controls: false,
+            search_query: None,
         },
     }
 

@@ -10,5 +10,6 @@ pub struct TemplateContext{
     pub current_page: String,
     pub nojs: bool,
     pub local: bool,
-    pub controls: bool
+    pub controls: bool,
+    pub search_query: Option<String>,
 }
