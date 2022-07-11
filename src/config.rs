@@ -70,6 +70,7 @@ pub struct Preferences {
     pub vr_mode: bool,
     pub show_nick: bool,
     pub save_player_pos: bool,
+    pub autofocus_search_box: bool,
 }
 
 impl Preferences {
