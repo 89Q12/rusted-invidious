@@ -83,6 +83,17 @@ host_binding: 0.0.0.0
 domain:
 
 ##
+## Domain name under which the the proxy instance is hosted. This is
+## used to craft absolute URLs to the proxy (e.g in the url for thumbnails).
+## The domain MUST be defined since you"re running a prox anyway.
+## If not and you don't want to than please use the original project.
+##
+## Accepted values: a fully qualified domain name (FQDN) (e.g "proxy.example.com")
+## Default: proxy.localhost
+##
+proxy_domain: proxy.localhost
+
+##
 ## Tell Invidious that it is behind a proxy that provides only
 ## HTTPS, so all links must use the https:// scheme. This
 ## setting MUST be set to true if invidious is behind a

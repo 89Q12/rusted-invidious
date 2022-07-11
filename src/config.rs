@@ -30,6 +30,7 @@ pub struct Config {
     pub disable_livestreams: bool,
     pub port: String,
     pub host_binding: String,
+    pub proxy_domain: String,
 }
 
 impl Config {
