@@ -100,8 +100,9 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     };
     let mut audio_streams: Vec<_> = player.streaming_data.formats.iter().filter(|format| format.mime_type.contains("audio")).collect();
     audio_streams.append(&mut player.streaming_data.adaptive_formats.iter().filter(|format| format.mime_type.contains("audio")).collect());
+    let  config = &state.lock().await.config;
     let video = Video{
-        thumbnail: proxyfi_url(player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(), &state.lock().await.config),
+        thumbnail: proxyfi_url(player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(),config),
         id: player.video_details.video_id,
         keywords: player.video_details.keywords.unwrap_or_default(),
         short_description: player.video_details.short_description,
@@ -118,7 +119,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         ucid: player.video_details.channel_id.clone(),
         related_videos,
         allowed_regions: player.microformat.player_microformat_renderer.available_countries,
-        author_thumbnail: proxyfi_url(get_owner_thumbnail(&next), &state.lock().await.config),
+        author_thumbnail: proxyfi_url(get_owner_thumbnail(&next),config),
         author_id: player.video_details.channel_id.clone(),
         author: player.video_details.author,
         author_verified,
