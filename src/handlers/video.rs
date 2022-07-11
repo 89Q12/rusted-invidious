@@ -74,7 +74,6 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
                 _ => "".to_string()
             },
             _ => "".to_string(),
-        None => "".to_string(),
     };
     let author_verified = if let Some(badges) = &secondary_video_renderer.owner.video_owner_renderer.badges{
         get_author_verified(&&badges.get(0).unwrap().metadata_badge_renderer)
@@ -107,7 +106,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     let mut audio_streams: Vec<_> = player.streaming_data.formats.iter().filter(|format| format.mime_type.contains("audio")).collect();
     audio_streams.append(&mut player.streaming_data.adaptive_formats.iter().filter(|format| format.mime_type.contains("audio")).collect());
     let video = Video{
-        thumbnail: player.video_details.thumbnail.thumbnails.get(0).unwrap().url.clone(),
+        thumbnail: player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(),
         id: player.video_details.video_id,
         keywords: player.video_details.keywords.unwrap_or_default(),
         short_description: player.video_details.short_description,
