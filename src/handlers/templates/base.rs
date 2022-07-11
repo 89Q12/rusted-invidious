@@ -8,7 +8,6 @@ pub struct Base<'a>{
     pub config: &'a Config,
     pub user: Option<User>,
     pub preferences: &'a Preferences,
-    pub search_bar: Option<String>,
     #[locale]
     pub loc: Locale<'a>,
     pub params: TemplateContext

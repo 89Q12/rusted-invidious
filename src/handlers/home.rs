@@ -17,7 +17,6 @@ pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,request: Reque
         config: &lock.config,
         user: None,
         preferences: &lock.preferences,
-        search_bar: None,
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
         params: build_params(&request)
     };

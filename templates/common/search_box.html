@@ -1,0 +1,10 @@
+
+<form class="pure-form" action="/search" method="get">
+	<fieldset>
+		<input type="search" id="searchbox" autocomplete="off" autocorrect="off"
+		autocapitalize="none" spellcheck="false" {% if preferences.autofocus_search_box %}autofocus{% endif %}
+		name="q" placeholder="{{ localize("search") }}"
+		title="{{ localize("search") }}"
+		{% match params.search_query %} {% when Some with (query) %} value="{{ query }}" {% when None %} value="" {% endmatch %}>
+	</fieldset>
+</form>

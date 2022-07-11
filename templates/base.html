@@ -25,16 +25,12 @@
             <div class="pure-u-1 pure-u-md-2-24"></div>
             <div class="pure-u-1 pure-u-md-20-24" id="contents">
                 <div class="pure-g navbar h-box">
-                    {% match search_bar %}
-                    {% when Some with (val) %}
-                        <div class="pure-u-1 pure-u-md-4-24">
-                            <a href="/" class="index-link pure-menu-heading">Invidious</a>
-                        </div>
-                        <div class="pure-u-1 pure-u-md-12-24 searchbar">
-                           {{ val }}
-                        </div>
-                    {% when None %}
-                   {% endmatch %}
+                    <div class="pure-u-1 pure-u-md-4-24">
+                        <a href="/" class="index-link pure-menu-heading">Invidious</a>
+                    </div>
+                    <div class="pure-u-1 pure-u-md-12-24 searchbar">
+                        {% include "common/search_box.html" %}
+                    </div>
 
                     <div class="pure-u-1 pure-u-md-8-24 user-field">
                         {% match user %}
