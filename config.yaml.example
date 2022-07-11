@@ -88,7 +88,7 @@ domain:
 ## The domain MUST be defined since you"re running a prox anyway.
 ## If not and you don't want to than please use the original project.
 ##
-## Accepted values: a fully qualified domain name (FQDN) (e.g "proxy.example.com")
+## Accepted values: a fully qualified domain name (FQDN) + protocol (e.g "https://proxy.example.com") if http is used it can be left out
 ## Default: proxy.localhost
 ##
 proxy_domain: proxy.localhost
