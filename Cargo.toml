@@ -13,7 +13,7 @@ axum ={version= "0.5", features = ["form","headers"]}
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.3", features = ["trace"] }
-youtubei-rs = {git = "https://github.com/11Tuvork28/youtubei-rs.git"}
+youtubei-rs = {git = "https://github.com/11Tuvork28/youtubei-rs.git", branch = "dev"}
 serde_yaml = "0.8.24"
 fluent = "0.16.0"
 fluent-templates = { version = "0.7.1", features = ["tera"] }
@@ -23,3 +23,6 @@ parking_lot = "^0.12.1"
 rusted-invidious-types = { git = "https://github.com/11Tuvork28/rusted-invidious-shared.git" }
 chrono = "0.4.19"
 regex = "1.6.0"
+tracing-opentelemetry = "0.17.4"
+opentelemetry = "0.17.0"
+opentelemetry-jaeger = "0.16.0"
