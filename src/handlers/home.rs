@@ -2,6 +2,7 @@ use std::sync::Arc;
 use askama::langid;
 use tokio::sync::Mutex;
 use axum::{response::Redirect, Extension,extract::path::Path, response::Response, http::Request, body::Body};
+use tracing::Level;
 use crate::{config::{State, Preferences}, structs::template_context::TemplateContext};
 use askama::Template;
 askama::localization!(LOCALES);
@@ -10,6 +11,8 @@ use super::{templates::base::Base, utils::{render, build_params}};
 /// Ideally this should be redirect the user to the configured home path
 /// e.g. /feed/popular or serve search page I guess but this could be changed
 pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,request: Request<Body>)-> Response {
+    tracing::event!(target: "web_handlers::index", Level::DEBUG, "Entering index handler");
+
     let lock = state.lock().await;
     // TODO: implement
     let base = Base{
@@ -20,6 +23,7 @@ pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,request: Reque
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
         params: build_params(&request)
     };
+    tracing::event!(target: "web_handlers::index", Level::DEBUG, "Created all templates and rendering template: base.html");
     render(base.render())
 }
 
