@@ -6,8 +6,8 @@
     Invidious - {{ localize("search") }}
 </title>
 <link rel="stylesheet" href="/assets/css/empty.css">
-{% endblock %}
-
+{% endblock header %}
+{% block content %}
 <div class="pure-g h-box" id="search-widget">
     <div class="pure-u-1" id="logo">
         <h1 href="/" class="pure-menu-heading">Invidious</h1>
@@ -18,3 +18,4 @@
     </div>
     <div class="pure-u-1-4"></div>
 </div>
+{% endblock content %}
