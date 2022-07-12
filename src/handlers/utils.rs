@@ -1,5 +1,6 @@
 use std::collections::{HashSet, HashMap};
 use axum::{http::{StatusCode, Request},response::Response, body::{self, Body}};
+use tracing::Level;
 use crate::{structs::template_context::TemplateContext, config::Config};
 use regex::Regex;
 
@@ -7,8 +8,14 @@ pub fn render(html_str: Result<String, askama::Error>) -> Response {
     return Response::builder()
     .status(StatusCode::OK)
     .body(body::boxed(match html_str{
-        Ok(html) => body::Full::from(html),
-        Err(err) => body::Full::from(err.to_string()),
+        Ok(html) => {
+            tracing::event!(target: "web_handlers::utils::render", Level::TRACE,"Rendered template successfully");
+            body::Full::from(html)
+        },
+        Err(err) =>{
+            tracing::event!(target: "web_handlers::utils::render", Level::ERROR, "Error while rendering template {}", err.to_string());
+            body::Full::from(err.to_string())
+        } 
     }))
     .unwrap();
 }
@@ -92,7 +99,9 @@ pub fn vect_difference(v1: &Vec<String>, v2: &Vec<&str>) -> Vec<String> {
 
 /// Function to convert youtube url into our proxied urls
 pub fn proxyfi_url(url: String, config: &Config) -> String {
-    let proxy_domain = &config.proxy_domain;
+    tracing::event!(target:"web_handlers::utils::proxyfi_url", Level::TRACE, "proxyfing url: {}", url);
     let re = Regex::new(r"(.*\.)?[a-zA-Z]+\.com").unwrap();
-    re.replace(&url,proxy_domain).to_string()
+    let url = re.replace(&url, &config.proxy_domain).to_string();
+    tracing::event!(target:"web_handlers::utils::proxyfi_url", Level::TRACE, "proxyfied is: {}", url);
+    url
 }
