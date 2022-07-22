@@ -2656,7 +2656,7 @@ dependencies = [
 [[package]]
 name = "youtubei-rs"
 version = "1.4.6"
-source = "git+https://github.com/11Tuvork28/youtubei-rs.git#5acf0b3a386c7023856c675f5d6be26ebe8c2b3f"
+source = "git+https://github.com/11Tuvork28/youtubei-rs.git#9da0e577a8b5ab508c032ce40929d56c02f79115"
 dependencies = [
  "reqwest",
  "serde",
