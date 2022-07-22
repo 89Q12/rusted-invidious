@@ -31,13 +31,17 @@ pub struct Config {
     pub port: String,
     pub host_binding: String,
     pub proxy_domain: String,
+    #[serde(skip)]
+    pub redirect_url: String
 }
 
 impl Config {
     /// Loads the configuration and parses it into a Config object, panics if the configuration file is invalid or missing.
     pub fn new() -> Config {
         let loaded_config = fs::read_to_string("config.yaml").unwrap();
-        serde_yaml::from_str(&loaded_config).unwrap()
+        let mut config: Config = serde_yaml::from_str(&loaded_config).unwrap();
+        config.redirect_url = "https://redirect.invidious.io".to_string();
+        config
     }
 }
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -74,6 +78,7 @@ pub struct Preferences {
     pub show_nick: bool,
     pub save_player_pos: bool,
     pub autofocus_search_box: bool,
+    pub show_watched: bool,
 }
 
 impl Preferences {
