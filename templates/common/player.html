@@ -10,7 +10,7 @@
         {% if params.listen %}
             {% for (pos, stream) in player.audio_streams.iter().enumerate() %}
                 {% let selected = pos == 0 %}
-                <source src="/latest_version?id=#{{ video.id }}&itag=#{{ stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
+                <source src="/latest_version?id={{ video.id }}&itag={{ stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
             {% endfor %}
         {% else %}
             {% if preferences.quality == "dash" %}
@@ -21,7 +21,7 @@
                 {% if stream.itag != 17 %}
                     {% let selected = preferences.quality == stream.quality || index == 0 %}
                 
-                    <source src="/latest_version?id=#{{video.id}}&itag=#{{stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
+                    <source src="/latest_version?id={{video.id}}&itag={{stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
                 {% endif %}
             {% endfor %}
 

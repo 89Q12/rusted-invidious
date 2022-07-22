@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% match  params.search_query %}
+    {% when Some with (query) %}
+        <title>{% if query.len() > 30 %} {{ query.clone().split_at(30).0.to_owned() + "&hellip;" }}{% else %} {{ query.clone() }}{% endif %} - Invidious</title>
+    {% when None %}
+{% endmatch %}
+<link rel="stylesheet" href="/assets/css/search.css?">
+{% endblock header %}
+{% block content %}
+<!-- Search redirection and filtering UI TODO implement
+ Invidious::Frontend::SearchFilters.generate(query.filters, query.text, query.page, locale) 
+-->
+<hr/>
+
+<div class="pure-g h-box v-box">
+    <div class="pure-u-1 pure-u-lg-1-5">
+
+            <a href="">{{ localize("previous_page") }}</a>
+
+    </div>
+    <div class="pure-u-1 pure-u-lg-3-5"></div>
+    <div class="pure-u-1 pure-u-lg-1-5" style="text-align:right">
+        {% if videos.len() >= 20 %}
+            <a href="">{{ localize("next_page") }}</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if videos.is_empty() %}
+    <div class="h-box no-results-error">
+        <div>
+            {{ localize("search_message_no_results") }}<br/><br/>
+            {{ localize("search_message_change_filters_or_query") }}<br/><br/>
+            {{ localize("search_message_use_another_instance", x: config.redirect_url.clone()) }}
+        </div>
+    </div>
+{% else %}
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-1-4">
+            <div class="h-box">
+                {% for item in videos.iter() %}
+                    {% match item %}
+                        {% when youtubei_rs::types::enums::ItemSectionRendererContents::ChannelRenderer with (item) %}
+
+                        {% when youtubei_rs::types::enums::ItemSectionRendererContents::PlaylistRenderer with (item) %}          
+                            {% include "common/renderers/playlistRenderer.html" %}
+                        {% when youtubei_rs::types::enums::ItemSectionRendererContents::RadioRenderer with (item) %}
+                            {% include "common/renderers/radioRenderer.html" %}
+                        {% when  youtubei_rs::types::enums::ItemSectionRendererContents::VideoRenderer with (item) %}
+                            {% include "common/renderers/videoRenderer.html" %}
+                        {% when  youtubei_rs::types::enums::ItemSectionRendererContents::ShelfRenderer with (item) %}
+
+                        {% else %}
+                    {% endmatch %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="pure-g h-box">
+    <div class="pure-u-1 pure-u-lg-1-5">
+
+            <a href"">{{ localize("previous_page") }}</a>
+    </div>
+    <div class="pure-u-1 pure-u-lg-3-5"></div>
+    <div class="pure-u-1 pure-u-lg-1-5" style="text-align:right">
+        {% if videos.len() >= 20 %}
+            <a href"">{{ localize("next_page") }}</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

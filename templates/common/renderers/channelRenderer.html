@@ -1,0 +1,26 @@
+<a href="/channel/{{ item.channel_id }}">
+    {% if !preferences.thin_mode %}
+        <center>
+            <img loading="lazy" tabindex="-1" style="width:56.25%" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
+        </center>
+    {% endif %}
+    {% match item.owner_badges %}
+        {% when Some with (badges) %}
+            <p dir="auto">{{ item.title.simple_text }}{% if youtubei_rs::utils::get_author_verified(badges.get(0).as_ref().unwrap().metadata_badge_renderer)  %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</p>
+        {% when None %}
+            <p dir="auto">{{ item.title.simple_text }}</p>
+    {% endmatch %}
+</a>
+{% match item.subscriber_count_text %}
+    {% when Some with (count_text) %}
+        <p>{{ localize("generic_subscribers_count", x: count_text.simple_text.clone()) }}</p>
+    {% when None %}
+        <p>{{ localize("generic_subscribers_count", x: "0") }}</p>
+{% endmatch %}
+<p>{{ localize("generic_videos_count", x: item.video_count_text.runs.get(0).unwrap().text.clone()) }}</p>
+
+<h5>
+{% for snippet in item.description_snippet.runs %}
+    {{ snippet.text.clone()}}
+{% endfor %}
+</h5>
