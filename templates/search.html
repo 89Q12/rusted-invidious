@@ -3,7 +3,7 @@
 {% block header %}
 {% match  params.search_query %}
     {% when Some with (query) %}
-        <title>{% if query.len() > 30 %} {{ query.clone().split_at(30).0.to_owned() + "&hellip;" }}{% else %} {{ query.clone() }}{% endif %} - Invidious</title>
+        <title>{% if query.len() > 30 %} {{ (query.clone().split_at(30).0.to_owned() + "&hellip;")|e("txt") }}{% else %} {{ query.clone() }}{% endif %} - Invidious</title>
     {% when None %}
 {% endmatch %}
 <link rel="stylesheet" href="/assets/css/search.css?">
@@ -11,6 +11,7 @@
 {% block content %}
 <!-- Search redirection and filtering UI TODO implement
  Invidious::Frontend::SearchFilters.generate(query.filters, query.text, query.page, locale) 
+ TODO: Implement paging or infinite scrolling
 -->
 <hr/>
 
