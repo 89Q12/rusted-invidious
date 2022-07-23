@@ -10,7 +10,7 @@ pub struct Watch<'a> {
     #[locale]
     pub loc: Locale<'a>,
     pub _parent: Base<'a>,
-    pub video: Video,
+    pub video: Video<'a>,
     pub player: Player<'a>,
     pub playlist: Option<Playlist>,
     pub comment_html: String,

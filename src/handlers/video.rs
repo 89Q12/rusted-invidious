@@ -3,7 +3,7 @@ use askama::{langid, Template};
 use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, body::Body};
 use tokio::sync::Mutex;
 use tracing::Level;
-use youtubei_rs::{query::{player, next_video_id, resolve}, types::{video::VideoSecondaryInfoRenderer, video::StreamingData}};
+use youtubei_rs::{query::{player, next_video_id, resolve}, types::{video::VideoSecondaryInfoRenderer, video::StreamingData, enums::NextContents}};
 use youtubei_rs::utils::*;
 use crate::{config::State, structs::{Video::Video, player::Player}, handlers::utils::proxyfi_url};
 use super::{utils::{string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
@@ -50,14 +50,9 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
             },
         },
     };
-    let related_videos = match next.contents.as_ref().unwrap(){
+    let related_videos: &Vec<NextContents> = match next.contents.as_ref().unwrap(){
 
-        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnWatchNextResults(renderer) => renderer.secondary_results.secondary_results.results.iter().filter_map(|item| {
-            match item{
-                youtubei_rs::types::enums::NextContents::CompactVideoRenderer(cmp) => Some(cmp.to_owned()),
-                _ => return None,
-            }
-        }).collect::<Vec<_>>(),
+        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnWatchNextResults(renderer) => &renderer.secondary_results.secondary_results.results,
         _ => unreachable!(),
     };
 
@@ -141,6 +136,11 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         projection_type: "".to_string(),// Unsupported for now.
         is_vr: false,// Unsupported for now.
         comments_count,
+        next_video_id: match related_videos.get(0).unwrap() {
+            NextContents::CompactVideoRenderer(rv) => rv.video_id.clone(),
+            _ => String::from(""),
+
+        }
     };
     drop(lock);
     

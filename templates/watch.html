@@ -52,7 +52,7 @@ we're going to need to do it here in order to allow for translations.
     {% endmatch %}
     "length_seconds": "{{ video.length_seconds }}",
     "play_next":  {{ !video.related_videos.is_empty() && !playlist.is_some() && params.continue_autoplay }},
-    "next_video": "{{ video.related_videos.get(0).unwrap().video_id }}",
+    "next_video": "{{ video.next_video_id }}",
     "youtube_comments_text": "{{ localize("view_youtube_comments") }}",
     "reddit_comments_text": "{{ localize("view_reddit_comments") }}",
     "reddit_permalink_text": "{{ localize("view_more_comments_on_reddit") }}",
@@ -252,10 +252,16 @@ we're going to need to do it here in order to allow for translations.
                 <hr>
             </div>
         {% else %}
-            {% for rv in video.related_videos %}
-                {% if !rv.video_id.is_empty() %}
-                    {% include "common/renderers/compactVideoRenderer.html" %}
-                {% endif %}
+            {% for item in video.related_videos.iter() %}
+                {% match item %}
+                    {% when youtubei_rs::types::enums::NextContents::CompactVideoRenderer with (rv) %}
+                        {% if !rv.video_id.is_empty() %}
+                            {% include "common/renderers/compactVideoRenderer.html" %}
+                        {% endif %}
+                    {% when youtubei_rs::types::enums::NextContents::CompactVideoRenderer with (rm) %}
+                        {% include "common/renderers/compactMovieRenderer.html" %}
+                    {% else %}
+                {% endmatch %}
             {% endfor%}
         {% endif %}
     </div>

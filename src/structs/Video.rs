@@ -1,6 +1,6 @@
-use youtubei_rs::types::{video::CompactVideoRenderer};
+use youtubei_rs::types::enums::NextContents;
 
-pub struct Video{
+pub struct Video<'a>{
     pub thumbnail: String,
     pub id: String,
     pub keywords: Vec<String>,
@@ -16,7 +16,7 @@ pub struct Video{
     pub genre: Option<String>,
     pub license: Option<String>,
     pub ucid: String,
-    pub related_videos: Vec<CompactVideoRenderer>,
+    pub related_videos: &'a Vec<NextContents>,
     pub allowed_regions: Vec<String>,
     pub author_thumbnail: String,
     pub author_id: String,
@@ -30,4 +30,5 @@ pub struct Video{
     pub projection_type: String,
     pub is_vr: bool,
     pub comments_count: String,
+    pub next_video_id: String,
 }
