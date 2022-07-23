@@ -1,4 +1,4 @@
-<a style="width:100%" href="/playlist?list={{item.playlist_id}}">
+<a style="width:100%" href="/watch?v={{ item.navigation_endpoint.watch_endpoint.as_ref().unwrap().video_id }}&list={{ item.navigation_endpoint.watch_endpoint.as_ref().unwrap().playlist_id.as_ref().unwrap() }}">
     {% if !preferences.thin_mode %}
         <div class="thumbnail">
             <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
