@@ -3,7 +3,7 @@ use askama::{langid, Template};
 use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, body::Body};
 use tokio::sync::Mutex;
 use tracing::Level;
-use youtubei_rs::{query::{player, next_video_id, resolve}, types::video::VideoSecondaryInfoRenderer};
+use youtubei_rs::{query::{player, next_video_id, resolve}, types::{video::VideoSecondaryInfoRenderer, video::StreamingData}};
 use youtubei_rs::utils::*;
 use crate::{config::State, structs::{Video::Video, player::Player}, handlers::utils::proxyfi_url};
 use super::{utils::{string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
@@ -12,13 +12,13 @@ askama::localization!(LOCALES);
 /// Handler for the /watch?v=id path and renders the watch page
 /// TODO clean up, reduce smell
 pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params): Query<HashMap<String, String>>,request: Request<Body>) -> Response {
-    tracing::event!(target: "web_handlers", Level::DEBUG, "entering watch handler");
+    tracing::event!(target: "web_handlers::watch", Level::DEBUG, "Entering watch handler");
     let lock = state.lock().await;
     let player_call = player(params.get("v").unwrap().to_string(), "".to_string(), &lock.yt_client_config);
     let next_call = next_video_id(params.get("v").unwrap().to_string(), "".to_string(), &lock.yt_client_config);
-    tracing::event!(target: "web_handlers", Level::TRACE, "Joining async calls");
+    tracing::event!(target: "web_handlers::watch", Level::TRACE, "Joining async calls");
     let (player_res, next_res) = tokio::join!(player_call, next_call);
-    tracing::event!(target: "web_handlers", Level::TRACE, "Finished joining async calls");
+    tracing::event!(target: "web_handlers::watch", Level::TRACE, "Finished joining async calls");
     let player= match player_res {
         Ok(player) =>match player.playability_status.status.as_str(){
             // TODO: Better way to handle errors
@@ -28,7 +28,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         Err(err) => match err {
             youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
             youtubei_rs::types::error::Errors::ParseError(_) => {
-                tracing::event!(target: "web_handlers", Level::DEBUG, "Error occurred while requesting a player data retrying wit android client");
+                tracing::event!(target: "web_handlers::watch", Level::DEBUG, "Error occurred while requesting a player data retrying wit android client");
                 match player(params.get("v").unwrap().to_string(), "".to_string(), &lock.yt_client_config).await{
                     Ok(player) => player,
                     Err(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
@@ -41,34 +41,46 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         Ok(next) => next,
         Err(err) => match err{
             youtubei_rs::types::error::Errors::RequestError(error) => {
-                tracing::event!(target: "web_handlers", Level::ERROR, "Request failed to next endpoint.\n Error: {}\n Video ID: {}", error.to_string(),params.get("v").unwrap().to_string() );
+                tracing::event!(target: "web_handlers::watch", Level::ERROR, "Request failed to next endpoint.\n Error: {}\n Video ID: {}", error.to_string(),params.get("v").unwrap().to_string() );
                 return string_to_body(StatusCode::NOT_FOUND.to_string())
             },
             youtubei_rs::types::error::Errors::ParseError(error) => {
-                tracing::event!(target: "web_handlers", Level::ERROR, "Parsing failed on next endpoint data.\n Error: {}\n Video ID: {}", error.to_string(),params.get("v").unwrap().to_string() );
+                tracing::event!(target: "web_handlers::watch", Level::ERROR, "Parsing failed on next endpoint data.\n Error: {}\n Video ID: {}", error.to_string(),params.get("v").unwrap().to_string() );
                 return string_to_body(StatusCode::NOT_FOUND.to_string())
             },
         },
     };
-    let related_videos = next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().secondary_results.secondary_results.results.iter().filter_map(|item| {
-        match item{
-            youtubei_rs::types::misc::NextContents::CompactVideoRenderer(cmp) => Some(cmp.to_owned()),
-            _ => return None,
-        }
-    }).collect::<Vec<_>>();
+    let related_videos = match next.contents.as_ref().unwrap(){
 
-    let secondary_video_renderer: &VideoSecondaryInfoRenderer = next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().results.results.contents.iter().filter_map(|item| {
-        return match item{
-            youtubei_rs::types::misc::NextContents::VideoSecondaryInfoRenderer(vpr) =>Some(vpr),
-            _ => None
-        };
-    }).collect::<Vec<_>>().get(0).unwrap();
-    let comments_count: String = match next.contents.as_ref().unwrap().two_column_watch_next_results.as_ref().unwrap().results.results.contents.get(2) {
-            Some(youtubei_rs::types::misc::NextContents::ItemSectionRenderer(comments)) => match comments.contents.get(0).unwrap(){
-                youtubei_rs::types::misc::ItemSectionRendererContents::CommentsEntryPointHeaderRenderer(header) => header["commentCount"]["simpleText"].to_string(),
+        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnWatchNextResults(renderer) => renderer.secondary_results.secondary_results.results.iter().filter_map(|item| {
+            match item{
+                youtubei_rs::types::enums::NextContents::CompactVideoRenderer(cmp) => Some(cmp.to_owned()),
+                _ => return None,
+            }
+        }).collect::<Vec<_>>(),
+        _ => unreachable!(),
+    };
+
+    let secondary_video_renderer: &VideoSecondaryInfoRenderer = match next.contents.as_ref().unwrap(){
+
+        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnWatchNextResults(renderer) => renderer.results.results.contents.iter().filter_map(|item| {
+            return match item{
+                youtubei_rs::types::enums::NextContents::VideoSecondaryInfoRenderer(vpr) =>Some(vpr),
+                _ => None
+            };
+        }).collect::<Vec<_>>().get(0).unwrap(),
+        _ => unreachable!(),
+    };
+    let comments_count: String = match next.contents.as_ref().unwrap(){
+
+        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnWatchNextResults(renderer) => match renderer.results.results.contents.get(2) {
+            Some(youtubei_rs::types::enums::NextContents::ItemSectionRenderer(comments)) => match comments.contents.get(0).unwrap(){
+                youtubei_rs::types::enums::ItemSectionRendererContents::CommentsEntryPointHeaderRenderer(header) => header["commentCount"]["simpleText"].to_string(),
                 _ => "".to_string()
             },
             _ => "".to_string(),
+        },
+        _ => unreachable!(),
     };
     let author_verified = if let Some(badges) = &secondary_video_renderer.owner.video_owner_renderer.badges{
         get_author_verified(&&badges.get(0).unwrap().metadata_badge_renderer)
@@ -80,7 +92,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         let mut return_str = None;
         for row in rows.iter(){
             let matched_row = match row{
-                youtubei_rs::types::misc::MetadataRowContents::MetadataRowRenderer(row) => row,
+                youtubei_rs::types::enums::MetadataRowContents::MetadataRowRenderer(row) => row,
                 _ => unreachable!()
             };
             if matched_row.title.simple_text.as_str() == "License"{
@@ -98,14 +110,12 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
     }else{
         None
     };
-    let mut audio_streams: Vec<_> = player.streaming_data.formats.iter().filter(|format| format.mime_type.contains("audio")).collect();
-    audio_streams.append(&mut player.streaming_data.adaptive_formats.iter().filter(|format| format.mime_type.contains("audio")).collect());
     let lock = state.lock().await;
     let video = Video{
         thumbnail: proxyfi_url(player.video_details.thumbnail.thumbnails.last().unwrap().url.clone(),&lock.config),
         id: player.video_details.video_id,
         keywords: player.video_details.keywords.unwrap_or_default(),
-        short_description: player.video_details.short_description,
+        short_description: player.video_details.short_description.unwrap_or_default(),
         title: player.video_details.title,
         is_listed: player.video_details.is_private,
         reason: None, // Implement
@@ -133,9 +143,28 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         comments_count,
     };
     drop(lock);
+    
+    let streaming_data = match player.streaming_data {
+        Some(streaming_data) => streaming_data,
+        None => StreamingData{
+            expires_in_seconds: String::from(""),
+            formats:None,
+            adaptive_formats: Vec::with_capacity(0),
+            dash_manifest_url: None,
+            hls_manifest_url:None,
+            hls_formats: None,
+        },
+    };
+    let streaming_formats = match streaming_data.formats {
+        Some(formats) => formats,
+        None =>Vec::with_capacity(0),
+    };
+
+    let mut audio_streams: Vec<_> = streaming_formats.iter().filter(|format| format.mime_type.contains("audio")).collect();
+    audio_streams.append(&mut streaming_data.adaptive_formats.iter().filter(|format| format.mime_type.contains("audio")).collect());
     // Merge formats into one vec
-    let mut formats =  player.streaming_data.formats.iter().filter(|format| !format.mime_type.contains("audio")).collect::<Vec<_>>();
-    let mut adaptive_formats = player.streaming_data.adaptive_formats.iter().filter(|format| !format.mime_type.contains("audio")).collect::<Vec<_>>();
+    let mut formats =  streaming_formats.iter().filter(|format| !format.mime_type.contains("audio")).collect::<Vec<_>>();
+    let mut adaptive_formats = streaming_data.adaptive_formats.iter().filter(|format| !format.mime_type.contains("audio")).collect::<Vec<_>>();
     formats.append(&mut adaptive_formats);
     let lock = state.lock().await;
     let captions = match player.captions{
@@ -143,10 +172,9 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         None => Vec::with_capacity(0),
     };
     let preferred_captions = captions.iter().filter(|track|lock.preferences.captions.contains(&track.name.simple_text)).collect();
-
-
+    
     let player_struct = Player{
-        formats: &player.streaming_data.formats,
+        formats: &formats,
         audio_streams,
         captions: &captions,
         preferred_captions: preferred_captions,
@@ -169,6 +197,7 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         player: player_struct,
         comment_html: "".to_string(),
     };
+    tracing::event!(target: "web_handlers::watch", Level::DEBUG, "Created all templates and rendering template: watch.html");
     render(watch.render())
 }
 

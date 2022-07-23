@@ -421,3 +421,12 @@ save_player_pos: true
 ## Default: false
 ##
 autofocus_search_box: false
+
+##
+## Determines if users should be shown already watched videos or not
+## The defauft is true as it could confuse users otherwise.
+##
+## Accepted values: true, false
+## Default: false
+##
+show_watched: true

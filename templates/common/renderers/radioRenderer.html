@@ -1,0 +1,10 @@
+{% let url = "/playlist?list={{item.playlist_id}}" %}
+<a style="width:100%" href="{{ url }}">
+    {% if !preferences.thin_mode %}
+        <div class="thumbnail">
+            <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
+            <p class="length">{{ localize("generic_videos_count", x: item.video_count_short_text.runs.get(0).unwrap().text.clone() ) }}</p>
+        </div>
+    {% endif %}
+    <p dir="auto">{{ item.title.simple_text }}</p>
+</a>

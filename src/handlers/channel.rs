@@ -7,7 +7,7 @@ use axum::{
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use youtubei_rs::query::{browse_id, resolve};
-use youtubei_rs::types::{channel::Tab, error::Errors, query_results::BrowseResult};
+use youtubei_rs::types::{error::Errors, query_results::BrowseResult};
 
 /// Handler for the path /channel/:id, /c/:id, /user/:id
 pub async fn index(
@@ -128,3 +128,11 @@ async fn fetch_channel(
         // TODO add about tab in youtubei_rs params: "EgVhYm91dLgBAPIGBAoCEgA%3D"
     }
 }
+
+/// For associations between protobufs and tab name
+pub enum Tab{
+    Videos,
+    Playlists,
+    Community
+}
+

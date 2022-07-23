@@ -1,0 +1,39 @@
+<div class="pure-u-1 pure-u-md-1-4">
+    <div class="h-box">
+        {% match item %}
+        {% when youtubei_rs::types::misc::ItemSectionRendererContents::ChannelRenderer with (item) %}
+
+        {% when youtubei_rs::types::misc::ItemSectionRendererContents::PlaylistRenderer with (item) %}          
+
+        {% when youtubei_rs::types::misc::ItemSectionRendererContents::RadioRenderer with (item) %}
+            {% let id =item.videos.get(0).unwrap().child_video_renderer.video_id %}
+            <a href="/mix?list={{id}}">
+                {% if !preferences.thin_mode %}
+                    <div class="thumbnail">
+                        <img loading="lazy" tabindex="-1" class="thumbnail" src="/vi/{{ id }}/mqdefault.jpg"/>
+                    </div>
+                {% endif %}
+                <p dir="auto">{{ item.title }}</p>
+            </a>
+
+        {% when  youtubei_rs::types::misc::ItemSectionRendererContents::VideoRenderer with (item) %}
+        {% when  youtubei_rs::types::misc::ItemSectionRendererContents::ShelfRenderer with (item) %}
+            <div class="video-card-row flexible">
+                <div class="flex-left">
+                    {% if item.premiere_timestamp.is_some() %}
+                        <p dir="auto">{{ translate(locale, "Premieres in `x`", recode_date((item.premiere_timestamp.as(Time) - Time.utc).ago, locale)) }}</p>
+                    {% else if Time.utc - item.published > 1.minute %}
+                        <p dir="auto">{{ translate(locale, "Shared `x` ago", recode_date(item.published, locale)) }}</p>
+                    {% endif %}
+                </div>
+
+                {% if item.views %}
+                <div class="flex-right">
+                    <p dir="auto">{{ localize("generic_views_count", x: item.views) }}</p>
+                </div>
+                {% endif %}
+            </div>
+        {% else %}
+        {% endmatch %}
+    </div>
+</div>
