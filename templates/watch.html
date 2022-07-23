@@ -46,8 +46,8 @@ we're going to need to do it here in order to allow for translations.
     "genre": {% match video.genre %} {% when Some with (genre) %}"{{ genre }}"{% when None %}null{% endmatch %},
     {% match playlist %}
         {% when Some with (pl) %}
-            "index": "{{  pl.continuation }}",
-            "plid": "{{pl.plid }}",
+            "index": "{{  pl.continuations.get(0).unwrap().next_continuation_data.continuation }}",
+            "plid": "{{ pl.playlist_id }}",
         {% when None %}
     {% endmatch %}
     "length_seconds": "{{ video.length_seconds }}",
@@ -139,7 +139,7 @@ we're going to need to do it here in order to allow for translations.
                             <label for="playlist_id">{{ localize("add_to_playlist") }}</label>
                             <select style="width:100%" name="playlist_id" id="playlist_id">
                                 {% for playlist in playlists.iter() %}
-                                    <option data-plid="{{ playlist.plid }}" value="{{ playlist.plid }}">{{  playlist.title }}</option>
+                                    <option data-plid="{{ playlist.playlist_id }}" value="{{ playlist.playlist_id }}">{{  playlist.title.simple_text }}</option>
                                 {% endfor %}
                             </select>
                         </div>

@@ -1,18 +1,18 @@
 <div class="flex-right">
     <div class="icon-buttons">
-        <a title="{{ localize("videoinfo_watch_on_youtube") }}" href="https://www.youtube.com/watch?v={{ item.video_id }}">
+        <a title="{{ localize("videoinfo_watch_on_youtube") }}" href="https://www.youtube.com/watch{{ endpoint_params }}">
             <i class="icon ion-logo-youtube"></i>
         </a>
-        <a title="{{ localize("audio_mode") }}" href="/watch?v={{ item.video_id }}&listen=1">
+        <a title="{{ localize("audio_mode") }}" href="/watch{{ endpoint_params }}&listen=1">
             <i class="icon ion-md-headset"></i>
         </a>
         
         {% if preferences.automatic_instance_redirect %}
-            <a title="{{ localize("switch_invidious_instance") }}" href="/redirect?referer=%2Fwatch?v={{ item.video_id}}">
+            <a title="{{ localize("switch_invidious_instance") }}" href="/redirect?referer=%2Fwatch{{ endpoint_params }}">
                 <i class="icon ion-md-jet"></i>
             </a>
         {% else %}
-            <a title="{{ localize("switch_invidious_instance") }}" href="https://redirect.invidious.io/watch?v={{ item.video_id }}">
+            <a title="{{ localize("switch_invidious_instance") }}" href="https://redirect.invidious.io/watch{{ endpoint_params }}">
                 <i class="icon ion-md-jet"></i>
             </a>
         {% endif %}

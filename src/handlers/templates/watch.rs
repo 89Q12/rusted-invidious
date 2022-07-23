@@ -1,6 +1,7 @@
 use askama::{Locale, Template};
+use youtubei_rs::types::playlist::NextPlaylist;
 
-use crate::structs::{Playlist::Playlist, Video::Video, player::Player};
+use crate::structs::{Video::Video, player::Player};
 
 use super::base::Base;
 
@@ -12,6 +13,6 @@ pub struct Watch<'a> {
     pub _parent: Base<'a>,
     pub video: Video<'a>,
     pub player: Player<'a>,
-    pub playlist: Option<Playlist>,
+    pub playlist: Option<NextPlaylist>,
     pub comment_html: String,
 }

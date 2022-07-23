@@ -5,3 +5,4 @@ pub mod video;
 pub mod templates;
 pub mod utils;
 pub mod search;
+pub mod playlists;
