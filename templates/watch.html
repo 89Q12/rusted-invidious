@@ -260,6 +260,8 @@ we're going to need to do it here in order to allow for translations.
                         {% endif %}
                     {% when youtubei_rs::types::enums::NextContents::CompactVideoRenderer with (rm) %}
                         {% include "common/renderers/compactMovieRenderer.html" %}
+                    {% when youtubei_rs::types::enums::NextContents::CompactPlaylistRenderer with (pl) %}
+                        {% include "common/renderers/compactPlaylistRenderer.html" %}
                     {% else %}
                 {% endmatch %}
             {% endfor%}
