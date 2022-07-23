@@ -254,7 +254,7 @@ we're going to need to do it here in order to allow for translations.
         {% else %}
             {% for rv in video.related_videos %}
                 {% if !rv.video_id.is_empty() %}
-                    {% include "common/related_video.html" %}
+                    {% include "common/renderers/compactVideoRenderer.html" %}
                 {% endif %}
             {% endfor%}
         {% endif %}
