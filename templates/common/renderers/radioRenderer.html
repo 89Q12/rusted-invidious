@@ -1,5 +1,4 @@
-{% let url = "/playlist?list={{item.playlist_id}}" %}
-<a style="width:100%" href="{{ url }}">
+<a style="width:100%" href="/playlist?list={{item.playlist_id}}">
     {% if !preferences.thin_mode %}
         <div class="thumbnail">
             <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
