@@ -39,7 +39,7 @@
     </a></div>
 
     {% let endpoint_params = "?v={{{ item.id }}" %}
-    include "components/video-context-buttons" 
+    {% include "common/video_context_buttons.html" %} 
 </div>
 
 <div class="video-card-row flexible">
