@@ -19,8 +19,10 @@
 {% endmatch %}
 <p>{{ localize("generic_videos_count", x: item.video_count_text.runs.get(0).unwrap().text.clone()) }}</p>
 
-<h5>
-{% for snippet in item.description_snippet.runs %}
-    {{ snippet.text.clone()}}
-{% endfor %}
-</h5>
+{% if item.description_snippet.is_some() %}
+    <h5>
+    {% for snippet in item.description_snippet.as_ref().unwrap().runs %}
+        {{ snippet.text.clone()}}
+    {% endfor %}
+    </h5>
+{% endif %}
