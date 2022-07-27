@@ -1,0 +1,18 @@
+{% for content in channel.items %}
+    {% match content %}
+        {% when youtubei_rs::types::enums::ItemSectionRendererContents::GridChannelRenderer with (item) %}
+            GridChannelRenderer
+            {% include "common/renderers/gridChannelRenderer.html" %}
+        {% when youtubei_rs::types::enums::ItemSectionRendererContents::GridPlaylistRenderer with (item) %}   
+            GridPlaylistRenderer       
+            {% include "common/renderers/gridPlaylistRenderer.html" %}
+        {% when youtubei_rs::types::enums::ItemSectionRendererContents::GridRadioRenderer with (item) %}
+            GridRadioRenderer
+            {% include "common/renderers/gridRadioRenderer.html" %}
+        {% when  youtubei_rs::types::enums::ItemSectionRendererContents::GridVideoRenderer with (item) %}
+            GridVideoRenderer
+            {{ item.video_id}}
+            {% include "common/renderers/gridVideoRenderer.html" %}
+        {% else %}
+    {% endmatch %}
+{% endfor %}

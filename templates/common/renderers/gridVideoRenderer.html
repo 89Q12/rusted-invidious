@@ -1,0 +1,76 @@
+<a style="width:100%" href="/watch?v={{ item.video_id }}">
+    {% if !preferences.thin_mode %}
+        <div class="thumbnail">
+            <img loading="lazy" tabindex="-1" class="thumbnail" src="/vi/{{ item.video_id}}/mqdefault.jpg"/>
+            {% if preferences.show_watched && user.is_some() %}
+                <form data-onsubmit="return_false" action="/watch_ajax?action_mark_watched=1&id={{ item.video_id }}&referer={{ params.current_page }}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ user.as_ref().unwrap().csrf_token }}">
+                    <p class="watched">
+                        <button type="submit" style="all:unset" data-onclick="mark_watched" data-id="{{ item.video_id }}">
+                            <i data-mouse="switch_classes" data-switch-classes="ion-ios-eye-off,ion-ios-eye" class="icon ion-ios-eye"></i>
+                        </button>
+                    </p>
+                </form>
+            {% endif %}
+            {% match item.thumbnail_overlays.get(0).unwrap() %}
+                {% when  youtubei_rs::types::enums::ThumbnailOverlays::ThumbnailOverlayTimeStatusRenderer with (overlay) %}
+                   {% if overlay.style.as_str() == "LIVE" %}
+                        <p class="length" dir="auto"><i class="icon ion-ios-play-circle"></i> {{ localize("live") }}</p>
+                    {% else %}
+                        <p class="length" dir="auto">overlay.text.simple_text.unwrap()</p>
+                    {% endif %}
+                {% else %}
+            {% endmatch %}
+        </div>
+    {% endif %}
+    {% match item.title.simple_text %}
+        {% when Some with (text) %}
+            <p dir="auto">{{ text }}</p>
+        {% when None %}
+            {% match item.title.runs %}
+                {% when Some with (runs) %}
+                    <p dir="auto">{{ runs.get(0).unwrap().text }}</p>
+                {% when None %}
+            {% endmatch %}
+    {% endmatch %}
+</a>
+
+<div class="video-card-row flexible">
+    <div class="flex-left"><a href="/channel/{{ channel.metadata.external_id }}">
+        {% match item.owner_badges %}
+            {% when Some with (badges) %}
+                {% if youtubei_rs::utils::get_author_verified(badges.get(0).unwrap().metadata_badge_renderer) %}
+                <p dir="auto">{{ channel.metadata.title }}<i class="icon ion ion-md-checkmark-circle"></i></p>
+                {% endif %}
+            {% when None %}
+        {% endmatch %}
+    </a></div>
+
+    {% let endpoint_params = "?v={{{ item.video_id }}" %}
+    {% include "common/video_context_buttons.html" %} 
+</div>
+
+<div class="video-card-row flexible">
+    <div class="flex-left">
+        {% if item.upcoming_event_data.is_some() %}
+            <p class="video-data" dir="auto">{{ localize("premieres_in_", x: item.upcoming_event_data.as_ref().unwrap().start_time.clone()) }}</p>
+        {% else %}
+            <p class="video-data" dir="auto">{{ localize("shared_upload_date", x: item.published_time_text.as_ref().unwrap().simple_text.clone()) }}</p>
+        {% endif %}
+    </div>
+
+    {% if item.view_count_text.is_some() %}
+        <div class="flex-right">
+            {% match item.view_count_text.as_ref().unwrap().simple_text %}
+                {% when Some with (simple_text) %}
+                    <p class="video-data" dir="auto">{{ localize("generic_views_count", x: simple_text.clone()) }}</p>
+                {% when None %}
+                    {% match item.view_count_text.as_ref().unwrap().runs %}
+                        {% when Some with (runs) %}
+                             <p class="video-data" dir="auto">{{ localize("generic_views_count", x: runs.get(0).as_ref().unwrap().text.clone() ) }} {{runs.get(1).as_ref().unwrap().text}}</p>
+                        {% when None %}
+                    {% endmatch %}
+            {% endmatch %}
+        </div>  
+    {% endif %}
+</div>
