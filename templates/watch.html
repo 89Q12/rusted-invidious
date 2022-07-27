@@ -203,6 +203,9 @@ we're going to need to do it here in order to allow for translations.
                     <span id="channel-name">{{ video.author }}{% if video.author_verified %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</span>
                 </div>
             </a>
+            {% let sub_count_text = video.sub_count_text.clone()  %}
+            {% let channel_id = video.ucid.clone() %}
+            {% let author = video.author.clone() %}
             {% include "common/subscribe_widget.html" %}
             <p id="published-date">
                 {% match video.premiere_timestamp %}
