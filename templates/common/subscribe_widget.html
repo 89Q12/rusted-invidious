@@ -1,20 +1,20 @@
 {% match user %}
     {% when Some with (user) %}
-    {% if user.subscriptions.contains(video.ucid) %}
+    {% if user.subscriptions.contains(channel_id) %}
         <p>
-            <form action="/subscription_ajax?action_remove_subscriptions=1&c={{ video.ucid }}&referer={{ params.current_page }}" method="post">
+            <form action="/subscription_ajax?action_remove_subscriptions=1&c={{ channel_id }}&referer={{ params.current_page }}" method="post">
                 <input type="hidden" name="csrf_token" value="{{ user.csrf_token }}">
                 <button data-type="unsubscribe" id="subscribe" class="pure-button pure-button-primary">
-                    <b><input style="all:unset" type="submit" value="{{ localize("unsubscribe") }} | {{ video.sub_count_text }}"></b>
+                    <b><input style="all:unset" type="submit" value="{{ localize("unsubscribe") }} | {{ sub_count_text }}"></b>
                 </button>
             </form>
         </p>
     {% else %}
         <p>
-            <form action="/subscription_ajax?action_create_subscription_to_channel=1&c={{ video.ucid }}&referer={{ params.current_page }}" method="post">
+            <form action="/subscription_ajax?action_create_subscription_to_channel=1&c={{ channel_id }}&referer={{ params.current_page }}" method="post">
                 <input type="hidden" name="csrf_token" value="{{ user.csrf_token }}">
                 <button data-type="subscribe" id="subscribe" class="pure-button pure-button-primary">
-                    <b><input style="all:unset" type="submit" value="{{ localize("subscribe") }} | {{ video.sub_count_text }}"></b>
+                    <b><input style="all:unset" type="submit" value="{{ localize("subscribe") }} | {{ sub_count_text }}"></b>
                 </button>
             </form>
         </p>
@@ -22,9 +22,9 @@
 
     <script id="subscribe_data" type="application/json">
     {
-        "ucid": {{ video.ucid }},
-        "author": {{ video.author }},
-        "sub_count_text": {{ video.sub_count_text }},
+        "ucid": {{ channel_id }},
+        "author": {{ author }},
+        "sub_count_text": {{ sub_count_text }},
         "csrf_token": {{ user.csrf_token }},
         "subscribe_text": {{ localize("subscribe") }},
         "unsubscribe_text": {{ localize("unsubscribe") }}
@@ -35,7 +35,7 @@
     <p>
         <a id="subscribe" class="pure-button pure-button-primary"
             href="/login?referer={{ params.current_page }}">
-            <b>{{ localize("subscribe") }} | {{ video.sub_count_text }}</b>
+            <b>{{ localize("subscribe") }} | {{ sub_count_text }}</b>
         </a>
     </p>
 {% endmatch %}

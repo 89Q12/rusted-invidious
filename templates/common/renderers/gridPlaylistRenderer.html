@@ -1,0 +1,28 @@
+<a style="width:100%" href="/playlist?list={{ item.playlist_id }}">
+    {% if !preferences.thin_mode %}
+        <div class="thumbnail">
+            <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
+            <p class="length">{{ localize("generic_videos_count", x: item.video_count_text.runs.get(0).unwrap().text.clone()) }}</p>
+        </div>
+    {% endif %}
+    {% match item.title.simple_text %}
+        {% when Some with (text) %}
+            <p dir="auto">{{ text }}</p>
+        {% when None %}
+            {% match item.title.runs %}
+                {% when Some with (runs) %}
+                    <p dir="auto">{{ runs.get(0).unwrap().text }}</p>
+                {% when None %}
+            {% endmatch %}
+    {% endmatch %}
+
+</a>
+<a href="/channel/{{ channel.metadata.external_id }}">
+    {% match channel.header.badges %}
+        {% when Some with (badges) %}
+            {% if youtubei_rs::utils::get_author_verified(badges.get(0).unwrap().metadata_badge_renderer) %}
+            <p dir="auto">{{ channel.metadata.title }}<i class="icon ion ion-md-checkmark-circle"></i></p>
+            {% endif %}
+        {% when None %}
+    {% endmatch %}
+</a>

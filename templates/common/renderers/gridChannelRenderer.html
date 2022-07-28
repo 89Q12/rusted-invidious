@@ -17,12 +17,9 @@
     {% when None %}
         <p>{{ localize("generic_subscribers_count", x: "0") }}</p>
 {% endmatch %}
-<p>{{ localize("generic_videos_count", x: item.video_count_text.runs.get(0).unwrap().text.clone()) }}</p>
-
-{% if item.description_snippet.is_some() %}
-    <h5>
-    {% for snippet in item.description_snippet.as_ref().unwrap().runs %}
-        {{ snippet.text.clone()}}
-    {% endfor %}
-    </h5>
-{% endif %}
+{% match item.video_count_text %}
+    {% when Some with (count_text) %}
+        <p>{{ localize("generic_videos_count", x: count_text.runs.get(0).unwrap().text.clone()) }}</p>        
+    {% when None %}    
+        <p>{{ localize("generic_videos_count", x: "0") }}</p>        
+{% endmatch %}

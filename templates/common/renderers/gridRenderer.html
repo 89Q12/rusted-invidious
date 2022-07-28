@@ -1,0 +1,22 @@
+{{ item.items.len() }}
+{% for content in item.items %}
+    {% match content %}
+        {% when youtubei_rs::types::enums::ItemSectionRendererContents::GridChannelRenderer with (item) %}
+            {% include "common/renderers/gridChannelRenderer.html" %}
+        {% when youtubei_rs::types::enums::ItemSectionRendererContents::GridPlaylistRenderer with (item) %}       
+            {% include "common/renderers/gridPlaylistRenderer.html" %}
+        {% when youtubei_rs::types::enums::ItemSectionRendererContents::GridRadioRenderer with (item) %}
+            {% include "common/renderers/gridRadioRenderer.html" %}
+        {% when  youtubei_rs::types::enums::ItemSectionRendererContents::GridVideoRenderer with (item) %}
+            {% include "common/renderers/gridVideoRenderer.html" %}
+        {% when  youtubei_rs::types::enums::ItemSectionRendererContents::BackstagePostThreadRenderer with (item) %}
+            {% match item.post %}
+                {% when  youtubei_rs::types::enums::CommunityPost::SharedPostRenderer with (post) %}
+                    {% include "common/renderers/sharedPostRenderer.html" %}
+                {% when  youtubei_rs::types::enums::CommunityPost::BackstagePostRenderer with (post) %}
+                    {% include "common/renderers/backstagePostRenderer.html" %}
+                {% endmatch %}
+        {% else %}
+        {{format!("{:?}", content)}}
+    {% endmatch %}
+{% endfor %}
