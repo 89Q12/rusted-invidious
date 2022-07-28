@@ -19,7 +19,7 @@ pub async fn index(
 ) -> Response {
     let ch = fetch_channel(id.to_owned(), Tab::Videos, &state);
     let about_call = fetch_channel(id.to_owned(), Tab::About, &state);
-    let (about, result) = tokio::join!(ch, about_call);
+    let (result, about) = tokio::join!(ch, about_call);
     let channel = match result {
         Ok(ch) => ch,
         Err(e) => match e {
@@ -35,13 +35,24 @@ pub async fn index(
         },
     };
     let about = match about.contents.unwrap(){
-        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => match column_renderer.tabs.get(column_renderer.tabs.len() - 1).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
+        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => {
+            for tab in &column_renderer.tabs{
+                if let Some(result) = &tab.tab_renderer{
+                    println!("{}, {}", result.selected.is_some(),result.title.as_ref().unwrap());
+                }
+            }
+            let tab = &column_renderer.tabs.get(5).unwrap().tab_renderer;
+            match tab.as_ref().unwrap().content.as_ref().unwrap(){
             youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                youtubei_rs::types::enums::ItemSectionRendererContents::ChannelAboutFullMetadataRenderer(about) => about.to_owned(),
+                youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => match item_renderer.contents.get(0).unwrap(){
+                    youtubei_rs::types::enums::ItemSectionRendererContents::ChannelAboutFullMetadataRenderer(about) => about.to_owned(),
+                    _ => unreachable!(),
+                },
                 _ => unreachable!()
             },
             _ => unreachable!()
-        },
+        }
+    },
         _ => unreachable!(),
     };
     let header = match channel.header.unwrap(){
@@ -77,14 +88,19 @@ pub async fn index(
         sorted_by: "newest".to_string(),
         auto_generated: false,
         items: match channel.contents.unwrap(){
-            youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => match column_renderer.tabs.get(column_renderer.tabs.len() - 1).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
-                youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) =>list_renderer.contents.clone(),
+            youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => match column_renderer.tabs.get(1).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
+                youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
+                    youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => item_renderer.contents.clone(),
+                    _ => unreachable!()
+ 
+                },
                 _ => unreachable!()
             },
             _ => unreachable!()
         },
         has_community_enabled: true,
     };
+    print!("{}", channel.items.len());
     let template = super::templates::channel::ChannelTemplate{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
         _parent: &base,
