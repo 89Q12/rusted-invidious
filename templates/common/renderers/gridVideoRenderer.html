@@ -17,7 +17,7 @@
                    {% if overlay.style.as_str() == "LIVE" %}
                         <p class="length" dir="auto"><i class="icon ion-ios-play-circle"></i> {{ localize("live") }}</p>
                     {% else %}
-                        <p class="length" dir="auto">overlay.text.simple_text.unwrap()</p>
+                        <p class="length" dir="auto">{{ overlay.text.simple_text.as_ref().unwrap() }}</p>
                     {% endif %}
                 {% else %}
             {% endmatch %}
