@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block header %}
+<meta name="description" content="{{ localize("an_alternative_front_end_to_youtube") }}">
+<title>
+    {% if preferences.default_home != "Trending" %}
+        {{ localize("trending") }} - Invidious
+    {% else %}
+        Invidious
+    {% endif %}
+</title>
+{% endblock header %}
+{% block content %}
+
+<div class="pure-g h-box">
+    <div class="pure-u-1-3">
+        <div class="pure-g" style="text-align:right">
+            {% for option in config.trending_pages.iter() %}
+                <div class="pure-u-1 pure-md-1-3">
+                    {% if params.trending_type == option %}
+                        <b>{{ localize(option)}}</b>
+                    {% else %}
+                        <a href="/feed/trending?type={{ option }}&region={{ preferences.region }}">
+                            {{ localize(option) }}
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="h-box">
+    <hr>
+</div>
+
+<div class="pure-g">
+    {% for item in trending_items %}
+        {% match item %}
+            {% when youtubei_rs::types::enums::ItemSectionRendererContents::ChannelRenderer with (item) %}
+                ChannelRenderer
+                {% include "common/renderers/channelRenderer.html" %}
+            {% when youtubei_rs::types::enums::ItemSectionRendererContents::PlaylistRenderer with (item) %}   
+            PlaylistRenderer       
+                {% include "common/renderers/playlistRenderer.html" %}
+            {% when youtubei_rs::types::enums::ItemSectionRendererContents::RadioRenderer with (item) %}
+            RadioRenderer
+                {% include "common/renderers/radioRenderer.html" %}
+            {% when  youtubei_rs::types::enums::ItemSectionRendererContents::VideoRenderer with (item) %}
+            VideoRenderer
+            {{ item.video_id}}
+                {% include "common/renderers/videoRenderer.html" %}
+            {% when  youtubei_rs::types::enums::ItemSectionRendererContents::ShelfRenderer with (item) %}
+            ShelfRenderer
+                {{ item.title.simple_text.as_ref().unwrap()}}
+                {% include "common/renderers/shelfRenderer.html" %}
+            {% else %}
+                {{format!("{:?}",item)}}
+        {% endmatch %}
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block header %}
+<title>{{ localize("Subscriptions") }} - Invidious</title>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/private?token=<%= token %>" />
+{% endblock header %}
+{% block content %}
+
+<div class="pure-g h-box">
+    <div class="pure-u-1-3">
+        <h3>
+            <a href="/subscription_manager">{{ localize("Manage subscriptions") }}</a>
+        </h3>
+    </div>
+    <div class="pure-u-1-3">
+        <h3 style="text-align:center">
+            <a href="/feed/history">{{ localize("Watch history") }}</a>
+        </h3>
+    </div>
+    <div class="pure-u-1-3">
+        <h3 style="text-align:right">
+            <a href="/feed/private?token=<%= token %>"><i class="icon ion-logo-rss"></i></a>
+        </h3>
+    </div>
+</div>
+
+<center>
+    {{ localize("subscriptions_unseen_notifs_count", x: notifications.len()) }}
+</center>
+
+{% if !notifications.is_empty() %}
+    <div class="h-box">
+        <hr>
+    </div>
+{% endif %}
+
+<div class="pure-g">
+<% notifications.each do |item| %>
+    <%= rendered "components/item" %>
+<% end %>
+</div>
+
+<div class="h-box">
+    <hr>
+</div>
+
+<script id="watched_data" type="application/json">
+<%=
+{
+    "csrf_token" => URI.encode_www_form(env.get?("csrf_token").try &.as(String) || "")
+}.to_pretty_json
+%>
+</script>
+<script src="/js/watched_widget.js"></script>
+
+<div class="pure-g">
+<% videos.each do |item| %>
+    <%= rendered "components/item" %>
+<% end %>
+</div>
+
+<div class="pure-g h-box">
+    <div class="pure-u-1 pure-u-lg-1-5">
+        <% if page > 1 %>
+            <a href="/feed/subscriptions?page=<%= page - 1 %><% if env.params.query["max_results"]? %>&max_results=<%= max_results %><% end %>">
+                {{ localize("Previous page") %>
+            </a>
+        <% end %>
+    </div>
+    <div class="pure-u-1 pure-u-lg-3-5"></div>
+    <div class="pure-u-1 pure-u-lg-1-5" style="text-align:right">
+        <% if (videos.size + notifications.size) == max_results %>
+            <a href="/feed/subscriptions?page=<%= page + 1 %><% if env.params.query["max_results"]? %>&max_results=<%= max_results %><% end %>">
+                {{ localize("Next page") %>
+            </a>
+        <% end %>
+    </div>
+</div>
+{% endblock content %}

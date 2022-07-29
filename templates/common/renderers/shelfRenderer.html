@@ -22,4 +22,16 @@
             {% else %}
         {% endmatch %}
     {% endfor %}
+{% else %}
+    {% for content in item.content.expanded_shelf_contents_renderer.as_ref().unwrap().items.iter() %}
+        {% match content %}
+            {% when youtubei_rs::types::enums::ItemSectionRendererContents::ChannelRenderer with (item) %}
+                {% include "common/renderers/channelRenderer.html" %}
+            {% when youtubei_rs::types::enums::ItemSectionRendererContents::PlaylistRenderer with (item) %}          
+                {% include "common/renderers/playlistRenderer.html" %}
+            {% when  youtubei_rs::types::enums::ItemSectionRendererContents::VideoRenderer with (item) %}
+                {% include "common/renderers/videoRenderer.html" %}
+            {% else %}
+        {% endmatch %}
+    {% endfor %}
 {% endif %}

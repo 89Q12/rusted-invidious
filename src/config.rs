@@ -32,7 +32,9 @@ pub struct Config {
     pub host_binding: String,
     pub proxy_domain: String,
     #[serde(skip)]
-    pub redirect_url: String
+    pub redirect_url: String,
+    #[serde(skip)]
+    pub trending_pages: Vec<String>,
 }
 
 impl Config {
@@ -41,6 +43,7 @@ impl Config {
         let loaded_config = fs::read_to_string("config.yaml").unwrap();
         let mut config: Config = serde_yaml::from_str(&loaded_config).unwrap();
         config.redirect_url = "https://redirect.invidious.io".to_string();
+        config.trending_pages = vec!["Default".to_string(), "Music".to_string(), "Gaming".to_string(), "Movies".to_string()];
         config
     }
 }

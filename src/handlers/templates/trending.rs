@@ -3,12 +3,12 @@ use youtubei_rs::types::enums::ItemSectionRendererContents;
 
 use super::base::Base;
 
-
 #[derive(Template)] 
-#[template(path = "search.html")]
-pub struct Search<'a>{
+#[template(path = "feeds/trending.html")]
+pub struct Trending<'a>{
     #[locale]
     pub loc: Locale<'a>,
     pub _parent: &'a Base<'a>,
-    pub videos: Vec<ItemSectionRendererContents>
+    pub trending_items: Vec<ItemSectionRendererContents>
+
 }

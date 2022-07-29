@@ -3,3 +3,4 @@ pub mod watch;
 pub mod search;
 pub mod view_playlist;
 pub mod channel;
+pub mod trending;
