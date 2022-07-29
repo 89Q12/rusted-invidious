@@ -8,7 +8,7 @@
         {% when youtubei_rs::types::misc::ItemSectionRendererContents::RadioRenderer with (item) %}
             {% let id =item.videos.get(0).unwrap().child_video_renderer.video_id %}
             <a href="/mix?list={{id}}">
-                {% if !preferences.thin_mode %}
+                {% if !context.preferences.thin_mode %}
                     <div class="thumbnail">
                         <img loading="lazy" tabindex="-1" class="thumbnail" src="/vi/{{ id }}/mqdefault.jpg"/>
                     </div>

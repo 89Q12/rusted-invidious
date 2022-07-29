@@ -1,7 +1,7 @@
 <a href="/watch?v={{ rv.video_id }}">
-    {% if !preferences.thin_mode %}
+    {% if !context.preferences.thin_mode %}
         <div class="thumbnail">
-            <img loading="lazy" class="thumbnail" src="{{ config.proxy_domain }}/vi/{{ rv.video_id }}/mqdefault.jpg">
+            <img loading="lazy" class="thumbnail" src="{{ context.config.proxy_domain }}/vi/{{ rv.video_id }}/mqdefault.jpg">
             {% match rv.length_text %}
                 {% when Some with (text) %}
                     <p class="length">{{ text.simple_text }}</p>

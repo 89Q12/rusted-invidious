@@ -1,6 +1,6 @@
 <div class="feed-menu">
-    {% for feed in preferences.feed_menu.iter() %}
-        {% if user.is_none() && (feed.to_owned() == "Playlists".to_string() || feed.to_owned() == "Subscriptions".to_string())  %}
+    {% for feed in context.preferences.feed_menu.iter() %}
+        {% if context.user.is_none() && (feed.to_owned() == "Playlists".to_string() || feed.to_owned() == "Subscriptions".to_string())  %}
             {% continue %}
         {% else %}
             <a href="/feed/{{ feed.to_lowercase() }}" class="feed-menu-item pure-menu-heading">

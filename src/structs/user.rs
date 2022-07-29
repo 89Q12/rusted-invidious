@@ -1,3 +1,5 @@
+use crate::config::Preferences;
+
 use super::Playlist;
 
 pub struct User{
@@ -5,6 +7,7 @@ pub struct User{
     pub name: String,
     pub notification_count: i32,
     pub subscriptions: Vec<String>,
+    pub preferences: Preferences,
 }
 impl User {
     pub fn get_playlists(&self) -> Vec<Playlist::Playlist> {

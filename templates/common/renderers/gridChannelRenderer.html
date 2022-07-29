@@ -1,5 +1,5 @@
 <a href="/channel/{{ item.channel_id }}">
-    {% if !preferences.thin_mode %}
+    {% if !context.preferences.thin_mode %}
         <center>
             <img loading="lazy" tabindex="-1" style="width:56.25%" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
         </center>

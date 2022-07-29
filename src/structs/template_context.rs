@@ -114,5 +114,13 @@ impl<'a> TemplateContext<'a> {
             None => false,
         }
     }
-
+    pub fn search_query(&self) -> String {
+        match self.query_params.get("q") {
+            Some(value) => *value,
+            None => String::from(""),
+        }
+    }
+    pub fn query_params(&self) -> String {
+        self.query_params.into_iter().map(|(k,v)| k+ "="+&v).collect::<Vec<String>>().join("&")
+    }
 }

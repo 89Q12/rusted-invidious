@@ -1,5 +1,5 @@
 <a href="/playlist?list={{ pl.playlist_id }}">
-    {% if !preferences.thin_mode %}
+    {% if !context.preferences.thin_mode %}
         <div class="thumbnail">
             <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ pl.thumbnail.thumbnails.last().unwrap().url }}"/>
             <p class="length">{{ localize("generic_videos_count", x: pl.video_count_short_text.simple_text.clone()) }}</p>

@@ -1,12 +1,12 @@
 <div class="pure-u-1 pure-u-md-1-4">
     <div class="h-box">
         <a style="width:100%" href="/watch?v={{ video.video_id }}">
-            {% if !preferences.thin_mode %}
+            {% if !context.preferences.thin_mode %}
                 <div class="thumbnail">
                     <img loading="lazy" tabindex="-1" class="thumbnail" src="/vi/{{ video.video_id }}/mqdefault.jpg"/>
-                    {% if preferences.show_watched && user.is_some() %}
-                        <form data-onsubmit="return_false" action="/watch_ajax?action_mark_watched=1&id={{ video.video_id }}&referer={{ params.current_page }}" method="post">
-                            <input type="hidden" name="csrf_token" value="{{ user.as_ref().unwrap().csrf_token }}">
+                    {% if context.preferences.show_watched && context.user.is_some() %}
+                        <form data-onsubmit="return_false" action="/watch_ajax?action_mark_watched=1&id={{ video.video_id }}&referer={{ context.current_page }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ context.user.as_ref().unwrap().csrf_token }}">
                             <p class="watched">
                                 <button type="submit" style="all:unset" data-onclick="mark_watched" data-id="{{ video.video_id }}">
                                     <i data-mouse="switch_classes" data-switch-classes="ion-ios-eye-off,ion-ios-eye" class="icon ion-ios-eye"></i>

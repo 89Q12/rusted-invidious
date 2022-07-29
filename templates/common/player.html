@@ -1,27 +1,27 @@
 <video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ video.thumbnail }}"
-    id="player" class="on-video_player video-js player-style-{{ preferences.player_style }}"
-    {% if preferences.autoplay %}autoplay{% endif %}
-    {% if preferences.video_loop %}loop{% endif %}
-    {% if params.controls %}controls{% endif %}>
+    id="player" class="on-video_player video-js player-style-{{ context.preferences.player_style }}"
+    {% if context.preferences.autoplay %}autoplay{% endif %}
+    {% if context.preferences.video_loop %}loop{% endif %}
+    {% if context.show_controls() %}controls{% endif %}>
     <!-- TODO: research into hlsvp-->
-    {% if player.hls_manifest_url.is_some() && !config.disable_livestreams %}
-        <source src="{{  player.hls_manifest_url.as_ref().unwrap() }}{% if params.local %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
+    {% if player.hls_manifest_url.is_some() && !context.config.disable_livestreams %}
+        <source src="{{  player.hls_manifest_url.as_ref().unwrap() }}{% if context.proxy_local() %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
     {% else %}
-        {% if params.listen %}
+        {% if context.listen() %}
             {% for (pos, stream) in player.audio_streams.iter().enumerate() %}
                 {% let selected = pos == 0 %}
-                <source src="/latest_version?id={{ video.id }}&itag={{ stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
+                <source src="/latest_version?id={{ video.id }}&itag={{ stream.itag }}{% if context.proxy_local()%}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
             {% endfor %}
         {% else %}
-            {% if preferences.quality == "dash" %}
+            {% if context.preferences.quality == "dash" %}
                 <source src="/api/manifest/dash/id/{{ video.id }}?local=true&unique_res=1" type="application/dash+xml" label="dash">
             {% endif %}
 
             {% for (index, stream) in player.formats.iter().enumerate() %}
                 {% if stream.itag != 17 %}
-                    {% let selected = preferences.quality == stream.quality || index == 0 %}
+                    {% let selected = context.preferences.quality == stream.quality || index == 0 %}
                 
-                    <source src="/latest_version?id={{video.id}}&itag={{stream.itag }}{% if params.local %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
+                    <source src="/latest_version?id={{video.id}}&itag={{stream.itag }}{% if context.proxy_local() %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
                 {% endif %}
             {% endfor %}
 
