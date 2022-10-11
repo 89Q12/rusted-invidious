@@ -10,7 +10,7 @@ pub struct TemplateContext<'a> {
     pub query_params: HashMap<String, String>,
     pub config: &'a Config,
     pub user: Option<User>,
-    pub preferences: &'a Preferences,
+    pub preferences: Preferences,
     pub current_page: String,
 }
 
@@ -47,9 +47,9 @@ impl<'a> TemplateContext<'a> {
             }
             None => HashMap::new(),
         };
-        let preferences = match user {
-            Some(user) => &user.preferences,
-            None => &config.default_preferences,
+        let preferences = match user.as_ref() {
+            Some(user) => user.preferences.clone(),
+            None => config.default_preferences.clone(),
         };
         TemplateContext {
             query_params,
@@ -65,6 +65,7 @@ impl<'a> TemplateContext<'a> {
             Some(value) =>  match value.as_str(){
                 "1" => true,
                 "0" => false,
+                _ => false
             },
             None => false,
         }
@@ -74,6 +75,7 @@ impl<'a> TemplateContext<'a> {
             Some(value) =>  match value.as_str(){
                 "1" => true,
                 "0" => false,
+                _ => false
             },
             None => false,
         }
@@ -83,6 +85,7 @@ impl<'a> TemplateContext<'a> {
             Some(value) =>  match value.as_str(){
                 "1" => true,
                 "0" => false,
+                _ => false
             },
             None => false,
         }
@@ -92,6 +95,7 @@ impl<'a> TemplateContext<'a> {
             Some(value) =>  match value.as_str(){
                 "1" => true,
                 "0" => false,
+                _ => false
             },
             None => false,
         }
@@ -101,6 +105,7 @@ impl<'a> TemplateContext<'a> {
             Some(value) =>  match value.as_str(){
                 "1" => true,
                 "0" => false,
+                _ => false
             },
             None => false,
         }
@@ -110,17 +115,18 @@ impl<'a> TemplateContext<'a> {
             Some(value) =>  match value.as_str(){
                 "1" => true,
                 "0" => false,
+                _ => false
             },
             None => false,
         }
     }
     pub fn search_query(&self) -> String {
         match self.query_params.get("q") {
-            Some(value) => *value,
+            Some(value) => value.clone(),
             None => String::from(""),
         }
     }
     pub fn query_params(&self) -> String {
-        self.query_params.into_iter().map(|(k,v)| k+ "="+&v).collect::<Vec<String>>().join("&")
+        self.query_params.to_owned().into_iter().map(|(k,v)| k+ "="+&v).collect::<Vec<String>>().join("&")
     }
 }
