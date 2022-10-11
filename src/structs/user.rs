@@ -2,6 +2,7 @@ use crate::config::Preferences;
 
 use super::Playlist;
 
+#[derive(Clone)]
 pub struct User{
     pub csrf_token: String,
     pub name: String,
