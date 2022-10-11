@@ -1,4 +1,4 @@
-use crate::{config::State, structs::{channel::Channel, template_context}};
+use crate::{config::State, structs::{channel::Channel, template_context::{self, TemplateContext}}};
 use axum::{
     extract::path::Path,
     response::{Redirect, Response},
@@ -9,7 +9,7 @@ use tokio::sync::Mutex;
 use youtubei_rs::query::browse_id;
 use youtubei_rs::types::{error::Errors, query_results::BrowseResult};
 use askama::{langid, Template};
-use super::{utils::{string_to_body, build_params, proxyfi_url, render}, templates::base::Base};
+use super::{utils::{string_to_body, proxyfi_url, render}, templates::base::Base};
 askama::localization!(LOCALES);
 /// Handler for the path /channel/:id, /c/:id, /user/:id
 pub async fn index(
@@ -64,15 +64,6 @@ pub async fn index(
         None => None,
     };
     let thumbnail = proxyfi_url(metadata.avatar.thumbnails.last().unwrap().url.to_string(),&lock.config);
-    let base = Base{
-        title: "invidious".to_string(),
-        config: &lock.config,
-        user: None,
-        preferences: &lock.preferences,
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        params: build_params(&request)
-    };
-
     let channel = Channel{
         about,
         banner,
@@ -97,8 +88,8 @@ pub async fn index(
     };
     let template = super::templates::channel::ChannelTemplate{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        _parent: &base,
         channel,
+        context: TemplateContext::new(&request, None, &lock.config),
     };
     render(template.render())
 }
@@ -173,15 +164,6 @@ pub async fn playlists(
         None => None,
     };
     let thumbnail = proxyfi_url(metadata.avatar.thumbnails.last().unwrap().url.to_string(),&lock.config);
-    let base = Base{
-        title: "invidious".to_string(),
-        config: &lock.config,
-        user: None,
-        preferences: &lock.preferences,
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        params: build_params(&request)
-    };
-
     let channel = Channel{
         about,
         banner,
@@ -206,8 +188,8 @@ pub async fn playlists(
     };
     let template = super::templates::channel::ChannelTemplate{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        _parent: &base,
         channel,
+        context: TemplateContext::new(&request, None, &lock.config),
     };
     render(template.render())
 }
@@ -265,15 +247,6 @@ pub async fn community(
         None => None,
     };
     let thumbnail = proxyfi_url(metadata.avatar.thumbnails.last().unwrap().url.to_string(),&lock.config);
-    let base = Base{
-        title: "invidious".to_string(),
-        config: &lock.config,
-        user: None,
-        preferences: &lock.preferences,
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        params: build_params(&request)
-    };
-
     let channel = Channel{
         about,
         banner,
@@ -298,8 +271,8 @@ pub async fn community(
     };
     let template = super::templates::channel::ChannelTemplate{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        _parent: &base,
         channel,
+        context: TemplateContext::new(&request, None, &lock.config),
     };
     render(template.render())
 }

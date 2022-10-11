@@ -5,8 +5,8 @@ use tokio::sync::Mutex;
 use tracing::Level;
 use youtubei_rs::{query::{player, next_video_id, resolve}, types::{video::VideoSecondaryInfoRenderer, video::StreamingData, enums::NextContents}};
 use youtubei_rs::utils::*;
-use crate::{config::State, structs::{Video::Video, player::Player}, handlers::utils::proxyfi_url};
-use super::{utils::{string_to_body, build_params, render}, templates::{base::Base, watch::Watch}};
+use crate::{config::State, structs::{Video::Video, player::Player, template_context::TemplateContext}, handlers::utils::proxyfi_url};
+use super::{utils::{string_to_body, render}, templates::watch::Watch};
 
 askama::localization!(LOCALES);
 /// Handler for the /watch?v=id path and renders the watch page
@@ -177,25 +177,17 @@ pub async fn watch_v(Extension(state): Extension<Arc<Mutex<State>>>,Query(params
         formats: &formats,
         audio_streams,
         captions: &captions,
-        preferred_captions: preferred_captions,
+        preferred_captions,
         hls_manifest_url: None, // FIXME - should be  player.streaming_data.hls_manifest_url
         aspect_ratio: "16:9",
     };
-    let base = Base{
-        title: "invidious".to_string(),
-        config: &lock.config,
-        user: None,
-        preferences: &lock.preferences,
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        params: build_params(&request)
-    };
     let watch = Watch{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        _parent: base,
         video,
         playlist: None,
         player: player_struct,
         comment_html: "".to_string(),
+        context: TemplateContext::new(&request, None, &lock.config),
     };
     tracing::event!(target: "web_handlers::watch", Level::DEBUG, "Created all templates and rendering template: watch.html");
     render(watch.render())
