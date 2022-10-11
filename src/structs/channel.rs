@@ -1,4 +1,4 @@
-use youtubei_rs::types::{channel::{ChannelAboutFullMetadataRenderer, C4TabbedHeaderRenderer, ChannelMetadataRenderer}, thumbnail::Thumbnail, enums::ItemSectionRendererContents};
+use youtubei_rs::types::{channel::{ChannelAboutFullMetadataRenderer, C4TabbedHeaderRenderer, ChannelMetadataRenderer}, enums::ItemSectionRendererContents};
 
 pub struct Channel {
     pub about: ChannelAboutFullMetadataRenderer,
