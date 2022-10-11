@@ -56,7 +56,7 @@ we're going to need to do it here in order to allow for translations.
     "youtube_comments_text": "{{ localize("view_youtube_comments") }}",
     "reddit_comments_text": "{{ localize("view_reddit_comments") }}",
     "reddit_permalink_text": "{{ localize("view_more_comments_on_reddit") }}",
-    "comments_text": "{{ localize("view_comments", x: video.comments_count.clone()) }}",
+    "comments_text": "{{ localize("view_x_comments", x: video.comments_count.clone()) }}",
     "hide_replies_text": "{{ localize("hide_replies") }}",
     "show_replies_text": "{{ localize("show_replies") }}",
     "preferences": {{  serde_json::to_value(context.preferences).unwrap()|json|safe }},
@@ -103,13 +103,13 @@ we're going to need to do it here in order to allow for translations.
     {% match video.premiere_timestamp %}
         {% when Some with (timestamp) %}
             <h3>
-                {{ localize("premieres_in_", x: timestamp.clone()) }}
+                {{ localize("premieres_in_x", x: timestamp.clone()) }}
             </h3>
         {% when None %}
     {% endmatch %}
     {% if video.live_now %}
         <h3>
-            {{ localize("videoinfo_started_streaming_xupload_date",  x: "".to_string()) }}
+            {{ localize("videoinfo_started_streaming_x_ago",  x: "".to_string()) }}
         </h3>
     {% endif %}
 </div>
@@ -210,9 +210,9 @@ we're going to need to do it here in order to allow for translations.
             <p id="published-date">
                 {% match video.premiere_timestamp %}
                 {% when Some with (timestamp) %}
-                        <b>{{ localize("premieres_", x: timestamp.clone()) }}</b>
+                        <b>{{ localize("premieres_in_x", x: timestamp.clone()) }}</b>
                 {% when None %}
-                        <b>{{ localize("shared_", x: video.published.clone()) }}</b>
+                        <b>{{ localize("shared_x_ago", x: video.published.clone()) }}</b>
                 {% endmatch %}
             </p>
             <div id="description-box"> 
@@ -234,7 +234,7 @@ we're going to need to do it here in order to allow for translations.
                 {% else %}
                     <noscript>
                         <a href="/watch?{{ video.id }}&nojs=1">
-                            {{ localize("hi_looks_like_you_have_javascript_turned_off_click_here_to_view_comments_keep_in_mind_they_may_take_a_bit_longer_to_load") }}
+                            {{ localize("no_js_comments") }}
                         </a>
                     </noscript>
                 {% endif %}

@@ -53,9 +53,9 @@
 <div class="video-card-row flexible">
     <div class="flex-left">
         {% if item.upcoming_event_data.is_some() %}
-            <p class="video-data" dir="auto">{{ localize("premieres_in_", x: item.upcoming_event_data.as_ref().unwrap().start_time.clone()) }}</p>
+            <p class="video-data" dir="auto">{{ localize("premieres_in_x", x: item.upcoming_event_data.as_ref().unwrap().start_time.clone()) }}</p>
         {% else %}
-            <p class="video-data" dir="auto">{{ localize("shared_upload_date", x: item.published_time_text.as_ref().unwrap().simple_text.clone()) }}</p>
+            <p class="video-data" dir="auto">{{ localize("shared_x_ago", x: item.published_time_text.as_ref().unwrap().simple_text.clone()) }}</p>
         {% endif %}
     </div>
 
