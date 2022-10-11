@@ -48,7 +48,7 @@ impl Config {
         config
     }
 }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize,Clone)]
 pub struct Preferences {
     pub autoplay: bool,
     pub captions: Vec<String>,
