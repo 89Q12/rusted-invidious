@@ -1,4 +1,4 @@
-use crate::structs::{Playlist::Playlist, template_context::TemplateContext};
+use crate::structs::{playlist::Playlist, template_context::TemplateContext};
 use askama::{Locale, Template};
 
 

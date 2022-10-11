@@ -19,7 +19,7 @@ pub async fn view_playlist(Extension(state): Extension<Arc<Mutex<State>>>,Query(
     let playlist = ViewPlaylist{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
         context: TemplateContext::new(&request, None, &lock.config),
-        pl: crate::structs::Playlist::Playlist {
+        pl: crate::structs::playlist::Playlist {
             contents: match browse_result.contents.unwrap(){                
                 youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(brr) => match brr.tabs.get(0).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
                     youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(slr) => match slr.contents.get(0).unwrap(){

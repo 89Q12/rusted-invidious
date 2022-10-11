@@ -5,7 +5,7 @@ use tokio::sync::Mutex;
 use tracing::Level;
 use youtubei_rs::{query::{player, next_video_id, resolve}, types::{video::VideoSecondaryInfoRenderer, video::StreamingData, enums::NextContents}};
 use youtubei_rs::utils::*;
-use crate::{config::State, structs::{Video::Video, player::Player, template_context::TemplateContext}, handlers::utils::proxyfi_url};
+use crate::{config::State, structs::{video::Video, player::Player, template_context::TemplateContext}, handlers::utils::proxyfi_url};
 use super::{utils::{string_to_body, render}, templates::watch::Watch};
 
 askama::localization!(LOCALES);
@@ -200,7 +200,7 @@ pub async fn redirect(Path(id): Path<String>) -> Redirect{
 
 /// Handler for the path /watch_ajax which is used to mark a video as watched if the user is logged in
 /// Protected route
-pub async fn watch_ajax(Extension(state): Extension<Arc<Mutex<State>>>,body: String){
+pub async fn watch_ajax(Extension(_state): Extension<Arc<Mutex<State>>>,_body: String){
     todo!()
 }
 

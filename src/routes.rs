@@ -3,7 +3,7 @@ use axum::{
     Router,
 };
 // Imports of the handlers
-use crate::handlers::{channel, feed, home, video, search::search_and_render, playlists::view_playlist};
+use crate::handlers::{channel, home, video, search::search_and_render, playlists::view_playlist};
 
 /// Short hand for nested /channel routes
 fn channel_routes() -> Router {

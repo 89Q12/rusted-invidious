@@ -1,6 +1,6 @@
-use std::collections::{HashSet, HashMap};
-use axum::{http::{StatusCode, Request},response::Response, body::{self, Body}};
-use crate::{structs::template_context::TemplateContext, config::Config};
+use std::collections::HashSet;
+use axum::{http::StatusCode,response::Response, body};
+use crate::config::Config;
 use regex::Regex;
 
 pub fn render(html_str: Result<String, askama::Error>) -> Response { 

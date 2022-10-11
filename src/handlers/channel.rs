@@ -1,4 +1,4 @@
-use crate::{config::State, structs::{channel::Channel, template_context::{self, TemplateContext}}};
+use crate::{config::State, structs::{channel::Channel, template_context::TemplateContext}};
 use axum::{
     extract::path::Path,
     response::{Redirect, Response},
@@ -9,7 +9,7 @@ use tokio::sync::Mutex;
 use youtubei_rs::query::browse_id;
 use youtubei_rs::types::{error::Errors, query_results::BrowseResult};
 use askama::{langid, Template};
-use super::{utils::{string_to_body, proxyfi_url, render}, templates::base::Base};
+use super::{utils::{string_to_body, proxyfi_url, render}};
 askama::localization!(LOCALES);
 /// Handler for the path /channel/:id, /c/:id, /user/:id
 pub async fn index(
@@ -23,15 +23,15 @@ pub async fn index(
     let channel = match result {
         Ok(ch) => ch,
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
         },
     };
     let about = match about {
         Ok(ch) => ch,
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
         },
     };
     let about = match about.contents.unwrap(){
@@ -101,12 +101,12 @@ pub async fn videos(
 ) -> Response {
     let result = fetch_channel(id, Tab::Videos, &state).await;
     match result {
-        Ok(pl) => {
+        Ok(_pl) => {
             todo!()
         }
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => todo!(),
-            youtubei_rs::types::error::Errors::ParseError(err) => todo!(),
+            youtubei_rs::types::error::Errors::RequestError(_) => todo!(),
+            youtubei_rs::types::error::Errors::ParseError(_) => todo!(),
         },
     }
 }
@@ -123,15 +123,15 @@ pub async fn playlists(
     let channel = match result {
         Ok(ch) => ch,
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
         },
     };
     let about = match about {
         Ok(ch) => ch,
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
         },
     };
     let about = match about.contents.unwrap(){
@@ -206,15 +206,15 @@ pub async fn community(
     let channel = match result {
         Ok(ch) => ch,
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
         },
     };
     let about = match about {
         Ok(ch) => ch,
         Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(err) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
+            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
         },
     };
     let about = match about.contents.unwrap(){
@@ -278,16 +278,16 @@ pub async fn community(
 }
 /// Handler for the path /channel/:id/live, /c/:id/, /user/:id/live
 pub async fn live(
-    Extension(state): Extension<Arc<Mutex<State>>>,
-    Path(id): Path<String>,
+    Extension(_state): Extension<Arc<Mutex<State>>>,
+    Path(_id): Path<String>,
 ) -> Redirect {
     todo!()
 }
 
 /// Handler for the path /attribution_link?a=something&u=/channel/:id/ it resolves the url and redirects to /channel/:id/
 pub async fn attribution_link(
-    Extension(state): Extension<Arc<Mutex<State>>>,
-    Path(id): Path<String>,
+    Extension(_state): Extension<Arc<Mutex<State>>>,
+    Path(_id): Path<String>,
 ) -> Redirect {
     todo!()
 }

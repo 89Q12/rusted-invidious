@@ -20,11 +20,11 @@ pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,request: Reque
 }
 
 /// Handler for the /feed/popular path.
-pub async fn popular(Extension(state): Extension<Arc<Mutex<State>>>) -> Response {
+pub async fn popular(Extension(_state): Extension<Arc<Mutex<State>>>) -> Response {
     todo!()
 }
 
 /// Handler for the /feed/trending path.
-pub async fn trending(Extension(state): Extension<Arc<Mutex<State>>>) -> Response {
+pub async fn trending(Extension(_state): Extension<Arc<Mutex<State>>>) -> Response {
     todo!()
 }
