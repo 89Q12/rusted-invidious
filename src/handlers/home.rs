@@ -1,11 +1,11 @@
 use std::sync::Arc;
 use askama::langid;
 use tokio::sync::Mutex;
-use axum::{response::Redirect, Extension,extract::path::Path, response::Response, http::Request, body::Body};
-use crate::{config::{State, Preferences}, structs::template_context::TemplateContext};
+use axum::{Extension, response::Response, http::Request, body::Body};
+use crate::{config::State, structs::template_context::TemplateContext};
 use askama::Template;
 askama::localization!(LOCALES);
-use super::{templates::base::Base, utils::{render, build_params}};
+use super::{templates::base::Base, utils::render};
 /// Handler for the root path.
 /// Ideally this should be redirect the user to the configured home path
 /// e.g. /feed/popular or serve search page I guess but this could be changed
@@ -13,12 +13,8 @@ pub async fn index(Extension(state): Extension<Arc<Mutex<State>>>,request: Reque
     let lock = state.lock().await;
     // TODO: implement
     let base = Base{
-        title: "invidious".to_string(),
-        config: &lock.config,
-        user: None,
-        preferences: &lock.preferences,
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        params: build_params(&request)
+        context: TemplateContext::new(&request, None, &lock.config),
     };
     render(base.render())
 }

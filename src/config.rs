@@ -32,7 +32,11 @@ pub struct Config {
     pub host_binding: String,
     pub proxy_domain: String,
     #[serde(skip)]
-    pub redirect_url: String
+    pub redirect_url: String,
+    #[serde(skip)]
+    pub trending_pages: Vec<String>,
+    #[serde(skip)]
+    pub default_preferences: Preferences,
 }
 
 impl Config {
@@ -44,7 +48,7 @@ impl Config {
         config
     }
 }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize,Clone)]
 pub struct Preferences {
     pub autoplay: bool,
     pub captions: Vec<String>,
@@ -86,6 +90,12 @@ impl Preferences {
     pub fn new() -> Preferences {
         let loaded_config = fs::read_to_string("preferences.yaml").unwrap();
         serde_yaml::from_str::<Preferences>(&loaded_config).unwrap()
+    }
+}
+
+impl Default for Preferences {
+    fn default() -> Self {
+        Preferences::new()
     }
 }
 /// The state that is shared with all handlers

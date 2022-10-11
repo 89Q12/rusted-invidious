@@ -7,7 +7,7 @@
             <i class="icon ion-md-headset"></i>
         </a>
         
-        {% if preferences.automatic_instance_redirect %}
+        {% if context.preferences.automatic_instance_redirect %}
             <a title="{{ localize("switch_invidious_instance") }}" href="/redirect?referer=%2Fwatch{{ endpoint_params }}">
                 <i class="icon ion-md-jet"></i>
             </a>

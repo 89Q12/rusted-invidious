@@ -5,23 +5,23 @@
 <meta name="description" content="{{ video.short_description }}">
 <meta name="keywords" content="{{ video.keywords.join(",") }}">
 <meta property="og:site_name" content="Invidious">
-<meta property="og:url" content="{{ config.domain}}/watch?v={{ video.id }}">
+<meta property="og:url" content="{{ context.config.domain}}/watch?v={{ video.id }}">
 <meta property="og:title" content="{{ video.title }}">
 <meta property="og:image" content="/vi/{{ video.id }}/maxres.jpg">
 <meta property="og:description" content="{{ video.short_description }}">
 <meta property="og:type" content="video.other">
-<meta property="og:video:url" content="{{ config.domain}}/embed/{{ video.id }}">
-<meta property="og:video:secure_url" content="{{ config.domain}}/embed/{{ video.id }}">
+<meta property="og:video:url" content="{{ context.config.domain}}/embed/{{ video.id }}">
+<meta property="og:video:secure_url" content="{{ context.config.domain}}/embed/{{ video.id }}">
 <meta property="og:video:type" content="text/html">
 <meta property="og:video:width" content="1280">
 <meta property="og:video:height" content="720">
 <meta name="twitter:card" content="player">
 <meta name="twitter:site" content="@omarroth1">
-<meta name="twitter:url" content="{{ config.domain}}/watch?v={{ video.id }}">
+<meta name="twitter:url" content="{{ context.config.domain}}/watch?v={{ video.id }}">
 <meta name="twitter:title" content="{{ video.title }}">
 <meta name="twitter:description" content="{{ video.short_description }}">
-<meta name="twitter:image" content="{{ config.domain}}/vi/{{ video.id }}/maxres.jpg">
-<meta name="twitter:player" content="{{ config.domain}}/embed/{{ video.id }}">
+<meta name="twitter:image" content="{{ context.config.domain}}/vi/{{ video.id }}/maxres.jpg">
+<meta name="twitter:player" content="{{ context.config.domain}}/embed/{{ video.id }}">
 <meta name="twitter:player:width" content="1280">
 <meta name="twitter:player:height" content="720">
 <link rel="alternate" href="https://www.youtube.com/watch?v={{ video.id }}">
@@ -51,7 +51,7 @@ we're going to need to do it here in order to allow for translations.
         {% when None %}
     {% endmatch %}
     "length_seconds": "{{ video.length_seconds }}",
-    "play_next":  {{ !video.related_videos.is_empty() && !playlist.is_some() && params.continue_autoplay }},
+    "play_next":  {{ !video.related_videos.is_empty() && !playlist.is_some() && context.continue_autoplay() }},
     "next_video": "{{ video.next_video_id }}",
     "youtube_comments_text": "{{ localize("view_youtube_comments") }}",
     "reddit_comments_text": "{{ localize("view_reddit_comments") }}",
@@ -59,8 +59,8 @@ we're going to need to do it here in order to allow for translations.
     "comments_text": "{{ localize("view_comments", x: video.comments_count.clone()) }}",
     "hide_replies_text": "{{ localize("hide_replies") }}",
     "show_replies_text": "{{ localize("show_replies") }}",
-    "preferences": {{  serde_json::to_value(preferences).unwrap()|json|safe }},
-    "params": {{ serde_json::to_value(params).unwrap()|json|safe }},
+    "preferences": {{  serde_json::to_value(context.preferences).unwrap()|json|safe }},
+    "params": {{ serde_json::to_value(context.query_params).unwrap()|json|safe }},
     {% match video.premiere_timestamp %}
         {% when Some with (timestamp) %}
             "premiere_timestamp": "{{ timestamp }}",
@@ -78,7 +78,7 @@ we're going to need to do it here in order to allow for translations.
 <div class="h-box">
     <h1>
         {{ video.title }}
-        {% if params.listen %}
+        {% if context.listen() %}
             <a title="{{localize("video_mode")}}" href="/watch?v={{ video.id }}&listen=0">
                 <i class="icon ion-ios-videocam"></i>
             </a>
@@ -121,16 +121,16 @@ we're going to need to do it here in order to allow for translations.
                 <a href="https://www.youtube.com/embed/{{ video.id }}">{{ localize("videoinfo_youtube_embed_link") }}</a>
             </span>
             <p id="watch-on-another-invidious-instance">
-            {% if preferences.automatic_instance_redirect %}
-                <a href="/redirect?referer={{ params.current_page }}">{{ localize("switch_invidious_instance") }}</a>
+            {% if context.preferences.automatic_instance_redirect %}
+                <a href="/redirect?referer={{ context.current_page }}">{{ localize("switch_invidious_instance") }}</a>
             {% else %}
-                <a href="https://redirect.invidious.io{{ params.current_page }}">{{ localize("switch_invidious_instance") }}</a>
+                <a href="https://redirect.invidious.io{{ context.current_page }}">{{ localize("switch_invidious_instance") }}</a>
             {% endif %}
             </p>
             <p id="embed-link">
-                <a href="/embed/{{video.id}}?{{ params.query_params }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
+                <a href="/embed/{{video.id}}?{{ context.query_params() }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
             </p>
-            {% match user %}
+            {% match context.user %}
             {% when Some with (user_unwraped) %}
                 {% let playlists = user_unwraped.get_playlists() %}
                 {% if !playlists.is_empty() %}
@@ -217,7 +217,7 @@ we're going to need to do it here in order to allow for translations.
             </p>
             <div id="description-box"> 
                 <!-- Description -->
-                {% if video.description.len() < 200 || preferences.extend_desc %}
+                {% if video.description.len() < 200 || context.preferences.extend_desc %}
                     <div id="descriptionWrapper">{{ video.description }}</div>
                 {% else %}
                     <input id="descexpansionbutton" type="checkbox"/>
@@ -229,7 +229,7 @@ we're going to need to do it here in order to allow for translations.
             </div>
             <hr>
             <div id="comments">
-                {% if params.nojs %}
+                {% if context.no_js() %}
                     {{ comment_html }}
                 {% else %}
                     <noscript>
@@ -250,7 +250,7 @@ we're going to need to do it here in order to allow for translations.
             <div {% if playlist.is_some() %}style="display:none"{% endif %}>
                 <div class="pure-control-group">
                     <label for="continue">{{ localize("preferences_continue_label") }}</label>
-                    <input name="continue" id="continue" type="checkbox" {% if params.continue_autoplay %}checked{% endif %}>
+                    <input name="continue" id="continue" type="checkbox" {% if context.continue_autoplay() %}checked{% endif %}>
                 </div>
                 <hr>
             </div>

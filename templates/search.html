@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block header %}
-{% match  params.search_query %}
-    {% when Some with (query) %}
-        <title>{% if query.len() > 30 %} {{ (query.clone().split_at(30).0.to_owned() + "&hellip;")|e("txt") }}{% else %} {{ query.clone() }}{% endif %} - Invidious</title>
-    {% when None %}
-{% endmatch %}
+
+    <title>{% if context.search_query().len() > 30 %} {{ (context.search_query().clone().split_at(30).0.to_owned() + "&hellip;")|e("txt") }}{% else %} {{ context.search_query() }}{% endif %} - Invidious</title>
+
 <link rel="stylesheet" href="/assets/css/search.css?">
 {% endblock header %}
 {% block content %}
@@ -34,7 +32,7 @@
         <div>
             {{ localize("search_message_no_results") }}<br/><br/>
             {{ localize("search_message_change_filters_or_query") }}<br/><br/>
-            {{ localize("search_message_use_another_instance", x: config.redirect_url.clone()) }}
+            {{ localize("search_message_use_another_instance", x: context.config.redirect_url.clone()) }}
         </div>
     </div>
 {% else %}
