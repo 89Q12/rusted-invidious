@@ -1,3 +1,7 @@
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RelatedStream{
     duration: i32, // The duration of the related video in seconds
     thumbnail:String, // The thumbnail of the related video

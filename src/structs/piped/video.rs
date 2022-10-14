@@ -1,12 +1,16 @@
-use std::ops::Sub;
+use serde_json::Value;
+use serde::Deserialize;
 
 use super::related_streams::RelatedStream;
 
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Video{
     video_streams: Vec<VideoStream>,  // The video streams of the video
     audio_streams: Vec<AudioStream>,  // The audio streams of the video
     subtitles: Vec<Subtitle>, // List of subtitles
     related_streams: Vec<RelatedStream>, // A list of related streams
+    chapters: Option<Vec<Chapter>>, // Possible list of chapters
     dash: Option<String>,  // The dash manifest URL, to be used if not null (for OTF streams)
     hls: Option<String>, // The hls manifest URL, to be used for Livestreams
     description: String,  // The description of the video
@@ -23,7 +27,8 @@ pub struct Video{
     uploader_subscriber_count: i32, // Subscribercount of the author(Channel)
     views: i32, // The number of views the video has
 }
-
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AudioStream{
     bitrate: i32, // The bitrate of the audio stream in bytes
     codec: String, // The codec of the audio stream
@@ -37,6 +42,8 @@ pub struct AudioStream{
     url: String, // The stream's URL
     video_only: bool, // Whether or not the stream is video only
 }
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct VideoStream{
     bitrate: i32, // The bitrate of the video stream in bytes
     codec: String, // The codec of the video stream
@@ -53,6 +60,8 @@ pub struct VideoStream{
     video_only: bool, // Whether or not the stream is video only
     width: i32 // The width of the video stream
 }
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Subtitle{
     auto_generated: bool, // Whether or not the subtitle was auto-generated
     code: String, // The language code of the subtitle
@@ -60,9 +69,15 @@ pub struct Subtitle{
     name: String, // The name of the subtitle
     url: String, // The URL of the subtitle
 }
-
+#[derive(Deserialize)]
 pub struct Chapter{
     title: String, // Title of the chapter
     image: String, // Image to display
     start: i32, // Second where the chapter starts
+}
+
+impl From<Value> for Video{
+    fn from(value: Value) -> Self {
+        serde_json::from_value(value).unwrap()
+    }
 }
