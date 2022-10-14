@@ -13,10 +13,9 @@ axum ={version= "0.5", features = ["form","headers"]}
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tower-http = { version = "0.3", features = ["trace"] }
-youtubei-rs = {git = "https://github.com/11Tuvork28/youtubei-rs.git"}
-serde_yaml = "0.8.24"
+serde_yaml = "0.9.13"
 fluent = "0.16.0"
-fluent-templates = { version = "0.7.1", features = ["tera"] }
+fluent-templates = { version = "0.8.0" }
 askama = {git = "https://github.com/11Tuvork28/askama.git", features = ["localization","serde-json"]}
 askama_axum = "0.1.0"
 parking_lot = "^0.12.1"

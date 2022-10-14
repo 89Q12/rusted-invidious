@@ -1,6 +1,6 @@
 use crate::config::Preferences;
 
-use super::playlist;
+use super::piped::playlist::Playlist;
 
 #[derive(Clone)]
 pub struct User{
@@ -11,7 +11,7 @@ pub struct User{
     pub preferences: Preferences,
 }
 impl User {
-    pub fn get_playlists(&self) -> Vec<playlist::Playlist> {
+    pub fn get_playlists(&self) -> Vec<Playlist> {
         todo!()
     }
 }

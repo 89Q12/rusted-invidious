@@ -9,8 +9,5 @@ pub struct Watch<'a> {
     #[locale]
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
-    pub video: Video<'a>,
-    pub player: Player<'a>,
-    pub playlist: Option<NextPlaylist>,
-    pub comment_html: String,
+    pub video: Video,
 }

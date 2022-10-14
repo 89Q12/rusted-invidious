@@ -1,7 +1,6 @@
 use rusted_invidious_types::database::db_manager::DbManager;
 use serde::{Deserialize, Serialize};
 use std::fs;
-use youtubei_rs::types::client::ClientConfig;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Config {
@@ -100,7 +99,6 @@ impl Default for Preferences {
 }
 /// The state that is shared with all handlers
 pub struct State {
-    pub yt_client_config: ClientConfig,
     pub db_manager: DbManager,
     pub config: Config,
     pub preferences: Preferences
