@@ -1,3 +1,6 @@
+use serde::Deserialize;
+
+#[derive(Deserialize)]
 pub struct VideoThumbnail{
     quality: String,
     url: String,
@@ -5,6 +8,7 @@ pub struct VideoThumbnail{
     height: i32
 }
 
+#[derive(Deserialize)]
 pub struct PlaylistVideo{
     title: String,
     video_id: String,
