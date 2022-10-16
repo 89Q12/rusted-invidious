@@ -22,3 +22,4 @@ parking_lot = "^0.12.1"
 rusted-invidious-types = { git = "https://github.com/11Tuvork28/rusted-invidious-shared.git" }
 chrono = "0.4.19"
 regex = "1.6.0"
+reqwest = { version = "0.11", features = ["gzip","json"] }
