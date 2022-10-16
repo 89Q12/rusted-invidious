@@ -10,5 +10,6 @@ pub struct Watch<'a> {
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
     pub video: Video,
-    pub playlist: Option<Playlist>
+    pub playlist: Option<Playlist>,
+    pub video_id: String
 }
