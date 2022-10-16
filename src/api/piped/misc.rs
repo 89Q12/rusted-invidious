@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use serde_json::Value;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -15,4 +16,16 @@ pub struct RelatedStream{
     short_description: Option<String>,
     uploader_name: String, // Author name aka Channel name
     uploaded: i64, // Unix timestamp. I know 32bit but I dont wanna need to change it in 3038 lol
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Next {
+    nextpage: String,
+    related_streams: Vec<RelatedStream>,
+}
+impl From<Value> for Next{
+    fn from(value: Value) -> Self {
+        serde_json::from_value(value).unwrap()
+    }
 }

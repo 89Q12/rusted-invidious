@@ -1,7 +1,7 @@
 use serde_json::Value;
 use serde::Deserialize;
 
-use super::related_streams::RelatedStream;
+use super::misc::RelatedStream;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]

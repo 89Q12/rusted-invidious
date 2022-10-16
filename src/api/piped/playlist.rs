@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use super::related_streams::RelatedStream;
+use super::misc::RelatedStream;
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Playlist {
@@ -15,19 +15,19 @@ pub struct Playlist {
     uploader_url: String, // The URL of the creator of the playlist
     videos: i32 // The number of videos in the playlist
 }
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct PlaylistNext {
-    nextpage: String,
-    related_streams: Vec<RelatedStream>,
+pub struct SearchPlaylist {
+    name: String, // The name of the playlist
+    url: String, // url to visit
+    thumbnail: String, // The thumbnail of the playlist
+    uploader_name: String, // The name of the creator of the playlist
+    videos: i32 // The number of videos in the playlist
 }
 
+
 impl From<Value> for Playlist{
-    fn from(value: Value) -> Self {
-        serde_json::from_value(value).unwrap()
-    }
-}
-impl From<Value> for PlaylistNext{
     fn from(value: Value) -> Self {
         serde_json::from_value(value).unwrap()
     }

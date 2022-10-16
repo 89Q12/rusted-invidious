@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use super::related_streams::RelatedStream;
+use super::misc::RelatedStream;
 
 #[derive(Deserialize)]
 pub struct Trending{

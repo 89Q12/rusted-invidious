@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use super::related_streams::RelatedStream;
+use super::{misc::RelatedStream, utils::parse_related};
 //Represent the video tab ONLY
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,5 +20,20 @@ pub struct Channel{
 impl From<Value> for Channel{
     fn from(value: Value) -> Self {
         serde_json::from_value(value).unwrap()
+    }
+}
+impl Channel {
+    pub(super) fn manual_parse(value: Value) -> Channel {
+        Channel{
+            avatar_url: value["avatar_url"].to_string(),
+            banner_url: value["banner_url"].to_string(),
+            description: value["description"].to_string(),
+            id: value["avatar_url"].to_string(),
+            name: value["avatar_url"].to_string(),
+            nextpage: value["avatar_url"].to_string(),
+            related_streams: parse_related(value),
+            subscriber_count: value["subscriber_count"].to_string().parse().unwrap(),
+            verified: value["verified"].as_bool().unwrap(),
+        }
     }
 }
