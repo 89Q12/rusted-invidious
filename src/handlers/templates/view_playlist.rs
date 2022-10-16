@@ -9,5 +9,6 @@ pub struct ViewPlaylist<'a>{
     #[locale]
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
-    pub pl: Playlist
+    pub pl: Playlist,
+    pub playlist_id: String
 }
