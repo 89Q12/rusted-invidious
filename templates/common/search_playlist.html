@@ -1,0 +1,10 @@
+<a style="width:100%" href="{{ item.url }}">
+    {% if !context.preferences.thin_mode %}
+        <div class="thumbnail">
+            <img loading="lazy" tabindex="-1" class="thumbnail" src="{{item.thumbnail}}"/>
+            <p class="length">{{ localize("generic_videos_count", x: item.videos)}}</p>
+        </div>
+    {% endif %}
+    <p dir="auto">{{ item.name }}</p>
+</a>
+<p dir="auto">{{ item.uploader_name }}</p>
