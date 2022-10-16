@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block header %}
-<title>{{ pl.title.simple_text }} - Invidious</title>
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/playlist/{{ pl.playlist_id }}" />
+<title>{{ pl.name }} - Invidious</title>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/playlist/{{ playlist_id }}" />
 {% endblock header %}
 {% block content %}
 
 <div class="pure-g h-box">
     <div class="pure-u-2-3">
-        <h3>{{ pl.title.simple_text }} </h3>
-            <b><a href="/channel/{{ pl.owner_text.runs.get(0).as_ref().unwrap().navigation_endpoint.as_ref().unwrap().browse_endpoint.as_ref().unwrap().browse_id }}">{{ pl.owner_text.runs.get(0).unwrap().text }}</a>| {{ localize("generic_videos_count", x: pl.view_count_text.simple_text.clone()) }} |{{ localize("upload_date", x: "Today") }}</b>
+        <h3>{{ pl.name }} </h3>
+            <b><a href="{{ pl.uploader_url }}">{{ pl.uploader }}</a>| {{ localize("generic_videos_count", x: pl.videos) }} |{{ localize("upload_date", x: "Today") }}</b>
             <div class="pure-u-2-3">
-                    <a href="https://www.youtube.com/playlist?list={{ pl.playlist_id }}">
+                    <a href="https://www.youtube.com/playlist?list={{ playlist_id }}">
                        {{ localize("view_playlist_on_youtube") }}
                     </a>
                     <span> | </span>
@@ -21,7 +21,7 @@
                            {{ localize("switch_invidious_instance") }}
                         </a>
                     {% else %}
-                        <a href="https://redirect.invidious.io/playlist?list={{ pl.playlist_id }}">
+                        <a href="https://redirect.invidious.io/playlist?list={{ playlist_id }}">
                            {{ localize("switch_invidious_instance") }}
                         </a>
                     {% endif %}
@@ -31,44 +31,24 @@
         <h3>
             <div class="pure-g user-field">
                 {% if true %}
-                    <div class="pure-u-1-3"><a href="/subscribe_playlist?list={{ pl.playlist_id }}"><i class="icon ion-md-add"></i></a></div>
+                    <div class="pure-u-1-3"><a href="/subscribe_playlist?list={{ playlist_id }}"><i class="icon ion-md-add"></i></a></div>
                 {% else %}
-                    <div class="pure-u-1-3"><a href="/delete_playlist?list={{ pl.playlist_id }}"><i class="icon ion-md-trash"></i></a></div>
+                    <div class="pure-u-1-3"><a href="/delete_playlist?list={{ playlist_id }}"><i class="icon ion-md-trash"></i></a></div>
                 {% endif %}
-                <div class="pure-u-1-3"><a href="/feed/playlist/{{ pl.playlist_id }}"><i class="icon ion-logo-rss"></i></a></div>
+                <div class="pure-u-1-3"><a href="/feed/playlist/{{ playlist_id }}"><i class="icon ion-logo-rss"></i></a></div>
             </div>
         </h3>
     </div>
 </div>
-{% match pl.description_text.runs %}
-    {% when Some with (description) %}
-        <div class="h-box">
-            <div id="descriptionWrapper">{{ description.get(0).unwrap().text }}</div>
-        </div>
-    {% when None %}
-{% endmatch %}
 
-<div class="pure-g">
-{% for item in pl.contents %}
-    {% match item %}
-        {% when youtubei_rs::types::enums::PlaylistVideoListContent::PlaylistVideoRenderer(video) %}
-            {% include "common/renderers/playlistVideoRenderer.html" %}
-        {% else %}
-    {% endmatch %}
-{% endfor %}
+<div class="h-box">
+    <div id="descriptionWrapper"></div>
 </div>
 
-<div class="pure-g h-box">
-    <div class="pure-u-1 pure-u-lg-1-5">
-        <a href="/playlist?list={{ pl.playlist_id }}&page=">
-            {{ localize("previous_page") }}
-        </a>
-    </div>
-    <div class="pure-u-1 pure-u-lg-3-5"></div>
-    <div class="pure-u-1 pure-u-lg-1-5" style="text-align:right">
-        <a href="/playlist?list={{ pl.playlist_id }}&page=">
-            {{ localize("next_page") }}
-        </a>
-    </div>
+
+<div class="pure-g">
+    {% for item in pl.related_streams %}
+        {% include "common/related_stream.html" %}
+    {% endfor %}
 </div>
 {% endblock content %}
