@@ -3,3 +3,5 @@ pub mod watch;
 pub mod search;
 pub mod view_playlist;
 pub mod channel;
+mod context;
+pub use context::Context as TemplateContext;

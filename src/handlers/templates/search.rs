@@ -1,7 +1,7 @@
 use askama::{Template, Locale};
-use youtubei_rs::types::enums::ItemSectionRendererContents;
 
-use crate::structs::template_context::TemplateContext;
+use crate::api::piped::SearchItem;
+use super::TemplateContext;
 
 
 #[derive(Template)] 
@@ -10,5 +10,5 @@ pub struct Search<'a>{
     #[locale]
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
-    pub videos: Vec<ItemSectionRendererContents>
+    pub items: Vec<SearchItem> 
 }

@@ -1,6 +1,7 @@
-use crate::structs::{playlist::Playlist, template_context::TemplateContext};
 use askama::{Locale, Template};
+use crate::api::piped::Playlist;
 
+use super::TemplateContext;
 
 #[derive(Template)] // this will generate the code...
 #[template(path = "view_playlist.html")]

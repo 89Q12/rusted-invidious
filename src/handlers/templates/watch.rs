@@ -1,7 +1,7 @@
 use askama::{Locale, Template};
-use youtubei_rs::types::playlist::NextPlaylist;
+use crate::api::piped::{Video, Playlist};
 
-use crate::structs::{video::Video, player::Player, template_context::TemplateContext};
+use super::TemplateContext;
 
 #[derive(Template)] // this will generate the code...
 #[template(path = "watch.html")]
@@ -10,4 +10,5 @@ pub struct Watch<'a> {
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
     pub video: Video,
+    pub playlist: Option<Playlist>
 }
