@@ -1,4 +1,5 @@
-use crate::{config::State, structs::{channel::Channel, template_context::TemplateContext}};
+use crate::handlers::templates::TemplateContext;
+use crate::{config::State, api::piped::Channel};
 use axum::{
     extract::path::Path,
     response::{Redirect, Response},
@@ -6,10 +7,8 @@ use axum::{
 };
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use youtubei_rs::query::browse_id;
-use youtubei_rs::types::{error::Errors, query_results::BrowseResult};
 use askama::{langid, Template};
-use super::{utils::{string_to_body, proxyfi_url, render}};
+use super::utils::{string_to_body, proxyfi_url, render};
 askama::localization!(LOCALES);
 /// Handler for the path /channel/:id, /c/:id, /user/:id
 pub async fn index(
@@ -17,79 +16,11 @@ pub async fn index(
     Path(id): Path<String>,
     request: Request<Body>
 ) -> Response {
-    let ch = fetch_channel(id.to_owned(), Tab::Videos, &state);
-    let about_call = fetch_channel(id.to_owned(), Tab::About, &state);
-    let (result, about) = tokio::join!(ch, about_call);
-    let channel = match result {
-        Ok(ch) => ch,
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-        },
-    };
-    let about = match about {
-        Ok(ch) => ch,
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-        },
-    };
-    let about = match about.contents.unwrap(){
-        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => {
-            let tab = &column_renderer.tabs.get(5).unwrap().tab_renderer;
-            match tab.as_ref().unwrap().content.as_ref().unwrap(){
-            youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => match item_renderer.contents.get(0).unwrap(){
-                    youtubei_rs::types::enums::ItemSectionRendererContents::ChannelAboutFullMetadataRenderer(about) => about.to_owned(),
-                    _ => unreachable!(),
-                },
-                _ => unreachable!()
-            },
-            _ => unreachable!()
-        }
-    },
-        _ => unreachable!(),
-    };
-    let header = match channel.header.unwrap(){
-        youtubei_rs::types::enums::HeaderContents::C4TabbedHeaderRenderer(c4_tabbed_header) => c4_tabbed_header,
-        _ => unreachable!()
-    };
-    let metadata = match channel.metadata.unwrap(){
-        youtubei_rs::types::enums::MetadataRenderers::ChannelMetadataRenderer(data) => data,
-        _ => unreachable!()
-    };
-    let lock = state.lock().await;
-    let banner = match &header.banner {
-        Some(banner) => Some(proxyfi_url(banner.thumbnails.last().unwrap().url.to_string(), &lock.config)),
-        None => None,
-    };
-    let thumbnail = proxyfi_url(metadata.avatar.thumbnails.last().unwrap().url.to_string(),&lock.config);
-    let channel = Channel{
-        about,
-        banner,
-        header,
-        metadata,
-        thumbnail,
-        sort_options: vec!["newest".to_string(), "oldest".to_string(), "popular".to_string()],
-        sorted_by: "newest".to_string(),
-        auto_generated: false,
-        items: match channel.contents.unwrap(){
-            youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => match column_renderer.tabs.get(1).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
-                youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                    youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => item_renderer.contents.clone(),
-                    _ => unreachable!()
- 
-                },
-                _ => unreachable!()
-            },
-            _ => unreachable!()
-        },
-        has_community_enabled: true,
-    };
+    let context = TemplateContext::new(&request, None, &state.lock().await.config);
     let template = super::templates::channel::ChannelTemplate{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        channel,
-        context: TemplateContext::new(&request, None, &lock.config),
+        channel: todo!(),
+        context,
     };
     render(template.render())
 }
@@ -99,16 +30,7 @@ pub async fn videos(
     Extension(state): Extension<Arc<Mutex<State>>>,
     Path(id): Path<String>,
 ) -> Response {
-    let result = fetch_channel(id, Tab::Videos, &state).await;
-    match result {
-        Ok(_pl) => {
-            todo!()
-        }
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => todo!(),
-            youtubei_rs::types::error::Errors::ParseError(_) => todo!(),
-        },
-    }
+    todo!()
 }
 
 /// Handler for the path /channel/:id/playlists, /c/:id/playlists, /user/:id/playlists
@@ -117,81 +39,7 @@ pub async fn playlists(
     Path(id): Path<String>,
     request: Request<Body>
 ) -> Response {
-    let ch = fetch_channel(id.to_owned(), Tab::Playlists, &state);
-    let about_call = fetch_channel(id.to_owned(), Tab::About, &state);
-    let (result, about) = tokio::join!(ch, about_call);
-    let channel = match result {
-        Ok(ch) => ch,
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-        },
-    };
-    let about = match about {
-        Ok(ch) => ch,
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-        },
-    };
-    let about = match about.contents.unwrap(){
-        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => {
-            let tab = &column_renderer.tabs.get(5).unwrap().tab_renderer;
-            match tab.as_ref().unwrap().content.as_ref().unwrap(){
-            youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => match item_renderer.contents.get(0).unwrap(){
-                    youtubei_rs::types::enums::ItemSectionRendererContents::ChannelAboutFullMetadataRenderer(about) => about.to_owned(),
-                    _ => unreachable!(),
-                },
-                _ => unreachable!()
-            },
-            _ => unreachable!()
-        }
-    },
-        _ => unreachable!(),
-    };
-    let header = match channel.header.unwrap(){
-        youtubei_rs::types::enums::HeaderContents::C4TabbedHeaderRenderer(c4_tabbed_header) => c4_tabbed_header,
-        _ => unreachable!()
-    };
-    let metadata = match channel.metadata.unwrap(){
-        youtubei_rs::types::enums::MetadataRenderers::ChannelMetadataRenderer(data) => data,
-        _ => unreachable!()
-    };
-    let lock = state.lock().await;
-    let banner = match &header.banner {
-        Some(banner) => Some(proxyfi_url(banner.thumbnails.last().unwrap().url.to_string(), &lock.config)),
-        None => None,
-    };
-    let thumbnail = proxyfi_url(metadata.avatar.thumbnails.last().unwrap().url.to_string(),&lock.config);
-    let channel = Channel{
-        about,
-        banner,
-        header,
-        metadata,
-        thumbnail,
-        sort_options: vec!["newest".to_string(), "oldest".to_string(), "popular".to_string()],
-        sorted_by: "newest".to_string(),
-        auto_generated: false,
-        items: match channel.contents.unwrap(){
-            youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => match column_renderer.tabs.get(2).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
-                youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                    youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => item_renderer.contents.clone(),
-                    _ => unreachable!()
- 
-                },
-                _ => unreachable!()
-            },
-            _ => unreachable!()
-        },
-        has_community_enabled: true,
-    };
-    let template = super::templates::channel::ChannelTemplate{
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        channel,
-        context: TemplateContext::new(&request, None, &lock.config),
-    };
-    render(template.render())
+    todo!()
 }
 
 /// Handler for the path /channel/:id/community, /c/:id/community, /user/:id/community
@@ -200,81 +48,7 @@ pub async fn community(
     Path(id): Path<String>,
     request: Request<Body>
 ) -> Response {
-    let ch = fetch_channel(id.to_owned(), Tab::Community, &state);
-    let about_call = fetch_channel(id.to_owned(), Tab::About, &state);
-    let (result, about) = tokio::join!(ch, about_call);
-    let channel = match result {
-        Ok(ch) => ch,
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-        },
-    };
-    let about = match about {
-        Ok(ch) => ch,
-        Err(e) => match e {
-            youtubei_rs::types::error::Errors::RequestError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-            youtubei_rs::types::error::Errors::ParseError(_) => return string_to_body(StatusCode::NOT_FOUND.to_string()),
-        },
-    };
-    let about = match about.contents.unwrap(){
-        youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => {
-            let tab = &column_renderer.tabs.get(5).unwrap().tab_renderer;
-            match tab.as_ref().unwrap().content.as_ref().unwrap(){
-            youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => match item_renderer.contents.get(0).unwrap(){
-                    youtubei_rs::types::enums::ItemSectionRendererContents::ChannelAboutFullMetadataRenderer(about) => about.to_owned(),
-                    _ => unreachable!(),
-                },
-                _ => unreachable!()
-            },
-            _ => unreachable!()
-        }
-    },
-        _ => unreachable!(),
-    };
-    let header = match channel.header.unwrap(){
-        youtubei_rs::types::enums::HeaderContents::C4TabbedHeaderRenderer(c4_tabbed_header) => c4_tabbed_header,
-        _ => unreachable!()
-    };
-    let metadata = match channel.metadata.unwrap(){
-        youtubei_rs::types::enums::MetadataRenderers::ChannelMetadataRenderer(data) => data,
-        _ => unreachable!()
-    };
-    let lock = state.lock().await;
-    let banner = match &header.banner {
-        Some(banner) => Some(proxyfi_url(banner.thumbnails.last().unwrap().url.to_string(), &lock.config)),
-        None => None,
-    };
-    let thumbnail = proxyfi_url(metadata.avatar.thumbnails.last().unwrap().url.to_string(),&lock.config);
-    let channel = Channel{
-        about,
-        banner,
-        header,
-        metadata,
-        thumbnail,
-        sort_options: vec!["newest".to_string(), "oldest".to_string(), "popular".to_string()],
-        sorted_by: "newest".to_string(),
-        auto_generated: false,
-        items: match channel.contents.unwrap(){
-            youtubei_rs::types::enums::TwoColumnTypes::TwoColumnBrowseResultsRenderer(column_renderer) => match column_renderer.tabs.get(3).unwrap().tab_renderer.as_ref().unwrap().content.as_ref().unwrap(){
-                youtubei_rs::types::enums::TabRendererContent::SectionListRenderer(list_renderer) => match list_renderer.contents.get(0).unwrap(){
-                    youtubei_rs::types::enums::ItemSectionRendererContents::ItemSectionRenderer(item_renderer) => item_renderer.contents.clone(),
-                    _ => unreachable!()
- 
-                },
-                _ => unreachable!()
-            },
-            _ => unreachable!()
-        },
-        has_community_enabled: true,
-    };
-    let template = super::templates::channel::ChannelTemplate{
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        channel,
-        context: TemplateContext::new(&request, None, &lock.config),
-    };
-    render(template.render())
+    todo!()
 }
 /// Handler for the path /channel/:id/live, /c/:id/, /user/:id/live
 pub async fn live(
@@ -291,61 +65,3 @@ pub async fn attribution_link(
 ) -> Redirect {
     todo!()
 }
-
-/// fetches a channel with the given tab e.g. videos
-async fn fetch_channel(
-    ucid: String,
-    tab: Tab,
-    state: &Arc<Mutex<State>>,
-) -> Result<BrowseResult, Errors> {
-    let lock = state.lock().await;
-    match tab {
-        Tab::Videos => {
-            browse_id(
-                ucid,
-                "EgZ2aWRlb3O4AQDyBgQKAjoA".to_string(),
-                &lock.yt_client_config,
-            )
-            .await
-        }
-        Tab::Playlists => {
-            browse_id(
-                ucid,
-                "EglwbGF5bGlzdHO4AQDyBgQKAkIA".to_string(),
-                &lock.yt_client_config,
-            )
-            .await
-        }
-        Tab::Community => {
-            browse_id(
-                ucid,
-                "Egljb21tdW5pdHm4AQDyBgQKAkoA".to_string(),
-                &lock.yt_client_config,
-            )
-            .await
-        }
-        Tab::About =>  browse_id(
-            ucid,
-            "EgVhYm91dLgBAPIGBAoCEgA%3D".to_string(),
-            &lock.yt_client_config,
-        )
-        .await,
-        Tab::Home => browse_id(
-            ucid,
-            "".to_string(),
-            &lock.yt_client_config,
-        )
-        .await,
-        // TODO add about tab, params: "EgVhYm91dLgBAPIGBAoCEgA%3D"
-    }
-}
-
-/// For associations between protobufs and tab name
-pub enum Tab{
-    Home,
-    Videos,
-    Playlists,
-    Community,
-    About
-}
-
