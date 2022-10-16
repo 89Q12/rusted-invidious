@@ -82,6 +82,7 @@ pub struct Preferences {
     pub save_player_pos: bool,
     pub autofocus_search_box: bool,
     pub show_watched: bool,
+    pub video_style: PlayStyle
 }
 
 impl Preferences {
@@ -102,4 +103,17 @@ pub struct State {
     pub db_manager: DbManager,
     pub config: Config,
     pub preferences: Preferences
+}
+#[derive(Debug, PartialEq, Serialize, Deserialize,Clone)]
+pub enum PlayStyle{
+    Invidious,
+    YouTube
+}
+impl PlayStyle{
+    pub fn get_style(self)-> String{
+        match self{
+            PlayStyle::Invidious => String::from("invidious"),
+            PlayStyle::YouTube => String::from("youtube"),
+        }
+    }
 }
