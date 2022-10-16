@@ -1,48 +1,40 @@
-<video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ video.thumbnail }}"
-    id="player" class="on-video_player video-js player-style-{{ context.preferences.player_style }}"
+<video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ video.thumbnail_url }}"
+    id="video" class="on-video_video video-js video-style-{{ context.preferences.video_style.get_style() }}"
     {% if context.preferences.autoplay %}autoplay{% endif %}
     {% if context.preferences.video_loop %}loop{% endif %}
     {% if context.show_controls() %}controls{% endif %}>
-    <!-- TODO: research into hlsvp-->
-    {% if player.hls_manifest_url.is_some() && !context.config.disable_livestreams %}
-        <source src="{{  player.hls_manifest_url.as_ref().unwrap() }}{% if context.proxy_local() %}?local=true{% endif %}" type="application/x-mpegURL" label="livestream">
+    {% if !video.hls.is_some() && !context.config.disable_livestreams %}
+        <source src="{{ video.hls.unwrap() }}}" type="application/x-mpegURL" label="livestream">
     {% else %}
         {% if context.listen() %}
-            {% for (pos, stream) in player.audio_streams.iter().enumerate() %}
-                {% let selected = pos == 0 %}
-                <source src="/latest_version?id={{ video.id }}&itag={{ stream.itag }}{% if context.proxy_local()%}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
+            {% for (index, stream) in video.audio_streams.iter().enumerate() %}
+                {% let selected = index == 0 %}
+                <source src="stream.url" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
             {% endfor %}
         {% else %}
-            {% if context.preferences.quality == "dash" %}
-                <source src="/api/manifest/dash/id/{{ video.id }}?local=true&unique_res=1" type="application/dash+xml" label="dash">
+            {% if context.preferences.quality == "dash" && video.dash.is_some() %}
+                <source src="{{ video.dash.unwrap() }}" type="application/dash+xml" label="dash">
             {% endif %}
 
-            {% for (index, stream) in player.formats.iter().enumerate() %}
-                {% if stream.itag != 17 %}
+            {% for (index, stream) in video.video_streams.iter().enumerate() %}
                     {% let selected = context.preferences.quality == stream.quality || index == 0 %}
-                
-                    <source src="/latest_version?id={{video.id}}&itag={{stream.itag }}{% if context.proxy_local() %}&local=true{% endif %}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
-                {% endif %}
+ 
+                    <source src="{{ stream.url }}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
             {% endfor %}
 
-            {% for caption in player.preferred_captions.iter() %}
-                <track kind="captions" src="/api/v1/captions/{{ video.id }}?label={{ caption.name.simple_text  }}" label="{{  caption.name.simple_text  }}">
-            {% endfor %}
-
-            {% for caption in player.captions.iter() %}
-                <track kind="captions" src="/api/v1/captions/{{ video.id }}?label={{ caption.name.simple_text  }}" label="{{  caption.name.simple_text }}">
+            {% for caption in video.subtitles.iter() %}
+                <track kind="captions" src="{{caption.url}}" label="{{  caption.name }}">
             {% endfor %}
         {% endif %}
     {% endif %}
 </video>
 
-<script id="player_data" type="application/json">
+<script id="video_data" type="application/json">
 {
-    "aspect_ratio": {{ player.aspect_ratio|json|safe }},
+    "aspect_ratio": {{ video.video_streams[0].height / video.video_streams[0].width }},
     "title": {{ video.title|json|safe }},
-    "description": {{ video.short_description|json|safe }},
-    "thumbnail": {{ video.thumbnail|json|safe }},
-    "preferred_caption_found": {{ !player.preferred_captions.is_empty() }}
+    "description": {{ video.description|json|safe }},
+    "thumbnail": {{ video.thumbnail_url|json|safe }},
 }
 </script>
-<script src="/assets/js/player.js"></script>
+<script src="/assets/js/video.js"></script>
