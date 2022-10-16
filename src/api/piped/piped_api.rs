@@ -2,9 +2,9 @@ use std::panic;
 
 use serde_json::Value;
 
-use crate::api::error::{ApiError, Errors};
+use crate::{api::error::{ApiError, Errors}};
 
-use super::{channel::Channel, playlist::Playlist, video::Video, comment::Comments, misc::Next};
+use super::{Channel, Playlist, Video, Comments, misc::Next, SearchItem, Search};
 
 pub struct PipedApiBuilder{
     api_host: Option<String>,
@@ -86,7 +86,17 @@ impl PipedApi{
             Err(err) => Err(err),
         }
     }
-    
+    pub async fn get_search(&self, query: String, filter: String) -> Result<Search,ApiError>{
+        let result = self.get_resource("/search?".to_owned() + &query +"&"+ &filter, None).await;
+        let value = match result {
+            Ok(val) => val,
+            Err(err) => return Err(err),
+        };
+        match self.parse_search(value){
+            Ok(val) => Ok(val),
+            Err(err) => Err(err),
+        }
+    }
     fn parse_channel(&self, value: Value) -> Result<Channel,ApiError>{
         let channel = panic::catch_unwind(|| {
             return Channel::from(value)
@@ -132,6 +142,34 @@ impl PipedApi{
             Err(_) => todo!()//Ok(Comments::manual_parse(value)),
         }
     }
+    fn parse_search(&self, value: Value) -> Result<Search, ApiError>{
+        let suggestion = match value["suggestion"].as_str(){
+            Some(val) => Some(val.to_string()),
+            None => None,
+        };
+        let corrected = value["corrected"].as_bool().unwrap_or_default();
+        let nextpage =  value["nextpage"].as_str().unwrap_or_default().to_string();
+        let mut items: Vec<SearchItem> = Vec::new();
+        for item in value["items"].as_array().unwrap(){
+            let val = serde_json::from_value(item.to_owned());
+            match val {
+                Ok(val) => items.push(val),
+                Err(err) => return Err(ApiError{
+                    kind: Errors::Parse,
+                    recoverable: true,
+                    message: err.to_string(),
+                    action: crate::api::error::Actions::RenderError,
+                }),
+            }
+        }
+        Ok(Search{
+            nextpage,
+            suggestion,
+            corrected,
+            items,
+        })
+
+    }
     async fn get_resource(&self,url: String, param: Option<String>) -> Result<Value,ApiError>{
         let url = match param{
             Some(param) => self.api_host.to_owned() + &url + &param,
@@ -145,7 +183,7 @@ impl PipedApi{
                     kind: Errors::Parse,
                     recoverable: false,
                     message: err.to_string(),
-                    action: crate::api::error::Actions::TryInvidious,
+                    action: crate::api::error::Actions::RenderError,
                 }),
             },
             Err(err) => Err(ApiError{

@@ -1,3 +1,5 @@
+use serde::Deserialize;
+
 use super::{SearchPlaylist, RelatedStream};
 
 pub struct Search {
@@ -6,7 +8,7 @@ pub struct Search {
     corrected: bool,  // Whether the query was corrected or not
     items: Vec<SearchItem>,
 }
-
+#[derive(Deserialize)]
 pub enum SearchItem {
     SearchPlaylist(SearchPlaylist),
     RelatedStream(RelatedStream)
