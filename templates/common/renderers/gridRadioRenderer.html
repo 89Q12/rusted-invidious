@@ -1,9 +1,0 @@
-<a style="width:100%" href="/watch?v={{ item.navigation_endpoint.watch_endpoint.as_ref().unwrap().video_id }}&list={{ item.navigation_endpoint.watch_endpoint.as_ref().unwrap().playlist_id.as_ref().unwrap() }}">
-    {% if !context.preferences.thin_mode %}
-        <div class="thumbnail">
-            <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.thumbnail.thumbnails.last().unwrap().url }}"/>
-            <p class="length">{{ localize("generic_videos_count", x: item.video_count_text.runs.get(0).unwrap().text.clone() ) }}</p>
-        </div>
-    {% endif %}
-    <p dir="auto">{{ item.title.simple_text }}</p>
-</a>
