@@ -26,7 +26,6 @@ async fn main() {
     db_manager.init_prepared_statements().await;
     // Needs to be wrapped in a mutex since we edit values is the state.
     let shared_state = Arc::new(RwLock::new(State{
-        yt_client_config:default_client_config(),
         db_manager,
         config,
         preferences: Preferences::new()
