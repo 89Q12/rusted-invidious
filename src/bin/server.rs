@@ -4,7 +4,7 @@ use rusted_invidious::{routes::get_router, config::{Config, State, Preferences},
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use tower_http::trace::TraceLayer;
 use std::net::SocketAddr;
-use tokio::sync::Mutex;
+use tokio::sync::RwLock;
 use std::sync::Arc;
 use youtubei_rs::utils::default_client_config;
 /// Main entry point for the web server:
@@ -25,7 +25,7 @@ async fn main() {
     db_manager.use_keyspace().await;
     db_manager.init_prepared_statements().await;
     // Needs to be wrapped in a mutex since we edit values is the state.
-    let shared_state = Arc::new(Mutex::new(State{
+    let shared_state = Arc::new(RwLock::new(State{
         yt_client_config:default_client_config(),
         db_manager,
         config,
