@@ -1,31 +1,30 @@
-pub enum Errors {
-    Parse,
-    Request,
-}
-pub enum Actions {
-    TryInvidious,
-    TryPiped,
-    RenderError,
-}
+use std::fmt::Display;
 
+#[derive(Debug, Clone)]
+pub enum Errors {
+    ParsingError,
+    RequestError,
+}
+#[derive(Debug)]
 pub struct ApiError{
     kind: Errors,
-    recoverable: bool,
     message: String,
-    action: Actions
 }
 impl ApiError {
-    pub fn new(kind: Errors, recoverable: bool, message: String, action: Actions) -> Self { Self { kind, recoverable, message, action } }
+    pub fn new(kind: Errors, message: String) -> Self { Self { kind, message } }
     pub fn kind(&self) -> Errors{
-        self.kind
-    }
-    pub fn recoverable(&self) -> bool{
-        self.recoverable
+        self.kind.clone()
     }
     pub fn message(&self) -> String{
-        self.message
+        self.message.clone()
     }
-    pub fn action(&self) -> Actions{
-        self.action
+}
+
+impl Display for Errors{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self{
+            Errors::ParsingError => write!(f, "Error occured during parsing."),
+            Errors::RequestError => write!(f, "Error occured during the request."),
+        }
     }
 }
