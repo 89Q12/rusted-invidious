@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <title>Error- Invidious</title>
+{% endblock header %}
+{% block content %}
+<div class="pure-g h-box">
+    <h1>Error!</h1>
+    <h2>What went wrong: {{ error.kind() }}</h2>
+    <h2>Message:</h2>
+    <p>{{ error.message() }}</p>
+</div>
+{% endblock content %}
