@@ -62,7 +62,6 @@ pub struct Preferences {
     pub watch_history: bool,
     pub max_results: i32,
     pub notifications_only: bool,
-    pub player_style: String,
     pub quality: String,
     pub quality_dash: String,
     pub default_home: String,
@@ -82,7 +81,7 @@ pub struct Preferences {
     pub save_player_pos: bool,
     pub autofocus_search_box: bool,
     pub show_watched: bool,
-    pub video_style: PlayStyle
+    pub player_style: PlayerStyle
 }
 
 impl Preferences {
@@ -105,15 +104,15 @@ pub struct State {
     pub preferences: Preferences
 }
 #[derive(Debug, PartialEq, Serialize, Deserialize,Clone)]
-pub enum PlayStyle{
+pub enum PlayerStyle{
     Invidious,
     YouTube
 }
-impl PlayStyle{
+impl PlayerStyle{
     pub fn get_style(self)-> String{
         match self{
-            PlayStyle::Invidious => String::from("invidious"),
-            PlayStyle::YouTube => String::from("youtube"),
+            PlayerStyle::Invidious => String::from("invidious"),
+            PlayerStyle::YouTube => String::from("youtube"),
         }
     }
 }
