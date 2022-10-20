@@ -84,7 +84,6 @@ preferences_region_label=País del contingut:
 preferences_sort_label=Ordena vídeos per: 
 published=publicat
 published_reverse=publicat - invers
-search=busca
 search_filters_date_option_hour=Última hora
 search_filters_date_option_month=Aquest mes
 search_filters_date_option_today=Avui

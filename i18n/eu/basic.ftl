@@ -268,5 +268,4 @@ subscriptions_unseen_notifs_count={ $x } ezikusitako oharra
 subscriptions_unseen_notifs_count_plural={ $x } ezikusitako oharrak
 tokens_count={ $x } tokena
 tokens_count_plural={ $x } tokenak
-unsubscribe=Baja eman
 youtube=YouTube
