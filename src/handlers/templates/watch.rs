@@ -1,5 +1,5 @@
 use askama::{Locale, Template};
-use crate::api::piped::{Video, Playlist};
+use crate::api::{PlaylistTrait, VideoBasicInfoTrait};
 
 use super::TemplateContext;
 
@@ -9,7 +9,7 @@ pub struct Watch<'a> {
     #[locale]
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
-    pub video: Video,
-    pub playlist: Option<Playlist>,
-    pub video_id: String
+    pub video: Box<dyn VideoBasicInfoTrait>,
+    pub playlist: Option<Box<dyn PlaylistTrait>>,
+    pub video_id: String,
 }

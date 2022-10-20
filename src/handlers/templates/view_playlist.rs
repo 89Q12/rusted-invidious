@@ -1,14 +1,14 @@
 use askama::{Locale, Template};
-use crate::api::piped::Playlist;
+use crate::api::PlaylistTrait;
 
 use super::TemplateContext;
 
 #[derive(Template)] // this will generate the code...
 #[template(path = "view_playlist.html")]
-pub struct ViewPlaylist<'a>{
+pub struct ViewPlaylist<'a, PL: PlaylistTrait>{
     #[locale]
     pub loc: Locale<'a>,
     pub context: TemplateContext<'a>,
-    pub pl: Playlist,
+    pub pl: PL,
     pub playlist_id: String
 }

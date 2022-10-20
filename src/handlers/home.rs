@@ -11,7 +11,7 @@ use super::{templates::base::Base, utils::render};
 /// Ideally this should be redirect the user to the configured home path
 /// e.g. /feed/popular or serve search page I guess but this could be changed
 pub async fn index(Extension(state): Extension<Arc<RwLock<State>>>,request: Request<Body>)-> Response {
-    let lock = state.lock().await;
+    let lock = state.read().await;
     // TODO: implement
     let base = Base{
         loc: askama::Locale::new(langid!("en-US"), &LOCALES),
