@@ -80,11 +80,7 @@ pub trait Playlist{
 }
 pub trait PartialVideo{
     fn get_id(&self) -> String;
-    fn get_dash(&self) -> Option<String>;
-    fn get_hls(&self) -> Option<String>;
-    fn get_description(&self) -> String;
-    fn get_short_duration(&self) -> i32;
-    fn get_likes(&self) -> i32;
+    fn get_short_description(&self) -> String;
     fn is_live(&self) -> bool;
     fn get_title(&self) -> String;
     fn get_upload_date(&self) -> String;
