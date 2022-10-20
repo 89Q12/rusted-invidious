@@ -60,12 +60,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
   # Dev only
   nginx:
-    image: nginx
+    build:
+      context: .
+      dockerfile: ./nginxDockerfile
     ports:
       - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./assets:/usr/share/nginx/html/assets:ro
 
 volumes:
   minio_data:
