@@ -1,14 +1,16 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-#[derive(Deserialize)]
+use crate::api::{error::{ApiError, Errors}, PartialVideoTrait};
+
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct RelatedStream{
     pub duration: i32, // The duration of the related video in seconds
     pub thumbnail:String, // The thumbnail of the related video
     pub title: String, // The title of the related video
     pub uploaded_date: String, // The date the related video was uploaded
-    pub uploader_avatar: String, // The avatar of the channel of the related video
+    pub uploader_avatar: Option<String>, // The avatar of the channel of the related video
     pub uploader_url: String, // The URL of the channel of the related video
     pub uploader_verified: bool, // Whether or not the channel of the related video is verified
     pub url: String, // The URL of the related video
@@ -24,17 +26,72 @@ pub struct Next {
     nextpage: String,
     related_streams: Vec<RelatedStream>,
 }
-impl From<Value> for Next{
-    fn from(value: Value) -> Self {
-        serde_json::from_value(value).unwrap()
+impl TryFrom<Value> for Next{
+    type Error = ApiError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match serde_json::from_value(value){
+            Ok(val) => Ok(val),
+            Err(err) => Err(ApiError::new(Errors::RequestError, err.to_string())),
+        }
     }
 }
 
-impl RelatedStream{
-    pub fn get_id(&self) -> String{
-        self.url.split("=").map(|x| x.to_string()).collect::<Vec<String>>()[1]
+impl PartialVideoTrait for RelatedStream{
+    fn get_id(&self) -> String {
+        self.url.split("=").map(|x| x.to_string()).collect::<Vec<String>>()[1].clone()
     }
-    pub fn live_now(&self) -> bool{
+
+    fn get_short_description(&self) -> String {
+        match &self.short_description{
+            Some(val) => val.clone(),
+            None => String::from(""),
+        }
+    }
+    fn is_live(&self) -> bool {
         return self.duration == -1 && self.uploaded == -1
+    }
+
+    fn get_title(&self) -> String {
+        self.title.clone()
+    }
+
+    fn get_upload_date(&self) -> String {
+        self.uploaded_date.clone()
+    }
+
+    fn get_uploader_name(&self) -> String {
+        self.uploader_name.clone()
+    }
+
+    fn is_uploader_verified(&self) -> bool {
+        self.uploader_verified.clone()
+    }
+
+    fn get_uploader_avatar_url(&self) -> String {
+        match &self.uploader_avatar{
+            Some(val) => val.clone(),
+            None => String::from(""),
+        }
+    }
+
+    fn get_url(&self) -> String {
+        self.url.clone()
+    }
+
+    fn get_thumbnail_url(&self) -> String {
+        self.thumbnail.clone()
+    }
+
+    fn get_duration(&self) -> i32 {
+        self.duration.clone()
+    }
+
+    fn get_uploader_url(&self) -> String {
+        self.uploader_url.clone()
+    }
+
+    fn get_views(&self) -> i32 {
+        self.views.clone()
     }
 }
