@@ -6,7 +6,6 @@ use tower_http::trace::TraceLayer;
 use std::net::SocketAddr;
 use tokio::sync::RwLock;
 use std::sync::Arc;
-use youtubei_rs::utils::default_client_config;
 /// Main entry point for the web server:
 /// it setups logging, loads the configuration, inits the database api and starts the server
 #[tokio::main]
