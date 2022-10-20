@@ -1,29 +1,29 @@
-<a style="width:100%" href="{{ item.url }}">
+<a style="width:100%" href="{{ item.get_url() }}">
     {% if !context.preferences.thin_mode %}
         <div class="thumbnail">
-            <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.thumbnail }}"/>
-            {% if context.preferences.show_watched %}
+            <img loading="lazy" tabindex="-1" class="thumbnail" src="{{ item.get_thumbnail_url() }}"/>
+            {% if context.user.is_some() && context.preferences.show_watched %}
                 <form data-onsubmit="return_false" action="/watch_ajax?action_mark_watched=1&id={{ item.get_id() }}&referer={{ context.current_page }}" method="post">
-                    <input type="hidden" name="csrf_token" value="<%= HTML.escape(env.get?("csrf_token").try &.as(String) || "") %>">
+                    <input type="hidden" name="csrf_token" value="{{ context.user.as_ref().unwrap().csrf_token }}">
                     <p class="watched">
                         <button type="submit" style="all:unset" data-onclick="mark_watched" data-id="{{ item.get_id() }}">
                             <i data-mouse="switch_classes" data-switch-classes="ion-ios-eye-off,ion-ios-eye" class="icon ion-ios-eye"></i>
                         </button>
                     </p>
                 </form>
-            {% else if item.live_now() %}
+            {% else if item.is_live() %}
                 <p class="length" dir="auto"><i class="icon ion-ios-play-circle"></i> {{ localize("live") }}</p>
-            {% else if item.duration != 0 %}
-                <p class="length">{{ format!("{:.1$}",(item.duration / 60), 2)}}</p>
+            {% else if item.get_duration() != 0 %}
+                <p class="length">{{ format!("{:.1$}",(item.get_duration() / 60), 2)}}</p>
             {% endif %}
         </div>
     {% endif %}
-    <p dir="auto">{{ item.title }}</p>
+    <p dir="auto">{{ item.get_title() }}</p>
 </a>
 
 <div class="video-card-row flexible">
-    <div class="flex-left"><a href="{{ item.uploader_url }}>
-        <p class="channel-name" dir="auto">{{ item.uploader_name }}{% if item.uploader_verified %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</p>
+    <div class="flex-left"><a href="{{ item.get_uploader_url() }}>
+        <p class="channel-name" dir="auto">{{ item.get_uploader_name() }}{% if item.is_uploader_verified() %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</p>
     </a></div>
 
     {% let endpoint_params = "?v={{{ item.get_id() }}" %}
@@ -32,10 +32,10 @@
 
 <div class="video-card-row flexible">
     <div class="flex-left">
-        <p class="video-data" dir="auto">{{ localize("shared_x_ago", x: item.uploaded_date.clone()) }}</p>
+        <p class="video-data" dir="auto">{{ localize("shared_x_ago", x: item.get_upload_date()) }}</p>
     </div>
 
     <div class="flex-right">
-        <p class="video-data" dir="auto">{{ localize("generic_views_count", x: item.views) }}</p>
+        <p class="video-data" dir="auto">{{ localize("generic_views_count", x: item.get_views()) }}</p>
     </div>
 </div>

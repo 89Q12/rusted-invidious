@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block header %}
-<title>{{ pl.name }} - Invidious</title>
+<title>{{ pl.get_name() }} - Invidious</title>
 <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/playlist/{{ playlist_id }}" />
 {% endblock header %}
 {% block content %}
 
 <div class="pure-g h-box">
     <div class="pure-u-2-3">
-        <h3>{{ pl.name }} </h3>
-            <b><a href="{{ pl.uploader_url }}">{{ pl.uploader }}</a>| {{ localize("generic_videos_count", x: pl.videos) }} |{{ localize("upload_date", x: "Today") }}</b>
+        <h3>{{ pl.get_name() }} </h3>
+            <b><a href="{{ pl.get_uploader_url() }}">{{ pl.get_uploader_name() }}</a>| {{ localize("generic_videos_count", x: pl.get_video_count()) }} |{{ localize("upload_date", x: "Today") }}</b>
             <div class="pure-u-2-3">
                     <a href="https://www.youtube.com/playlist?list={{ playlist_id }}">
                        {{ localize("view_playlist_on_youtube") }}
@@ -47,7 +47,7 @@
 
 
 <div class="pure-g">
-    {% for item in pl.related_streams %}
+    {% for item in pl.get_videos() %}
         {% include "common/related_stream.html" %}
     {% endfor %}
 </div>

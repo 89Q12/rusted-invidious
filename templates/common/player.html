@@ -1,29 +1,27 @@
-<video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ video.thumbnail_url }}"
-    id="video" class="on-video_video video-js video-style-{{ context.preferences.video_style.get_style() }}"
+<video style="outline:none;width:100%;background-color:#000" playsinline poster="{{ video.get_thumbnail_url() }}"
+    id="video" class="on-video_video video-js video-style-{{ context.preferences.player_style.clone().get_style() }}"
     {% if context.preferences.autoplay %}autoplay{% endif %}
     {% if context.preferences.video_loop %}loop{% endif %}
     {% if context.show_controls() %}controls{% endif %}>
-    {% if !video.hls.is_some() && !context.config.disable_livestreams %}
-        <source src="{{ video.hls.unwrap() }}}" type="application/x-mpegURL" label="livestream">
+    {% if !video.get_hls().is_some() && !context.config.disable_livestreams %}
+        <source src="{{ video.get_hls().unwrap() }}}" type="application/x-mpegURL" label="livestream">
     {% else %}
         {% if context.listen() %}
-            {% for (index, stream) in video.audio_streams.iter().enumerate() %}
-                {% let selected = index == 0 %}
-                <source src="stream.url" type="{{ stream.mime_type }}" label="{{ stream.bitrate }}k" selected="{{ selected  }}">
+        <source src="video.get_audio_streams()[0].get_url()" type="{{ video.get_audio_streams()[0].get_mime_type() }}" label="{{ video.get_audio_streams()[0].get_bitrate() }}k" selected="{{ true }}">
+            {% for stream in video.get_audio_streams().into_iter().skip(1) %}
+                <source src="stream.get_url()" type="{{ stream.get_mime_type() }}" label="{{ stream.get_bitrate() }}k" selected="{{ false }}">
             {% endfor %}
         {% else %}
-            {% if context.preferences.quality == "dash" && video.dash.is_some() %}
-                <source src="{{ video.dash.unwrap() }}" type="application/dash+xml" label="dash">
+            {% if context.preferences.quality == "dash" && video.get_dash().is_some() %}
+                <source src="{{ video.get_dash().unwrap() }}" type="application/dash+xml" label="dash">
             {% endif %}
 
-            {% for (index, stream) in video.video_streams.iter().enumerate() %}
-                    {% let selected = context.preferences.quality == stream.quality || index == 0 %}
- 
-                    <source src="{{ stream.url }}" type="{{ stream.mime_type }}" label="{{ stream.quality  }}" selected="{{ selected  }}">
+            {% for stream in video.get_video_streams() %}
+                <source src="stream.get_url()" type="{{ stream.get_mime_type() }}" label="{{ stream.get_bitrate() }}k" selected="{{ context.preferences.quality == stream.get_quality() }}">
             {% endfor %}
 
-            {% for caption in video.subtitles.iter() %}
-                <track kind="captions" src="{{caption.url}}" label="{{  caption.name }}">
+            {% for caption in video.get_subtitles() %}
+                <track kind="captions" src="{{caption.get_api_url()}}" label="{{ caption.get_name() }}">
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -31,10 +29,10 @@
 
 <script id="video_data" type="application/json">
 {
-    "aspect_ratio": {{ video.video_streams[0].height / video.video_streams[0].width }},
-    "title": {{ video.title|json|safe }},
-    "description": {{ video.description|json|safe }},
-    "thumbnail": {{ video.thumbnail_url|json|safe }},
+    "aspect_ratio": {{ video.get_video_streams()[0].get_height() / video.get_video_streams()[0].get_width() }},
+    "title": {{ video.get_title()|json|safe }},
+    "description": {{ video.get_description()|json|safe }},
+    "thumbnail": {{ video.get_thumbnail_url()|json|safe }},
 }
 </script>
 <script src="/assets/js/video.js"></script>

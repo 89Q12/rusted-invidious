@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 
 {% block header %}
-<meta name="thumbnail" content="{{ video.thumbnail_url }}">
-<meta name="description" content="{{ video.description }}">
+<meta name="thumbnail" content="{{ video.get_thumbnail_url() }}">
+<meta name="description" content="{{ video.get_description() }}">
 <meta property="og:site_name" content="Invidious">
-<meta property="og:url" content="{{ context.config.domain}}/watch?v={{ video_id }}">
-<meta property="og:title" content="{{ video.title }}">
-<meta property="og:image" content="/vi/{{ video_id }}/maxres.jpg">
-<meta property="og:description" content="{{ video.description }}">
+<meta property="og:url" content="{{ context.config.domain}}/watch?v={{ video.get_id() }}">
+<meta property="og:title" content="{{ video.get_title() }}">
+<meta property="og:image" content="/vi/{{ video.get_id() }}/maxres.jpg">
+<meta property="og:description" content="{{ video.get_description() }}">
 <meta property="og:type" content="video.other">
-<meta property="og:video:url" content="{{ context.config.domain}}/embed/{{ video_id }}">
-<meta property="og:video:secure_url" content="{{ context.config.domain}}/embed/{{ video_id }}">
+<meta property="og:video:url" content="{{ context.config.domain}}/embed/{{ video.get_id() }}">
+<meta property="og:video:secure_url" content="{{ context.config.domain}}/embed/{{ video.get_id() }}">
 <meta property="og:video:type" content="text/html">
 <meta property="og:video:width" content="1280">
 <meta property="og:video:height" content="720">
 <meta name="twitter:card" content="player">
 <meta name="twitter:site" content="@omarroth1">
-<meta name="twitter:url" content="{{ context.config.domain}}/watch?v={{ video_id }}">
-<meta name="twitter:title" content="{{ video.title }}">
-<meta name="twitter:description" content="{{ video.description }}">
-<meta name="twitter:image" content="{{ context.config.domain}}/vi/{{ video_id }}/maxres.jpg">
-<meta name="twitter:player" content="{{ context.config.domain}}/embed/{{ video_id }}">
+<meta name="twitter:url" content="{{ context.config.domain}}/watch?v={{ video.get_id() }}">
+<meta name="twitter:title" content="{{ video.get_title() }}">
+<meta name="twitter:description" content="{{ video.get_description() }}">
+<meta name="twitter:image" content="{{ context.config.domain}}/vi/{{ video.get_id() }}/maxres.jpg">
+<meta name="twitter:player" content="{{ context.config.domain}}/embed/{{ video.get_id() }}">
 <meta name="twitter:player:width" content="1280">
 <meta name="twitter:player:height" content="720">
-<link rel="alternate" href="https://www.youtube.com/watch?v={{ video_id }}">
-<title>{{ video.title }} - Invidious</title>
+<link rel="alternate" href="https://www.youtube.com/watch?v={{ video.get_id() }}">
+<title>{{ video.get_title() }} - Invidious</title>
 
 <!-- Description expansion also updates the 'Show more' button to 'Show less' so
 we're going to need to do it here in order to allow for translations.
@@ -41,16 +41,16 @@ we're going to need to do it here in order to allow for translations.
 {% block content %}
 <script id="video_data" type="application/json">
     {
-    "id": "{{ video_id }}",
+    "id": "{{ video.get_id() }}",
     "genre": "",
     {% match playlist %}
         {% when Some with (pl) %}
             "index": "",
-            "plid": "",
+            "plid": pl.get_id(),
         {% when None %}
     {% endmatch %}
-    "length_seconds": "{{ video.duration }}",
-    "play_next":  {{ !video.related_streams.is_empty() && !playlist.is_some() && context.continue_autoplay() }},
+    "length_seconds": "{{ video.get_duration() }}",
+    "play_next":  {{ !video.has_related_streams() && !playlist.is_some() && context.continue_autoplay() }},
     "next_video": "{{ video.get_next_video() }}",
     "youtube_comments_text": "{{ localize("view_youtube_comments") }}",
     "reddit_comments_text": "{{ localize("view_reddit_comments") }}",
@@ -72,20 +72,20 @@ we're going to need to do it here in order to allow for translations.
 </div>
 <div class="h-box">
     <h1>
-        {{ video.title }}
+        {{ video.get_title() }}
         {% if context.listen() %}
-            <a title="{{localize("video_mode")}}" href="/watch?v={{ video_id }}&listen=0">
+            <a title="{{localize("video_mode")}}" href="/watch?v={{ video.get_id() }}&listen=0">
                 <i class="icon ion-ios-videocam"></i>
             </a>
         {% else %}
-            <a title="{{localize("audio_mode")}}" href="/watch?v={{ video_id }}&listen=1">
+            <a title="{{localize("audio_mode")}}" href="/watch?v={{ video.get_id() }}&listen=1">
                 <i class="icon ion-md-headset"></i>
             </a>
         {% endif %}
     </h1>
-    {% if video.livestream %}
+    {% if video.is_live() %}
         <h3>
-            {{ localize("videoinfo_started_streaming_x_ago",  x: video.uploaded_date) }}
+            {{ localize("videoinfo_started_streaming_x_ago",  x: video.get_upload_date()) }}
         </h3>
     {% endif %}
 </div>
@@ -93,8 +93,8 @@ we're going to need to do it here in order to allow for translations.
     <div class="pure-u-1 pure-u-lg-1-5">
         <div class="h-box">
             <span id="watch-on-youtube">
-                <a href="https://www.youtube.com/watch?v={{ video_id }}">{{ localize("videoinfo_watch_on_youtube") }}</a>
-                <a href="https://www.youtube.com/embed/{{ video_id }}">{{ localize("videoinfo_youtube_embed_link") }}</a>
+                <a href="https://www.youtube.com/watch?v={{ video.get_id() }}">{{ localize("videoinfo_watch_on_youtube") }}</a>
+                <a href="https://www.youtube.com/embed/{{ video.get_id() }}">{{ localize("videoinfo_youtube_embed_link") }}</a>
             </span>
             <p id="watch-on-another-invidious-instance">
             {% if context.preferences.automatic_instance_redirect %}
@@ -104,7 +104,7 @@ we're going to need to do it here in order to allow for translations.
             {% endif %}
             </p>
             <p id="embed-link">
-                <a href="/embed/{{video_id}}?{{ context.query_params() }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
+                <a href="/embed/{{video.get_id()}}?{{ context.query_params() }}">{{ localize("videoinfo_invidious_embed_link") }}</a>
             </p>
             {% match context.user %}
             {% when Some with (user_unwraped) %}
@@ -121,8 +121,8 @@ we're going to need to do it here in order to allow for translations.
                         </div>
                         <input type="hidden" name="csrf_token" value="{{ user_unwraped.csrf_token }}">
                         <input type="hidden" name="action_add_video" value="1">
-                        <input type="hidden" name="video_id" value="{{ video_id }}">
-                        <button data-onclick="add_playlist_video" data-id="{{ video_id }}" type="submit" class="pure-button pure-button-primary">
+                        <input type="hidden" name="video.get_id()" value="{{ video.get_id() }}">
+                        <button data-onclick="add_playlist_video" data-id="{{ video.get_id() }}" type="submit" class="pure-button pure-button-primary">
                             <b>{{ localize("add_to_playlist") }}</b>
                         </button>
                     </form>
@@ -135,37 +135,40 @@ we're going to need to do it here in order to allow for translations.
                 {% endif %}
                 {% when None %}
             {% endmatch %}
-            <p id="views"><i class="icon ion-ios-eye"></i> {{ video.views }}</p>
-            <p id="likes"><i class="icon ion-ios-thumbs-up"></i> {{ video.likes }}</p>
+            <p id="views"><i class="icon ion-ios-eye"></i> {{ video.get_views() }}</p>
+            <p id="likes"><i class="icon ion-ios-thumbs-up"></i> {{ video.get_likes() }}</p>
             <p id="dislikes"></p>
-            </p>
+            <p id="license">{{ video.get_license() }}</p>
+            <p id="category">{{ video.get_category() }}</p>
+            <p id="privacy">{{ video.get_privacy() }}</p>
+            <p id="age-limit">{{ video.get_age_limit() }}</p>
             <p id="wilson" style="display: none; visibility: hidden;"></p>
             <p id="rating" style="display: none; visibility: hidden;"></p>
             <p id="engagement" style="display: none; visibility: hidden;"></p>
         </div>
     </div>
-    <div class="pure-u-1 {% if !video.related_streams.is_empty() || playlist.is_some() %}pure-u-lg-3-5{% else %}pure-u-md-4-5{% endif %}">
+    <div class="pure-u-1 {% if !video.has_related_streams() || playlist.is_some() %}pure-u-lg-3-5{% else %}pure-u-md-4-5{% endif %}">
         <div class="h-box">
-            <a href="{{ video.uploader_url }}" style="display:block;width:fit-content;width:-moz-fit-content">
+            <a href="{{ video.get_uploader_url() }}" style="display:block;width:fit-content;width:-moz-fit-content">
                 <div class="channel-profile">
-                    <img src="{{ video.uploader_avatar }}">
-                    <span id="channel-name">{{ video.uploader }}{% if video.uploader_verified %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</span>
+                    <img src="{{ video.get_uploader_avatar_url() }}">
+                    <span id="channel-name">{{ video.get_uploader_name() }}{% if video.is_uploader_verified() %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</span>
                 </div>
             </a>
-            {% let sub_count_text = video.uploader_subscriber_count  %}
-            {% let channel_id = video.get_channel_id() %}
-            {% let author = video.uploader %}
+            {% let sub_count_text = video.get_uploader_subscriber_count()  %}
+            {% let channel_id = video.get_uploader_id() %}
+            {% let author = video.get_uploader_name() %}
             {% include "common/subscribe_widget.html" %}
             <p id="published-date">
-            <b>{{ localize("shared_x_ago", x: video.uploaded_date) }}</b>
+            <b>{{ localize("shared_x_ago", x: video.get_upload_date()) }}</b>
             </p>
             <div id="description-box"> 
                 <!-- Description -->
-                {% if video.description.len() < 200 || context.preferences.extend_desc %}
-                    <div id="descriptionWrapper">{{ video.description }}</div>
+                {% if video.get_description().len() < 200 || context.preferences.extend_desc %}
+                    <div id="descriptionWrapper">{{ video.get_description() }}</div>
                 {% else %}
                     <input id="descexpansionbutton" type="checkbox"/>
-                    <div id="descriptionWrapper">{{ video.description }}</div>
+                    <div id="descriptionWrapper">{{ video.get_description() }}</div>
                     <label for="descexpansionbutton">
                         <a></a>
                     </label>
@@ -181,7 +184,7 @@ we're going to need to do it here in order to allow for translations.
             <div id="playlist" class="h-box"></div>
         {% endif %}
         <div class="h-box">
-        {% if video.related_streams.is_empty() %}
+        {% if video.has_related_streams() %}
             <div {% if playlist.is_some() %}style="display:none"{% endif %}>
                 <div class="pure-control-group">
                     <label for="continue">{{ localize("preferences_continue_label") }}</label>
@@ -190,7 +193,7 @@ we're going to need to do it here in order to allow for translations.
                 <hr>
             </div>
         {% else %}
-            {% for item in video.related_streams %}
+            {% for item in video.get_related_streams() %}
             <div class="pure-u-1 pure-u-md-1-4">
                 <div class="h-box">
                     {% include "common/related_stream.html" %}
