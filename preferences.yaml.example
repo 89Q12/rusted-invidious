@@ -185,10 +185,10 @@ comments: ["youtube", ""]
 ##
 ## Default player style.
 ##
-## Accepted values: invidious, youtube
-## Default: invidious
+## Accepted values: Invidious, YouTube
+## Default: Invidious
 ##
-player_style: invidious
+player_style: Invidious
 
 ##
 ## Show/Hide the "related videos" sidebar when
