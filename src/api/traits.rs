@@ -24,7 +24,7 @@ pub trait VideoBasicInfo{
     fn get_subtitles(&self) -> Vec<Box<dyn Subtitle>>;
     fn get_channel_id(&self) -> String;
     fn get_next_video(&self) -> String;
-    fn get_license(&self) -> String;
+    fn get_licence(&self) -> String;
     fn get_category(&self) -> String;
     fn get_privacy(&self) -> String;
     fn get_age_limit(&self) -> u8;
