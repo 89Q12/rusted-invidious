@@ -12,3 +12,5 @@ pub use traits::PartialVideo as PartialVideoTrait;
 pub use traits::Playlist as PlaylistTrait;
 pub use traits::SearchResult as SearchResultTrait;
 pub use traits::Channel as ChannelTrait;
+pub use traits::Comments as CommentsTrait;
+pub use traits::Comment as CommentTrait;

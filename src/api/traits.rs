@@ -112,3 +112,21 @@ pub trait Channel{
     fn get_subscriber_count(&self) -> i32;
     fn is_verified(&self) -> bool;
 }
+pub trait Comments{
+    fn is_disabled(&self) -> bool;
+    fn get_comments(&self) -> Vec<Box<dyn Comment>>;
+    fn get_nextpage(&self) -> String;
+}
+
+pub trait Comment{
+    fn get_author_name(&self) -> String;
+    fn get_author_url(&self) -> String;
+    fn get_author_avatar_url(&self) -> String;
+    fn get_id(&self) -> String;
+    fn is_hearted(&self) -> bool;
+    fn is_pineed(&self) -> bool;
+    fn get_like_count(&self) -> i32;
+    fn is_author_verified(&self) -> bool;
+    fn get_comment_text(&self) -> String;
+    fn get_posted_date(&self) -> String;
+}
