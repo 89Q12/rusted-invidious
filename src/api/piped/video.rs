@@ -241,7 +241,7 @@ impl VideoBasicInfoTrait for Video{
     }
 
     fn get_uploader_avatar_url(&self) -> String {
-        self.title.clone()
+        self.uploader_avatar.clone()
     }
 
     fn get_uploader_url(&self) -> String {
