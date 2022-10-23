@@ -21,4 +21,3 @@ mod channel;
 pub use channel::Channel as Channel;
 mod piped_api;
 pub use piped_api::PipedApiBuilder as PipedApi;
-mod utils;
