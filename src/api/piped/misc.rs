@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::api::{error::{ApiError, Errors}, PartialVideoTrait};
+use crate::api::{error::{ApiError, Errors}, PartialVideoTrait,NextResultTrait};
 
 #[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -99,6 +99,19 @@ impl PartialVideoTrait for RelatedStream{
     }
 }
 
+impl NextResultTrait for Next{
+    fn get_items(&self) -> Vec<Box<dyn PartialVideoTrait>> {
+        let mut ret_vec = Vec::new();
+        for stream in self.related_streams.to_owned(){
+            ret_vec.push(Box::new(stream) as Box<dyn PartialVideoTrait>);
+        };
+        ret_vec
+    }
+
+    fn get_nextpage(&self) -> String {
+        self.nextpage.clone()
+    }
+}
 pub enum SearchFilter{
     All,
     Videos,
