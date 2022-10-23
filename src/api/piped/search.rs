@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 use serde_json;
-use crate::api::error::{ApiError, Errors};
+use crate::api::{error::{ApiError, Errors}, SearchResultTrait};
 
 use super::{SearchPlaylist, RelatedStream};
 
@@ -12,7 +12,7 @@ pub struct Search {
     corrected: bool,  // Whether the query was corrected or not
     items: Vec<SearchItem>,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub enum SearchItem {
     SearchPlaylist(SearchPlaylist),
     RelatedStream(RelatedStream)
@@ -26,5 +26,23 @@ impl TryFrom<Value> for Search{
             Ok(val) => Ok(val),
             Err(err) => Err(ApiError::new(Errors::RequestError, err.to_string())),
         }
+    }
+}
+
+impl SearchResultTrait for Search{
+    fn get_items(&self) -> Vec<SearchItem> {
+        self.items.to_owned()
+    }
+
+    fn get_suggestion(&self) -> Option<String> {
+        self.suggestion.clone()
+    }
+
+    fn is_corrected(&self) -> bool {
+        self.corrected.clone()
+    }
+
+    fn get_nextpage(&self) -> String {
+        self.nextpage.clone()
     }
 }

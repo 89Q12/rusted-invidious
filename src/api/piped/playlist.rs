@@ -19,7 +19,7 @@ pub struct Playlist {
     pub videos: i32 // The number of videos in the playlist
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SearchPlaylist {
     pub name: String, // The name of the playlist
