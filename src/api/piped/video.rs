@@ -24,15 +24,15 @@ pub struct Video{
     proxy_url: String, // The proxy url to be used for rewrites
     thumbnail_url: String, // The thumbnail of the video
     title: String,  // The title of the video
-    uploaded_date: String, // The date the video was uploaded
+    upload_date: String, // The date the video was uploaded
     uploader: String,  // The name of the channel of the video
     uploader_url: String, // The URL of the channel of the video
     uploader_verified: bool,  // Whether or not the channel of the video is verified
     uploader_subscriber_count: i32, // Subscribercount of the author(Channel)
     uploader_avatar: String, // The avatar url to the channel
     views: i32, // The number of views the video has
+    licence: Option<String>,
     category: String,
-    license: String,
     privacy: String,
     age_limit: u8
 }
@@ -40,7 +40,7 @@ pub struct Video{
 #[serde(rename_all = "camelCase")]
 pub struct AudioStream{
     pub bitrate: i32, // The bitrate of the audio stream in bytes
-    pub codec: String, // The codec of the audio stream
+    pub codec: Option<String>, // The codec of the audio stream
     pub format: String, // The format of the audio stream
     pub index_end: i32, // Useful for creating dash streams
     pub index_start: i32,  // Useful for creating dash streams
@@ -55,7 +55,7 @@ pub struct AudioStream{
 #[serde(rename_all = "camelCase")]
 pub struct VideoStream{
     bitrate: i32, // The bitrate of the video stream in bytes
-    codec: String, // The codec of the video stream
+    codec:  Option<String>, // The codec of the video stream
     format: String, // The format of the video stream
     fps: i32, // The frames per second of the video stream
     height: i32, // The height of the video stream
@@ -116,7 +116,10 @@ impl AudioStreamTrait for AudioStream{
     }
 
     fn get_codec(&self) -> String {
-        self.codec.clone()
+        match &self.codec{
+            Some(codec) => codec.clone(),
+            None => String::from(""),
+        }
     }
 
     fn get_format(&self) -> String {
@@ -142,7 +145,10 @@ impl VideoStreamTrait for VideoStream{
     }
 
     fn get_codec(&self) -> String {
-        self.codec.clone()
+        match &self.codec{
+            Some(codec) => codec.clone(),
+            None => String::from(""),
+        }
     }
 
     fn get_format(&self) -> String {
@@ -229,7 +235,7 @@ impl VideoBasicInfoTrait for Video{
     }
 
     fn get_upload_date(&self) -> String {
-        self.uploaded_date.clone()
+        self.upload_date.clone()
     }
 
     fn get_uploader_name(&self) -> String {
@@ -311,8 +317,11 @@ impl VideoBasicInfoTrait for Video{
         }
     }
 
-    fn get_license(&self) -> String {
-        self.license.clone()
+    fn get_licence(&self) -> String {
+        match &self.licence{
+            Some(licence) => licence.clone(),
+            None => String::from("No licence"),
+        }
     }
 
     fn get_category(&self) -> String {
