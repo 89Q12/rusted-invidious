@@ -94,17 +94,6 @@ impl PipedApi{
             Err(err) => Err(err),
         }
     }
-    pub async fn get_resolved_clip_id(&self, clip_id: String) -> Result<Box<dyn SearchResultTrait>,ApiError>{
-        let result = self.get_resource("/clips/".to_owned() + &clip_id, None).await;
-        let value = match result {
-            Ok(val) => val,
-            Err(err) => return Err(err),
-        };
-        match Search::try_from(value){
-            Ok(chan) => Ok(Box::new(chan)),
-            Err(err) => Err(err),
-        }
-    }
     pub async fn get_next_results(&self, endpoint: PipedEndpoint, query_param: String) -> Result<Box<dyn NextResultTrait>, ApiError>{
         let result = self.get_resource(endpoint.get_endpoint_uri() + &query_param, None).await;
         let value = match result {
