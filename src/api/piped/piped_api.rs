@@ -116,6 +116,17 @@ impl PipedApi{
             Err(err) => Err(err),
         }
     }
+    pub async fn get_next_search_result(&self,query: String, filter: SearchFilter) -> Result<Box<dyn SearchResultTrait>, ApiError>{
+        let result = self.get_resource("/nextpage/search?q=".to_owned() + &query, Some(format!("&filter={}", filter.get_filter()))).await;
+        let value = match result {
+            Ok(val) => val,
+            Err(err) => return Err(err),
+        };
+        match Search::try_from(value){
+            Ok(chan) => Ok(Box::new(chan)),
+            Err(err) => Err(err),
+        }
+    }
 
     async fn get_resource(&self,url: String, param: Option<String>) -> Result<Value,ApiError>{
         let url = match param{
