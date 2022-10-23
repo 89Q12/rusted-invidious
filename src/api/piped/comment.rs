@@ -3,7 +3,6 @@ use serde_json::Value;
 use crate::api::CommentsTrait;
 use crate::api::CommentTrait;
 use crate::api::error::{ApiError, Errors};
-use crate::handlers::templates::not_implemented;
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct  Comments{
