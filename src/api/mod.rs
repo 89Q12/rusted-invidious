@@ -14,3 +14,4 @@ pub use traits::SearchResult as SearchResultTrait;
 pub use traits::Channel as ChannelTrait;
 pub use traits::Comments as CommentsTrait;
 pub use traits::Comment as CommentTrait;
+pub use traits::Trending as TrendingTrait;

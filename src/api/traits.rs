@@ -130,3 +130,7 @@ pub trait Comment{
     fn get_comment_text(&self) -> String;
     fn get_posted_date(&self) -> String;
 }
+
+pub trait Trending{
+    fn get_videos(self) -> Vec<Box<dyn PartialVideo>>;
+}
