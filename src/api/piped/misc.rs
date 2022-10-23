@@ -124,3 +124,17 @@ impl SearchFilter{
         }
     }
 }
+
+pub enum PipedEndpoint {
+    NextPlaylist,
+    NextChannel,
+}
+
+impl PipedEndpoint{
+    pub fn get_endpoint_uri(self) -> String{
+        match self {
+            PipedEndpoint::NextPlaylist => String::from("/nextpage/playlists"),
+            PipedEndpoint::NextChannel => String::from("/nextpage/channel"),
+        }
+    }
+}
