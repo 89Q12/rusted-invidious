@@ -9,7 +9,7 @@ pub struct RelatedStream{
     pub duration: i32, // The duration of the related video in seconds
     pub thumbnail:String, // The thumbnail of the related video
     pub title: String, // The title of the related video
-    pub uploaded_date: String, // The date the related video was uploaded
+    pub uploaded_date: Option<String>, // The date the related video was uploaded
     pub uploader_avatar: Option<String>, // The avatar of the channel of the related video
     pub uploader_url: String, // The URL of the channel of the related video
     pub uploader_verified: bool, // Whether or not the channel of the related video is verified
@@ -57,7 +57,10 @@ impl PartialVideoTrait for RelatedStream{
     }
 
     fn get_upload_date(&self) -> String {
-        self.uploaded_date.clone()
+        match  &self.uploaded_date{
+            Some(date_string) => date_string.clone(),
+            None => String::from("LIVE"),
+        }
     }
 
     fn get_uploader_name(&self) -> String {
@@ -93,5 +96,31 @@ impl PartialVideoTrait for RelatedStream{
 
     fn get_views(&self) -> i32 {
         self.views.clone()
+    }
+}
+
+pub enum SearchFilter{
+    All,
+    Videos,
+    Playlists,
+    Channels,
+    MusicSongs,
+    MusicVideos,
+    MusicAlbums,
+    MusicPlaylists
+}
+
+impl SearchFilter{
+    pub fn get_filter(self) -> String{
+        match self{
+            SearchFilter::All => String::from("all"),
+            SearchFilter::Videos => String::from("videos"),
+            SearchFilter::Playlists => String::from("playlists"),
+            SearchFilter::Channels => String::from("channels"),
+            SearchFilter::MusicSongs => String::from("music_songs"),
+            SearchFilter::MusicVideos => String::from("music_videos"),
+            SearchFilter::MusicAlbums => String::from("music_albums"),
+            SearchFilter::MusicPlaylists => String::from("music_playlists"),
+        }
     }
 }
