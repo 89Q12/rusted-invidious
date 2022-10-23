@@ -12,7 +12,7 @@ serde = { version = "1.0", features = ["derive"] }
 axum ={version= "0.5", features = ["form","headers"]}
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tower-http = { version = "0.3", features = ["trace"] }
+tower-http = { version = "0.3", features = ["trace","cors"] }
 serde_yaml = "0.9.13"
 fluent = "0.16.0"
 fluent-templates = { version = "0.8.0" }
