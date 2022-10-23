@@ -134,3 +134,8 @@ pub trait Comment{
 pub trait Trending{
     fn get_videos(self) -> Vec<Box<dyn PartialVideo>>;
 }
+
+pub trait NextResult{
+    fn get_items(&self) -> Vec<Box<dyn PartialVideo>>;
+    fn get_nextpage(&self) -> String;
+}
