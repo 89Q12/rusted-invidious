@@ -1,13 +1,14 @@
 use std::{sync::Arc, collections::HashMap};
 use askama::{langid, Template};
-use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}, http::{StatusCode, Request}, body::Body};
+use axum::{response::{Response, Redirect}, Extension,extract::{path::Path, Query}, http::Request, body::Body};
 use reqwest::ClientBuilder;
 use tokio::sync::RwLock;
 use tracing::Level;
 use crate::config::State;
-use super::utils::{render, render_error};
+use super::utils::{render, render_error, render_not_implemented};
 use crate::handlers::templates::TemplateContext;
 use crate::api::piped::PipedApi;
+
 askama::localization!(LOCALES);
 /// Handler for the /watch?v=id path and renders the watch page
 /// TODO clean up, reduce smell
@@ -38,11 +39,17 @@ pub async fn redirect(Path(id): Path<String>) -> Redirect{
 
 /// Handler for the path /watch_ajax which is used to mark a video as watched if the user is logged in
 /// Protected route
-pub async fn watch_ajax(Extension(_state): Extension<Arc<RwLock<State>>>){
-    todo!()
+pub async fn watch_ajax(Extension(state): Extension<Arc<RwLock<State>>>,request: Request<Body>) -> Response{
+    let config = &state.read().await.config;
+    let context = TemplateContext::new(&request, None, config);
+    render_not_implemented(context)
 }
 
 /// Handler for the paths /clip/:id it extracts the videoId from the clip id and redirects to the /watch?v=id path
 pub async fn clip(Extension(state): Extension<Arc<RwLock<State>>>,Path(id): Path<String>) -> Redirect{
-    todo!()
+    let client = ClientBuilder::new().gzip(true).build().unwrap();
+    match client.get(format!("/clips/{}",id)).send().await{
+        Ok(data) => Redirect::temporary(&format!("watch?v={}", data.text().await.unwrap())),
+        Err(_) => Redirect::temporary("/feed/popular"),
+    }
 }
