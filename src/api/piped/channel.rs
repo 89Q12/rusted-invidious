@@ -10,11 +10,11 @@ use super::misc::RelatedStream;
 #[serde(rename_all = "camelCase")]
 pub struct Channel{
     pub avatar_url: String, // The avatar of the channel
-    pub banner_url: String, // The banner of the channel
+    pub banner_url: Option<String>, // The banner of the channel
     pub description: String, // The description of the channel
     pub id: String, // The ID of the channel
     pub name: String, // The name of the channel
-    pub nextpage: String, // A JSON encoded page, which is used for the nextpage endpoint.
+    pub nextpage: Option<String>, // A JSON encoded page, which is used for the nextpage endpoint.
     pub related_streams: Vec<RelatedStream>, // A list of videos from the channel
     pub subscriber_count: i32, // The number of subscribers the channel has
     pub verified: bool // Whether or not the channel is verified
@@ -36,7 +36,10 @@ impl ChannelTrait for Channel {
     }
 
     fn get_banner_url(&self) -> String {
-        self.banner_url.clone()
+        match &&self.banner_url{
+            Some(banner_url) => banner_url.clone(),
+            None => String::default(),
+        }
     }
 
     fn get_description(&self) -> String {
@@ -52,7 +55,10 @@ impl ChannelTrait for Channel {
     }
 
     fn get_nextpage(&self) -> String {
-        self.nextpage.clone()
+        match &self.nextpage{
+            Some(page) => page.clone(),
+            None => String::default(),
+        }
     }
 
     fn get_related_streams(&self) -> Vec<Box<dyn PartialVideoTrait>> {
@@ -71,4 +77,14 @@ impl ChannelTrait for Channel {
         self.verified.clone()
     }
 
+}
+#[derive(Deserialize, Clone)]
+pub struct SearchChannel{
+    pub description: Option<String>,
+    pub subscribers: i32, 
+    pub videos: i32,
+    pub verified: bool,
+    pub url: String,
+    pub name: String,
+    pub thumbnail: String
 }
