@@ -109,7 +109,7 @@ pub enum PlayerStyle{
     YouTube
 }
 impl PlayerStyle{
-    pub fn get_style(self)-> String{
+    pub fn get_style(&self)-> String{
         match self{
             PlayerStyle::Invidious => String::from("invidious"),
             PlayerStyle::YouTube => String::from("youtube"),
