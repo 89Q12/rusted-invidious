@@ -17,7 +17,7 @@
                     <span> | </span>
 
                     {% if context.preferences.automatic_instance_redirect %}
-                        <a href="/redirect?referer={{ context.current_page }}">
+                        <a href="/redirect?referer={{ context.current_page() }}">
                            {{ localize("switch_invidious_instance") }}
                         </a>
                     {% else %}

@@ -11,7 +11,7 @@ pub struct Context<'a> {
     pub config: &'a Config,
     pub user: Option<User>,
     pub preferences: Preferences,
-    pub current_page: String,
+    current_page: String,
 }
 
 impl<'a> Context<'a> {
@@ -128,5 +128,8 @@ impl<'a> Context<'a> {
     }
     pub fn query_params(&self) -> String {
         self.query_params.to_owned().into_iter().map(|(k,v)| k+ "="+&v).collect::<Vec<String>>().join("&")
+    }
+    pub fn current_page(&self) -> String {
+        self.current_page.clone() + &self.query_params()
     }
 }

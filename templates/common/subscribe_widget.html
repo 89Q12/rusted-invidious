@@ -2,7 +2,7 @@
     {% when Some with (user) %}
     {% if user.subscriptions.contains(channel_id) %}
         <p>
-            <form action="/subscription_ajax?action_remove_subscriptions=1&c={{ channel_id }}&referer={{ context.current_page }}" method="post">
+            <form action="/subscription_ajax?action_remove_subscriptions=1&c={{ channel_id }}&referer={{ context.current_page() }}" method="post">
                 <input type="hidden" name="csrf_token" value="{{ user.csrf_token }}">
                 <button data-type="unsubscribe" id="subscribe" class="pure-button pure-button-primary">
                     <b><input style="all:unset" type="submit" value="{{ localize("unsubscribe") }} | {{ sub_count_text }}"></b>
@@ -11,7 +11,7 @@
         </p>
     {% else %}
         <p>
-            <form action="/subscription_ajax?action_create_subscription_to_channel=1&c={{ channel_id }}&referer={{ context.current_page }}" method="post">
+            <form action="/subscription_ajax?action_create_subscription_to_channel=1&c={{ channel_id }}&referer={{ context.current_page() }}" method="post">
                 <input type="hidden" name="csrf_token" value="{{ user.csrf_token }}">
                 <button data-type="subscribe" id="subscribe" class="pure-button pure-button-primary">
                     <b><input style="all:unset" type="submit" value="{{ localize("subscribe") }} | {{ sub_count_text }}"></b>
@@ -34,7 +34,7 @@
 {% when None %}
     <p>
         <a id="subscribe" class="pure-button pure-button-primary"
-            href="/login?referer={{ context.current_page }}">
+            href="/login?referer={{ context.current_page() }}">
             <b>{{ localize("subscribe") }} | {{ sub_count_text }}</b>
         </a>
     </p>

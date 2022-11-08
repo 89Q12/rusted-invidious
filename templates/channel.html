@@ -51,9 +51,9 @@
         <a href="https://www.youtube.com/channel/{{ channel.get_id() }}">{{ localize("view_channel_on_youtube") }}</a>
         <div class="pure-u-1 pure-md-1-3">
             {% if context.preferences.automatic_instance_redirect %}
-                <a href="/redirect?referer={{ context.current_page }}">{{ localize("switch_invidious_instance") }}</a>
+                <a href="/redirect?referer={{ context.current_page() }}">{{ localize("switch_invidious_instance") }}</a>
             {% else %}
-                <a href="https://redirect.invidious.io{{ context.current_page }}">{{ localize("switch_invidious_instance") }}</a>
+                <a href="https://redirect.invidious.io{{ context.current_page() }}">{{ localize("switch_invidious_instance") }}</a>
             {% endif %}
         </div>
         <div class="pure-u-1 pure-md-1-3">
