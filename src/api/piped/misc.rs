@@ -138,6 +138,21 @@ impl SearchFilter{
     }
 }
 
+impl From<String> for SearchFilter{
+    fn from(str: String) -> Self {
+        match str.as_str(){
+            "all" => SearchFilter::All,
+            "playlist" => SearchFilter::Playlists,
+            "videos" => SearchFilter::Videos,
+            "channels" => SearchFilter::Channels,
+            "music_songs" => SearchFilter::MusicSongs,
+            "music_videos" => SearchFilter::MusicVideos,
+            "music_albums" => SearchFilter::MusicAlbums,
+            "music_playlists" => SearchFilter::MusicPlaylists,
+            _ => SearchFilter::All
+        }
+    }
+}
 pub enum PipedEndpoint {
     NextPlaylist,
     NextChannel,

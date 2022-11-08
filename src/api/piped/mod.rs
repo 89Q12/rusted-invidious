@@ -12,6 +12,7 @@ pub use comment::Comments as Comments;
 pub use comment::Comment as Comment;
 mod misc;
 pub use misc::RelatedStream as RelatedStream;
+pub use misc::SearchFilter as SearchFilter;
 mod trending;
 pub use trending::Trending as Trending;
 mod playlist;

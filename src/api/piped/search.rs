@@ -3,7 +3,7 @@ use serde_json::Value;
 use serde_json;
 use crate::api::{error::{ApiError, Errors}, SearchResultTrait};
 
-use super::{SearchPlaylist, RelatedStream};
+use super::{SearchPlaylist, RelatedStream, channel::SearchChannel};
 
 #[derive(Deserialize)]
 pub struct Search {
@@ -15,7 +15,8 @@ pub struct Search {
 #[derive(Deserialize, Clone)]
 pub enum SearchItem {
     SearchPlaylist(SearchPlaylist),
-    RelatedStream(RelatedStream)
+    SearchStream(RelatedStream),
+    SearchChannel(SearchChannel)
 }
 
 impl TryFrom<Value> for Search{
