@@ -1,0 +1,10 @@
+<a href="{{ item.url }}">
+    {% if !context.preferences.thin_mode %}
+        <center>
+            <img loading="lazy" tabindex="-1" style="width:56.25%" src="{{ item.thumbnail }}"/>
+        </center>
+    {% endif %}
+    <p dir="auto">{{ item.name }}{% if item.verified %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</p>
+</a>
+<p>{{ localize("generic_subscribers_count", x: item.subscribers) }}, </p>
+<h5>{% if item.description.is_some() %}{{ item.description.as_ref().unwrap() }}{% endif %}</h5>

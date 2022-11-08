@@ -41,10 +41,12 @@
             <div class="pure-u-1 pure-u-md-1-4">
                 <div class="h-box">
                     {% match variant %}
-                        {% when crate::api::piped::SearchItem::RelatedStream with (item) %}
+                        {% when crate::api::piped::SearchItem::SearchStream with (item) %}
                             {% include "common/related_stream.html" %}
                         {% when crate::api::piped::SearchItem::SearchPlaylist with (item) %}
                             {% include "common/search_playlist.html" %}
+                        {% when crate::api::piped::SearchItem::SearchChannel with (item) %}
+                            {% include "common/search_channel.html" %}
                     {% endmatch %}
                 </div>
             </div>
