@@ -1,6 +1,6 @@
 use crate::config::Preferences;
 
-use super::piped::playlist::Playlist;
+use super::piped::Playlist;
 
 #[derive(Clone)]
 pub struct User{
