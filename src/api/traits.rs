@@ -38,7 +38,7 @@ pub trait AudioStream{
     fn get_mime_type(&self) -> String;
     fn get_quality(&self) -> String;
     fn get_url(&self) -> String;
-    fn get_index_range(&self) -> i64;
+    fn get_index_range(&self) -> String;
     fn get_itag(&self) -> String;
 }
 
@@ -52,7 +52,7 @@ pub trait VideoStream{
     fn get_fps(&self) -> i32;
     fn get_height(&self) -> i32;
     fn get_width(&self) -> i32;
-    fn get_index_range(&self) -> i64;
+    fn get_index_range(&self) -> String;
     fn get_itag(&self) -> String;
 }
 

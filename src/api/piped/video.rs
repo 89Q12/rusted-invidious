@@ -137,8 +137,8 @@ impl AudioStreamTrait for AudioStream{
     fn get_url(&self) -> String {
         self.url.clone()
     }
-    fn get_index_range(&self) -> i64 {
-        (self.init_end - self.init_start).into()
+    fn get_index_range(&self) -> String {
+        format!("{}-{}",self.init_end,self.init_start)
     }
 
     fn get_itag(&self) -> String {
@@ -186,8 +186,8 @@ impl VideoStreamTrait for VideoStream{
         self.width.clone()
     }
 
-    fn get_index_range(&self) -> i64 {
-        (self.init_end - self.init_start).into()
+    fn get_index_range(&self) -> String {
+        format!("{}-{}",self.init_end,self.init_start)
     }
 
     fn get_itag(&self) -> String {
