@@ -33,15 +33,15 @@ pub async fn trending(Extension(state): Extension<Arc<RwLock<State>>>,request: R
     let piped = PipedApi::new(client).api_host("http://localhost:8080".to_owned()).build();
     let config = &state.read().await.config;
     let context = TemplateContext::new(&request, None, config);
-    let video = match piped.get_trending("en".to_string()).await{
-          Ok(chan) => chan,
-          Err(err) => return render_error(err, context) ,
-    };
-    let template = super::templates::{
-        loc: askama::Locale::new(langid!("en-US"), &LOCALES),
-        video,
-        context,
-        playlist: None,
-    };
-    render(template.render())
+    // let videos = match piped.get_trending("en".to_string()).await{
+    //       Ok(chan) => Box::new(chan.get_videos()),
+    //       Err(err) => return render_error(err, context) ,
+    // };
+    todo!()
+    //let template = super::templates::Trending{
+      //  loc: askama::Locale::new(langid!("en-US"), &LOCALES),
+        //videos,
+      //context,
+    //};
+    //render(template.render())
 }
