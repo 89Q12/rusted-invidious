@@ -1,241 +1,140 @@
-pub mod types;
 pub mod dash {
-    use crate::api::traits::AudioStream;
-    use crate::api::traits::VideoStream;
+    use std::time::Duration;
 
-    use super::super::common::Streams;
-    use super::types::AdaptionSet;
-    use super::types::AdaptionSetAttributes;
-    use super::types::Attributes;
-    use super::types::Attributes2;
-    use super::types::Attributes4;
-    use super::types::Attributes5;
-    use super::types::Attributes8;
-    use super::types::Declaration;
-    use super::types::Element;
-    use super::types::Element2;
-    use super::types::Element4;
-    use super::types::Element5;
-    use super::types::Element6;
-    use super::types::Root;
-    use quick_xml::se::Serializer;
+    use serde::ser::Serialize;
     use quick_xml::writer::Writer;
-    use serde::Serialize;
+    use quick_xml::se::Serializer;
+    use dash_mpd::{MPD, Period, AdaptationSet, Representation, BaseURL, AudioChannelConfiguration, SegmentBase, Initialization};
     use base64::encode;
-    pub fn generate_dash_file_from_formats(vstreams: Vec<Streams>, length: i32) -> String {
-        let generated_json = generate_xmljs_json_from_data(vstreams, length);
+
+    use crate::api::common::Streams;
+
+    pub fn generate_dash_file_from_formats(vstreams: Vec<Streams>, video_length: i32) -> String {
         let mut buffer = Vec::new();
         let writer = Writer::new_with_indent(&mut buffer, b' ', 2);
-        let mut ser = Serializer::with_root(writer, Some("root"));
-        generated_json.serialize(&mut ser).unwrap();
-        println!("{}",String::from_utf8(buffer.clone()).unwrap());
-        println!("{}", length);
-        "data:application/dash+xml;charset=utf-8;base64,".to_owned()+ &encode(String::from_utf8(buffer.clone()).unwrap())
+        let mut ser = Serializer::with_root(writer, Some("MPD"));
+        let mpd = MPD {
+            mpdtype: Some("static".into()),
+            xmlns: Some("urn:mpeg:dash:schema:mpd:2011".into()),
+            profiles: Some("urn:mpeg:dash:profile:full:2011".to_string()),
+            minBufferTime: Some(Duration::from_millis(1500)),
+            mediaPresentationDuration: Some(Duration::from_secs(video_length.try_into().unwrap())),
+            periods: [gen_period(vstreams, video_length)].to_vec(),
+            ..Default::default()
+        };
+        mpd.serialize(&mut ser)
+        .expect("serializing MPD struct");
+        encode(String::from_utf8(buffer.clone()).unwrap())
     }
-
-    fn generate_xmljs_json_from_data(streams: Vec<Streams>, length: i32) -> Root {
-        Root {
-            declaration: Declaration {
-                attributes: Attributes {
-                    version: "1.0".to_string(),
-                    encoding: "utf-8".to_string(),
-                },
-            },
-            elements: [Element {
-                type_field: "element".to_string(),
-                name: "MPD".to_string(),
-                attributes: Attributes2 {
-                    xmlns: "urn:mpeg:dash:schema:mpd:2011".to_string(),
-                    profiles: "urn:mpeg:dash:profile:full:2011".to_string(),
-                    min_buffer_time: "PT1.5S".to_string(),
-                    type_field: "static".to_string(),
-                    media_presentation_duration: format!("PT{}S", length),
-                },
-                elements: generate_adaptation_set(streams),
-            }]
-            .to_vec(),
+    fn gen_period(vstreams: Vec<Streams>, video_length: i32) -> Period{
+        Period{
+            adaptations: gen_adaptations(vstreams, video_length),
+            ..Default::default()
         }
     }
 
-    fn generate_adaptation_set(streams: Vec<Streams>) -> Vec<Element2> {
-        let mut elements = Vec::<Element2>::new();
-        let mut mime_types = Vec::<String>::new();
-        let mut root = Element2{
-            type_field: "element".to_string(),
-            name: "Period".to_string(),
-            elements: Vec::new(),
-        };
-        for stream in &streams {
-            match stream {
-                Streams::VideoStream(stream) => mime_types.push(stream.get_mime_type()),
-                Streams::AudioStream(stream) => mime_types.push(stream.get_mime_type()),
+    fn gen_adaptations(vstreams: Vec<Streams>, video_length: i32) -> Vec<AdaptationSet> {
+        let mut adaptations = Vec::new();
+        let mut audio_mime_types: Vec<String> = Vec::new();
+        let mut video_mime_types: Vec<String> = Vec::new();
+        for i in 0..vstreams.len(){
+            match vstreams[i]{
+                Streams::VideoStream(stream) => video_mime_types.push(stream.get_mime_type()),
+                Streams::AudioStream(stream) => audio_mime_types.push(stream.get_mime_type()),
             }
         }
-        mime_types.sort();
-        println!("{:?}", mime_types);
-        mime_types.dedup();
-        println!("{:?}", mime_types);
-        for (i, mime_type) in mime_types.iter().enumerate() {
-            println!("{}", mime_type);
-            let mut set = AdaptionSet {
-                type_field: "element".to_string(),
-                name: "AdaptionSet".to_string(),
-                attributes: AdaptionSetAttributes {
-                    id: i,
-                    mime_type: mime_type.to_owned(),
-                    start_with_sap: "1".to_string(),
-                    subsegment_alignment: "true".to_string(),
-                    scan_type: scan_type(mime_type),
-                },
-                elements: Vec::new(),
+        audio_mime_types.sort();
+        audio_mime_types.dedup();
+        video_mime_types.sort();
+        video_mime_types.dedup();
+        for i in 0..audio_mime_types.len(){
+            let set = AdaptationSet{
+                //Should not ever panic
+                id: Some(i.try_into().unwrap()),
+                subsegmentAlignment: Some(true),
+                mimeType: Some(audio_mime_types[i].clone()),
+                representations: gen_representations(vstreams, video_length,false),
+                ..Default::default()
             };
-            for i in 0..streams.len() {
-                match &streams[i] {
-                    Streams::VideoStream(stream) => {
-                        set.elements.push(generate_representation_video(&stream))
-                    }
-                    Streams::AudioStream(stream) => {
-                        set.elements.push(generate_representation_audio(&stream))
-                    }
-                }
+            adaptations.push(set);
+        };
+        for i in 0..video_mime_types.len(){
+            let set = AdaptationSet{
+                //Should not ever panic
+                id: Some(i.try_into().unwrap()),
+                subsegmentAlignment: Some(true),
+                mimeType: Some(audio_mime_types[i].clone()),
+                representations: gen_representations(vstreams, video_length, true),
+                ..Default::default()
             };
-            root.elements.push(set);
-        }
-        elements.push(root);
-        println!("{:?}", elements);
-        return elements;
+            adaptations.push(set);
+        };
+        adaptations
     }
 
-    fn generate_representation_audio(stream: &Box<dyn AudioStream>) -> Element4 {
-        Element4 {
-            type_field: "Element".to_string(),
-            name: "Representation".to_string(),
-            attributes: Attributes4 {
-                id: stream.get_itag(),
-                codecs: stream.get_codec(),
-                bandwidth: stream.get_bitrate().to_string(),
-                width: None,
-                height: None,
-                max_playout_rate: None,
-                frame_rate: None,
-            },
-            elements: [
-                Element5 {
-                    type_field: "element".to_string(),
-                    name: "AudioChannelConfiguration".to_string(),
-                    elements: None,
-                    attributes: Some(Attributes8 {
-                        index_range: None,
-                        scheme_id_uri: Some(
-                            "urn:mpeg:dash:23003:3:audio_channel_configuration:2011".to_string(),
-                        ),
-                        value: Some("2".to_string()),
-                    }),
-                },
-                Element5 {
-                    type_field: "element".to_string(),
-                    name: "BaseURL".to_string(),
-                    elements: Some(
-                        [Element6 {
-                            type_field: "text".to_string(),
-                            text: Some(stream.get_url()),
-                            name: None,
-                            attributes: None,
-                            elements: None,
-                        }]
-                        .to_vec(),
-                    ),
-                    attributes: None,
-                },
-                Element5 {
-                    type_field: "element".to_string(),
-                    name: "SeelementgmentBase".to_string(),
-                    elements: Some(
-                        [Element6 {
-                            type_field: "element".to_string(),
-                            text: None,
-                            name: Some("Initialization".to_string()),
-                            attributes: Some(Attributes5 {
-                                range: Some(stream.get_index_range()),
-                                id: None,
-                                codecs: None,
-                                bandwidth: None,
+    fn gen_representations(vstreams: Vec<Streams>, video_length: i32,match_video: bool) -> Vec<Representation> {
+        let mut representations: Vec<Representation> = Vec::new();
+        for stream in vstreams{
+            if match_video{
+                match stream{
+                    Streams::VideoStream(video) => representations.push(Representation{
+                        id: Some(video.get_itag()),
+                        mimeType: Some(video.get_mime_type()),
+                        codecs:Some(video.get_codec()),
+                        startWithSAP: Some(1),
+                        BaseURL: [BaseURL{
+                            base: video.get_url(),
+                            serviceLocation: None,
+                        }].to_vec(),
+                        bandwidth: Some(video.get_bitrate().try_into().unwrap()),
+                        SegmentBase: Some(SegmentBase{
+                            initialization: Some(Initialization{
+                                sourceURL: None,
+                                range: Some(video.get_index_range()),
                             }),
-                            elements: None,
-                        }]
-                        .to_vec(),
-                    ),
-                    attributes: Some(Attributes8 {
-                        index_range: Some(stream.get_index_range()),
-                        scheme_id_uri: None,
-                        value: None,
+                            indexRange: Some(video.get_index_range()),
+                            ..Default::default()
+                        }),
+                        width: Some(video.get_width().try_into().unwrap()),
+                        height: Some(video.get_height().try_into().unwrap()),
+                        frameRate: Some(video.get_fps().to_string()),
+                        ..Default::default()
                     }),
-                },
-            ]
-            .to_vec(),
-        }
-    }
-    fn generate_representation_video(stream: &Box<dyn VideoStream>) -> Element4 {
-        Element4 {
-            type_field: "Element".to_string(),
-            name: "Representation".to_string(),
-            attributes: Attributes4 {
-                id: stream.get_itag(),
-                codecs: stream.get_codec(),
-                bandwidth: stream.get_bitrate().to_string(),
-                width: Some(stream.get_width().into()),
-                height: Some(stream.get_height().into()),
-                max_playout_rate: Some("1".to_string()),
-                frame_rate: Some(stream.get_fps().into()),
-            },
-            elements: [
-                Element5 {
-                    type_field: "element".to_string(),
-                    name: "BaseURL".to_string(),
-                    elements: Some(
-                        [Element6 {
-                            type_field: "text".to_string(),
-                            text: Some(stream.get_url()),
-                            name: None,
-                            attributes: None,
-                            elements: None,
-                        }]
-                        .to_vec(),
-                    ),
-                    attributes: None,
-                },
-                Element5 {
-                    type_field: "element".to_string(),
-                    name: "SegmentBase".to_string(),
-                    elements: Some(
-                        [Element6 {
-                            type_field: "element".to_string(),
-                            text: None,
-                            name: Some("Initialization".to_string()),
-                            attributes: Some(Attributes5 {
-                                range: Some(stream.get_index_range()),
-                                id: None,
-                                codecs: None,
-                                bandwidth: None,
+                    _ => continue,
+                }
+            }
+            else{
+                match stream{
+                    Streams::AudioStream(audio) => representations.push(Representation{
+                        id: Some(audio.get_itag()),
+                        mimeType: Some(audio.get_mime_type()),
+                        codecs:Some(audio.get_codec()),
+                        scanType: Some("Progressive".to_string()),
+                        startWithSAP: Some(1),
+                        BaseURL: [BaseURL{
+                            base: audio.get_url(),
+                            serviceLocation: None,
+                        }].to_vec(),
+                        bandwidth: Some(audio.get_bitrate().try_into().unwrap()),
+                        AudioChannelConfiguration: Some(AudioChannelConfiguration{
+                            id: None,
+                            schemeIdUri: Some("urn:mpeg:dash:23003:3:audio_channel_configuration:2011".to_string()),
+                            value: Some("2".to_string()),
+                        }),
+                        SegmentBase: Some(SegmentBase{
+                            initialization: Some(Initialization{
+                                sourceURL: None,
+                                range: Some(audio.get_index_range()),
                             }),
-                            elements: None,
-                        }]
-                        .to_vec(),
-                    ),
-                    attributes: Some(Attributes8 {
-                        index_range: Some(stream.get_index_range()),
-                        scheme_id_uri: None,
-                        value: None,
+                            indexRange: Some(audio.get_index_range()),
+                            ..Default::default()
+                        }),
+                        ..Default::default()
                     }),
-                },
-            ]
-            .to_vec(),
+                    _ => continue,
+                } 
+            }
         }
-    }
-    fn scan_type(mimetype: &String) -> Option<String> {
-        if !mimetype.contains("audio") {
-            return Some(String::from("progressive"));
-        }
-        None
+        todo!()
     }
 }
