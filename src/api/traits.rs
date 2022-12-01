@@ -2,7 +2,7 @@ use super::piped::SearchItem;
 
 pub trait VideoBasicInfo{
     fn get_id(&self) -> String;
-    fn get_dash(&self) -> Option<String>;
+    fn get_dash(&self) -> String;
     fn get_hls(&self) -> Option<String>;
     fn get_description(&self) -> String;
     fn get_duration(&self) -> i32;
@@ -38,6 +38,8 @@ pub trait AudioStream{
     fn get_mime_type(&self) -> String;
     fn get_quality(&self) -> String;
     fn get_url(&self) -> String;
+    fn get_index_range(&self) -> i64;
+    fn get_itag(&self) -> String;
 }
 
 pub trait VideoStream{
@@ -50,6 +52,8 @@ pub trait VideoStream{
     fn get_fps(&self) -> i32;
     fn get_height(&self) -> i32;
     fn get_width(&self) -> i32;
+    fn get_index_range(&self) -> i64;
+    fn get_itag(&self) -> String;
 }
 
 pub trait Subtitle{
