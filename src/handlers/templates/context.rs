@@ -11,7 +11,7 @@ pub struct Context<'a> {
     pub config: &'a Config,
     pub user: Option<User>,
     pub preferences: Preferences,
-    current_page: String,
+    pub current_page: String,
 }
 
 impl<'a> Context<'a> {
