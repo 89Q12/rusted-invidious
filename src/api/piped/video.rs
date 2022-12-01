@@ -1,9 +1,7 @@
-use std::ops::Sub;
-
 use serde_json::Value;
 use serde::Deserialize;
 
-use crate::api::{error::{ApiError, Errors}, PartialVideoTrait};
+use crate::api::{error::{ApiError, Errors}, PartialVideoTrait, common::Streams};
 use super::misc::RelatedStream;
 use crate::api::{AudioStreamTrait,VideoBasicInfoTrait,VideoStreamTrait,SubtitleTrait,ChapterTrait};
 
@@ -50,6 +48,7 @@ pub struct AudioStream{
     pub quality: String, // The quality of the audio stream
     pub url: String, // The stream's URL
     pub video_only: bool, // Whether or not the stream is video only
+    itag: i32,
 }
 #[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -68,6 +67,7 @@ pub struct VideoStream{
     url: String, // The stream's URL
     video_only: bool, // Whether or not the stream is video only
     width: i32, // The width of the video stream
+    itag: i32,
 }
 #[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -137,6 +137,13 @@ impl AudioStreamTrait for AudioStream{
     fn get_url(&self) -> String {
         self.url.clone()
     }
+    fn get_index_range(&self) -> i64 {
+        (self.init_end - self.init_start).into()
+    }
+
+    fn get_itag(&self) -> String {
+        self.itag.to_string()
+    }
 }
 
 impl VideoStreamTrait for VideoStream{
@@ -178,6 +185,14 @@ impl VideoStreamTrait for VideoStream{
     fn get_width(&self) -> i32 {
         self.width.clone()
     }
+
+    fn get_index_range(&self) -> i64 {
+        (self.init_end - self.init_start).into()
+    }
+
+    fn get_itag(&self) -> String {
+        self.itag.to_string()
+    }
 }
 
 impl SubtitleTrait for  Subtitle{
@@ -206,8 +221,21 @@ impl VideoBasicInfoTrait for Video{
     fn get_id(&self) -> String {
         String::from("")
     }
-    fn get_dash(&self) -> Option<String> {
-        self.dash.clone()
+    fn get_dash(&self) -> String {
+        match &self.dash{
+            Some(dash) => dash.to_owned(),
+            None => {
+                let mut vec: Vec<Streams> = Vec::new();
+                for stream in self.video_streams.to_owned(){
+                    vec.push(Streams::VideoStream(Box::new(stream) as Box<dyn VideoStreamTrait>));
+                };
+                for stream in self.audio_streams.to_owned(){
+                    vec.push(Streams::AudioStream(Box::new(stream) as Box<dyn AudioStreamTrait>));
+                };
+                let i = vec.len().try_into().unwrap();
+               return super::super::dash::generate_dash_file_from_formats(vec,i)
+            },
+        }
     }
 
     fn get_hls(&self) -> Option<String> {
