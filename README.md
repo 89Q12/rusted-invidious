@@ -43,5 +43,3 @@ A more detailed description can be found [here](https://github.com/11Tuvork28/ru
 A big thank you to the [invidious](http://github.com/iv-org/invidious) and [NewPipe](https://github.com/TeamNewPipe/NewPipe) teams who did the main work in researching and reverse engineering YouTube.
 
 Without them and especially without the [invidious team](http://github.com/iv-org/invidious) this project would not have been possible.
-
-Translated with www.DeepL.com/Translator (free version)
