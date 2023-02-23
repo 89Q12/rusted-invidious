@@ -1,45 +1,47 @@
 # About
-Rusted-invidious is a fork or rather a rewrite of invidious which is an privacy focused front-end for YouTube.
-More information about the original project can be found at http://github.com/iv-org/invidious
+Rusted-invidious is a fork or rewrite of invidious, a privacy-focused front-end for YouTube.
+More information about the original project can be found at http://github.com/iv-org/invidious.
 
-This project aims to improve on it and to be node aware from the ground up which means its meant to be ran on a Kubernetes cluster. It also aims to be completely compitable with the current API of invidious, configs files aren't the same but a migration tool will be provided(TBD).
+This project aims to improve it and be node aware from the ground up, which means running it on a Kubernetes cluster. It also aims to be fully compatible with the current API of invidious, the configuration files are not the same but a migration tool is provided (TBD).
 
-If you're looking for a simpler solution, please consider using [invidious](http://github.com/iv-org/invidious) as this project is heavy when hosted on one machine.
+If you are looking for a simpler solution, consider using [invidious](http://github.com/iv-org/invidious), as this project is very heavy when hosted on a machine.
 
-That said this project is still in the gamma version and far away from useable.
+That being said, this project is still in gamma and far from usable.
 # Local development
-For local development you can the provided docker-compose file to start all services necessary for it to run but currently it DOES NOT COMPILE.
-You may want to edited the nginx config file to fit your needs.
+For local development, you can use the provided docker-compose file to start all the necessary services, but currently it is NOT COMPILED.
+You may want to modify the nginx configuration file to suit your needs.
 # Structure
-The project consists of multiple services:
-- [Notification service](https://github.com/11Tuvork28/rusted-invidious-notifications/)
-- [Channel feed refresh service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
-- The main app aka this repository
-- (TBD)Job management which manages each instance of the [Channel feed refresh service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
-- (TBD)Proxy for the public api and images, this is intended to ran on servers spread around the world to provide exellent latencies.
+The project consists of several services:
+- [notification service](https://github.com/11Tuvork28/rusted-invidious-notifications/)
+- [Channel feed update service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
+- The main application aka this repository.
+- (TBD)Job management that manages each instance of the [Channel feed refresh service](https://github.com/11Tuvork28/rusted-invidious-refresh-feed/)
+- (TBD)Proxy for the public API and images, this is to run on servers distributed around the world to ensure excellent latency.
 
 This project also uses:
-- Kafka for communicating internally between services and possible add futures features
-- Scylla for the database as its suited to run on a Kubernetes cluster
+- Kafka for internal communication between services and possible future features.
+- Scylla for the database, which is suitable for running in a Kubernetes cluster
 
-A more detailed description can be found at [here](https://github.com/11Tuvork28/rusted-invidious/blob/main/notes.md)
-# Config parameters that are unsupported or changed
-- channel_threads => unsupported
+A more detailed description can be found [here](https://github.com/11Tuvork28/rusted-invidious/blob/main/notes.md)
+# config parameters that are not supported or changed.
+- channel_threads => not supported
 - db_name => db_keyspace
-- channel_refresh_interval => unsupported
-- feed_threads => unsupported
-- database_url => unsupported
-- decrypt_pollin => unsupported
-- full_refresh => unsupported
-- dmca_content => unsupported
-- check_tables => unsupported
-- cache_annotation => unsupported
-- force_resolve => unsupported
-- pool_size => unsupported
-- use_quic => unsupported
-- cookies => unsupported
+- channel_refresh_interval => not supported
+- feed_threads => not supported
+- database_url => not supported
+- decrypt_pollin => not supported
+- full_refresh => not supported
+- dmca_content => not supported
+- check_tables => not supported
+- cache_annotation => not supported
+- force_resolve => not supported
+- pool_size => not supported
+- use_quic => not supported
+- cookies => not supported
 
-# Credits
-A huge thanks to the [invidious](http://github.com/iv-org/invidious) and [NewPipe](https://github.com/TeamNewPipe/NewPipe) teams for doing the meger work of researching and reverse engineering YouTube in the first place.
+# credits
+A big thank you to the [invidious](http://github.com/iv-org/invidious) and [NewPipe](https://github.com/TeamNewPipe/NewPipe) teams who did the main work in researching and reverse engineering YouTube.
 
-Without them and especially without the [invidious team](http://github.com/iv-org/invidious) this project would not be possible.
+Without them and especially without the [invidious team](http://github.com/iv-org/invidious) this project would not have been possible.
+
+Translated with www.DeepL.com/Translator (free version)
