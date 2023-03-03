@@ -38,7 +38,7 @@ pub mod dash {
         let mut audio_mime_types: Vec<String> = Vec::new();
         let mut video_mime_types: Vec<String> = Vec::new();
         for i in 0..vstreams.len(){
-            match vstreams[i]{
+            match &vstreams[i]{
                 Streams::VideoStream(stream) => video_mime_types.push(stream.get_mime_type()),
                 Streams::AudioStream(stream) => audio_mime_types.push(stream.get_mime_type()),
             }
@@ -53,7 +53,7 @@ pub mod dash {
                 id: Some(i.try_into().unwrap()),
                 subsegmentAlignment: Some(true),
                 mimeType: Some(audio_mime_types[i].clone()),
-                representations: gen_representations(vstreams, video_length,false),
+                representations: gen_representations(&vstreams, video_length,false),
                 ..Default::default()
             };
             adaptations.push(set);
@@ -64,7 +64,7 @@ pub mod dash {
                 id: Some(i.try_into().unwrap()),
                 subsegmentAlignment: Some(true),
                 mimeType: Some(audio_mime_types[i].clone()),
-                representations: gen_representations(vstreams, video_length, true),
+                representations: gen_representations(&vstreams, video_length, true),
                 ..Default::default()
             };
             adaptations.push(set);
@@ -72,7 +72,7 @@ pub mod dash {
         adaptations
     }
 
-    fn gen_representations(vstreams: Vec<Streams>, video_length: i32,match_video: bool) -> Vec<Representation> {
+    fn gen_representations(vstreams: &Vec<Streams>, video_length: i32,match_video: bool) -> Vec<Representation> {
         let mut representations: Vec<Representation> = Vec::new();
         for stream in vstreams{
             if match_video{
