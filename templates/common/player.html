@@ -12,8 +12,8 @@
                 <source src="stream.get_url()" type="{{ stream.get_mime_type() }}" label="{{ stream.get_bitrate() }}k" selected="{{ false }}">
             {% endfor %}
         {% else %}
-            {% if context.preferences.quality == "dash" && video.get_dash().is_some() %}
-                <source src="{{ video.get_dash().unwrap() }}" type="application/dash+xml" label="dash">
+            {% if context.preferences.quality == "dash" %}
+                <source src="{{ video.get_dash() }}" type="application/dash+xml" label="dash">
             {% endif %}
 
             {% for stream in video.get_video_streams() %}
