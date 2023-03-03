@@ -30,6 +30,8 @@ pub struct Config {
     pub port: String,
     pub host_binding: String,
     pub proxy_domain: String,
+    #[serde(rename = "api_domain")]
+    pub piped_api_domain: String,
     #[serde(skip)]
     pub redirect_url: String,
     #[serde(skip)]

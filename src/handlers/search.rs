@@ -21,8 +21,8 @@ pub async fn search_and_render(Extension(state): Extension<Arc<RwLock<State>>>,Q
         None => String::default(),
     };
     let client = ClientBuilder::new().gzip(true).build().unwrap();
-    let piped = PipedApi::new(client).api_host("http://localhost:8080".to_owned()).build();
     let config = &state.read().await.config;
+    let piped = PipedApi::new(client).api_host(config.piped_api_domain.to_owned()).build();
     let context = TemplateContext::new(&request, None, config);
     let items = match piped.get_search_results(query.to_string(), SearchFilter::from(filter)).await{
           Ok(items) => items,

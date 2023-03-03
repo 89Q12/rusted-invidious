@@ -113,6 +113,16 @@ https_only: false
 ##
 hsts: true
 
+##
+## Domain name under which the the api instance is hosted. This is
+## used to request the youtube data in a useable format.
+##
+## Note: This setting is MANDATORY as otherwise the project wont function!!
+##
+## Accepted values: a fully qualified domain name (FQDN) + protocol (e.g "https://api.example.com") if http is used it can be left out
+## Default: api.localhost
+##
+api_domain: api.localhost
 
 # -----------------------------
 #  Network (outbound)

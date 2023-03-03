@@ -30,8 +30,8 @@ pub async fn popular(Extension(_state): Extension<Arc<RwLock<State>>>) -> Respon
 /// Handler for the /feed/trending path.
 pub async fn trending(Extension(state): Extension<Arc<RwLock<State>>>,request: Request<Body>) -> Response {
     let client = ClientBuilder::new().gzip(true).build().unwrap();
-    let piped = PipedApi::new(client).api_host("http://localhost:8080".to_owned()).build();
     let config = &state.read().await.config;
+    let piped = PipedApi::new(client).api_host(config.piped_api_domain.to_owned()).build();
     let context = TemplateContext::new(&request, None, config);
     // let videos = match piped.get_trending("en".to_string()).await{
     //       Ok(chan) => Box::new(chan.get_videos()),
