@@ -5,7 +5,7 @@ use super::TemplateContext;
 use crate::api::PartialVideoTrait;
 
 #[derive(Template)] 
-#[template(path = "search.html",  print = "all")]
+#[template(path = "search.html")]
 pub struct Search<'a>{
     #[locale]
     pub loc: Locale<'a>,

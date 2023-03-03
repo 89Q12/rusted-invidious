@@ -2,7 +2,7 @@ use askama::{Template, Locale};
 use super::TemplateContext;
 use crate::api::ChannelTrait;
 #[derive(Template)] 
-#[template(path = "channel.html",  print = "all")]
+#[template(path = "channel.html")]
 pub struct ChannelTemplate<'a>{
     #[locale]
     pub loc: Locale<'a>,
