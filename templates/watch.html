@@ -193,13 +193,32 @@ we're going to need to do it here in order to allow for translations.
                 <hr>
             </div>
         {% else %}
-            {% for item in video.get_related_streams() %}
-            <div class="pure-u-1 pure-u-md-1-4">
-                <div class="h-box">
-                    {% include "common/related_stream.html" %}
-                </div>
+            <div class="h-box">
+                {% for item in video.get_related_streams() %}
+                    <div id="rv%{{ item.get_id() }}">
+                        <a href="/watch?v={{ item.get_id() }}&{{ context.query_params() }}">
+                            {% if !context.preferences.thin_mode %}
+                                <div class="thumbnail">
+                                    <img loading="lazy" class="thumbnail" src="https://proxy.invidio.xamh.de/vi/{{ item.get_id() }}/mqdefault.jpg?host=i.ytimg.com">
+                                    <p class="length">{{ item.get_duration() }}</p>
+                                </div>
+                            {% endif %}
+                            <p style="width:100%">{{ item.get_title() }}</p>
+                        </a>
+                        <h5 class="pure-g">
+                            <div class="pure-u-14-24">
+                                <b style="width:100%"><a href="{{ item.get_uploader_url() }}">{{ item.get_uploader_name() }}{% if item.is_uploader_verified() %}&nbsp;<i class="icon ion ion-md-checkmark-circle"></i>{% endif %}</a></b>
+                            </div>
+
+                            <div class="pure-u-10-24" style="text-align:right">
+                                <b class="width:100%">
+                                    {{ localize("generic_views_count", x: item.get_views()) }}
+                                </b>
+                            </div>
+                        </h5>
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor%}
         {% endif %}
     </div>
 </div>
