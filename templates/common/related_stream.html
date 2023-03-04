@@ -13,8 +13,8 @@
                 </form>
             {% else if item.is_live() %}
                 <p class="length" dir="auto"><i class="icon ion-ios-play-circle"></i> {{ localize("live") }}</p>
-            {% else if item.get_duration() != 0 %}
-                <p class="length">{{ format!("{:.1$}",(item.get_duration() / 60), 2)}}</p>
+            {% else %}
+                <p class="length">{{ item.get_duration() }}</p>
             {% endif %}
         </div>
     {% endif %}

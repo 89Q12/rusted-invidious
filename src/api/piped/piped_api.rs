@@ -48,7 +48,7 @@ impl PipedApi{
             Ok(mut chan) => match chan.has_dash(){
                 true => Ok(Box::new(chan)),
                 false => {
-                    match dash_utils::dash::generate_dash(chan.get_video(),chan.get_audio(), chan.get_duration()).await{
+                    match dash_utils::dash::generate_dash(chan.get_video(),chan.get_audio(), chan.get_duration_seconds()).await{
                         Ok(dash) => chan.set_dash(dash),
                         Err(_) => return Ok(Box::new(chan)),
                 };

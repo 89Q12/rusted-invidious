@@ -1,7 +1,7 @@
 use serde_json::Value;
 use serde::{Deserialize, Serialize};
 
-use crate::api::{error::{ApiError, Errors}, PartialVideoTrait, common::Streams};
+use crate::api::{error::{ApiError, Errors}, PartialVideoTrait, common::{Streams, self}};
 use super::misc::RelatedStream;
 use crate::api::{AudioStreamTrait,VideoBasicInfoTrait,VideoStreamTrait,SubtitleTrait,ChapterTrait};
 
@@ -233,8 +233,8 @@ impl VideoBasicInfoTrait for Video{
         self.description.clone()
     }
 
-    fn get_duration(&self) -> i32 {
-        self.duration.clone()
+    fn get_duration(&self) -> String {
+        common::format_duration(self.duration)
     }
 
     fn get_likes(&self) -> i32 {
@@ -381,5 +381,8 @@ impl Video{
     }
     pub(super) fn get_video(&self) -> Vec<VideoStream>{
         self.video_streams.clone()
+    }
+    pub(super) fn get_duration_seconds(&self) -> i32{
+        self.duration.clone()
     }
 }

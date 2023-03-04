@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::api::{error::{ApiError, Errors}, PartialVideoTrait,NextResultTrait};
+use crate::api::{error::{ApiError, Errors}, PartialVideoTrait,NextResultTrait, common};
 
 #[derive(Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -86,8 +86,8 @@ impl PartialVideoTrait for RelatedStream{
         self.thumbnail.clone()
     }
 
-    fn get_duration(&self) -> i32 {
-        self.duration.clone()
+    fn get_duration(&self) -> String {
+        common::format_duration(self.duration)
     }
 
     fn get_uploader_url(&self) -> String {
