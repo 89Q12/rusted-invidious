@@ -4,10 +4,11 @@
     <title>Error- Invidious</title>
 {% endblock header %}
 {% block content %}
-<div class="pure-g h-box">
-    <h1>Error!</h1>
-    <h2>What went wrong: {{ error.kind() }}</h2>
-    <h2>Message:</h2>
-    <p>{{ error.message() }}</p>
-</div>
+        <div class="h-box">
+            <h1>Error!</h1>
+            <h2>What went wrong:</h2>
+            <p>{{ error.kind() }}</p>
+            <h2>Message:</h2>
+            <p>{{ error.message() }}</p>
+        </div>
 {% endblock content %}
