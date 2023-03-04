@@ -5,7 +5,7 @@ pub trait VideoBasicInfo{
     fn get_dash(&self) -> Option<String>;
     fn get_hls(&self) -> Option<String>;
     fn get_description(&self) -> String;
-    fn get_duration(&self) -> i32;
+    fn get_duration(&self) -> String;
     fn get_likes(&self) -> i32;
     fn is_live(&self) -> bool;
     fn get_title(&self) -> String;
@@ -93,7 +93,7 @@ pub trait PartialVideo{
     fn get_uploader_avatar_url(&self) -> String;
     fn get_url(&self) -> String;
     fn get_thumbnail_url(&self) -> String;
-    fn get_duration(&self) -> i32;
+    fn get_duration(&self) -> String;
     fn get_uploader_url(&self) -> String;
     fn get_views(&self) -> i32;
 }
