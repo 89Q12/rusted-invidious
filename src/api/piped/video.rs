@@ -17,7 +17,7 @@ pub struct Video{
     hls: Option<String>, // The hls manifest URL, to be used for Livestreams
     description: String,  // The description of the video
     duration: i32,  // The duration of the video in seconds
-    likes: i32, // The number of likes the video has
+    likes: i64, // The number of likes the video has
     livestream: bool,  // Whether or not the video is a livestream
     proxy_url: String, // The proxy url to be used for rewrites
     thumbnail_url: String, // The thumbnail of the video
@@ -26,9 +26,9 @@ pub struct Video{
     uploader: String,  // The name of the channel of the video
     uploader_url: String, // The URL of the channel of the video
     uploader_verified: bool,  // Whether or not the channel of the video is verified
-    uploader_subscriber_count: i32, // Subscribercount of the author(Channel)
+    uploader_subscriber_count: i64, // Subscribercount of the author(Channel)
     uploader_avatar: String, // The avatar url to the channel
-    views: i32, // The number of views the video has
+    views: i64, // The number of views the video has
     licence: Option<String>,
     category: String,
     privacy: String,
@@ -237,7 +237,7 @@ impl VideoBasicInfoTrait for Video{
         common::format_duration(self.duration)
     }
 
-    fn get_likes(&self) -> i32 {
+    fn get_likes(&self) -> i64 {
         self.likes.clone()
     }
 
@@ -273,12 +273,12 @@ impl VideoBasicInfoTrait for Video{
         self.uploader_url.split("/").map(|x| x.to_string()).collect::<Vec<String>>()[2].clone()    
     }
 
-    fn get_uploader_subscriber_count(&self) -> i32 {
+    fn get_uploader_subscriber_count(&self) -> i64 {
         self.uploader_subscriber_count.clone()
     }
 
-    fn get_views(&self) -> i32 {
-        self.views.clone()
+    fn get_views(&self) -> String {
+        common::format_numbers(self.views.clone())
     }
 
     fn get_thumbnail_url(&self) -> String {

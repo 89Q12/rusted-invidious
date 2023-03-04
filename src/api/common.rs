@@ -1,5 +1,6 @@
 use crate::api::traits::VideoStream as VStream;
 use crate::api::traits::AudioStream as AStream;
+use std::str;
 
 
 pub enum Streams {
@@ -21,4 +22,15 @@ pub fn format_duration(duration: i32) -> String {
         time_str = hours.to_string() + &":";
     }
     format!("{}{}:{}", time_str,pad(minutes.into(), 2), pad(seconds, 2))
+}
+
+pub fn format_numbers(num: i64) -> String{
+    num.to_string()
+    .as_bytes()
+    .rchunks(3)
+    .rev()
+    .map(str::from_utf8)
+    .collect::<Result<Vec<&str>, _>>()
+    .unwrap()
+    .join(",")
 }

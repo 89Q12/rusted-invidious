@@ -6,7 +6,7 @@ pub trait VideoBasicInfo{
     fn get_hls(&self) -> Option<String>;
     fn get_description(&self) -> String;
     fn get_duration(&self) -> String;
-    fn get_likes(&self) -> i32;
+    fn get_likes(&self) -> i64;
     fn is_live(&self) -> bool;
     fn get_title(&self) -> String;
     fn get_upload_date(&self) -> String;
@@ -15,8 +15,8 @@ pub trait VideoBasicInfo{
     fn get_uploader_avatar_url(&self) -> String;
     fn get_uploader_url(&self) -> String;
     fn get_uploader_id(&self) -> String;
-    fn get_uploader_subscriber_count(&self) -> i32;
-    fn get_views(&self) -> i32;
+    fn get_uploader_subscriber_count(&self) -> i64;
+    fn get_views(&self) -> String;
     fn get_thumbnail_url(&self) -> String;
     fn get_video_streams(&self) -> Vec<Box<dyn VideoStream>>;
     fn get_audio_streams(&self) -> Vec<Box<dyn AudioStream>>;
@@ -95,7 +95,7 @@ pub trait PartialVideo{
     fn get_thumbnail_url(&self) -> String;
     fn get_duration(&self) -> String;
     fn get_uploader_url(&self) -> String;
-    fn get_views(&self) -> i32;
+    fn get_views(&self) -> String;
 }
 
 pub trait SearchResult{

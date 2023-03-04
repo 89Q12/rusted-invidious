@@ -10,11 +10,12 @@ pub struct RelatedStream{
     pub thumbnail:String, // The thumbnail of the related video
     pub title: String, // The title of the related video
     pub upload_date: Option<String>, // The date the related video was uploaded
+    pub uploaded_date: Option<String>, // The date the related video was uploaded
     pub uploader_avatar: Option<String>, // The avatar of the channel of the related video
     pub uploader_url: String, // The URL of the channel of the related video
     pub uploader_verified: bool, // Whether or not the channel of the related video is verified
     pub url: String, // The URL of the related video
-    pub views: i32, // The number of views the related video has
+    pub views: i64, // The number of views the related video has
     pub short_description: Option<String>,
     pub uploader_name: String, // Author name aka Channel name
     pub uploaded: i64, // Unix timestamp. I know 32bit but I dont wanna need to change it in 3038 lol
@@ -59,7 +60,10 @@ impl PartialVideoTrait for RelatedStream{
     fn get_upload_date(&self) -> String {
         match  &self.upload_date{
             Some(date_string) => date_string.clone(),
-            None => String::from("LIVE"),
+            None => match &self.uploaded_date{
+                Some(date_string) =>  date_string.clone(),
+                None =>  String::from("LIVE"),
+            },
         }
     }
 
@@ -94,8 +98,8 @@ impl PartialVideoTrait for RelatedStream{
         self.uploader_url.clone()
     }
 
-    fn get_views(&self) -> i32 {
-        self.views.clone()
+    fn get_views(&self) -> String {
+        common::format_numbers(self.views.clone())
     }
 }
 
