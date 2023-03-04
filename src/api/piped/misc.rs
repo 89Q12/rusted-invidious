@@ -9,7 +9,7 @@ pub struct RelatedStream{
     pub duration: i32, // The duration of the related video in seconds
     pub thumbnail:String, // The thumbnail of the related video
     pub title: String, // The title of the related video
-    pub uploaded_date: Option<String>, // The date the related video was uploaded
+    pub upload_date: Option<String>, // The date the related video was uploaded
     pub uploader_avatar: Option<String>, // The avatar of the channel of the related video
     pub uploader_url: String, // The URL of the channel of the related video
     pub uploader_verified: bool, // Whether or not the channel of the related video is verified
@@ -57,7 +57,7 @@ impl PartialVideoTrait for RelatedStream{
     }
 
     fn get_upload_date(&self) -> String {
-        match  &self.uploaded_date{
+        match  &self.upload_date{
             Some(date_string) => date_string.clone(),
             None => String::from("LIVE"),
         }
