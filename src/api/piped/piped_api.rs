@@ -1,6 +1,5 @@
-
 use serde_json::Value;
-use crate::api::{error::{ApiError, Errors}, ChannelTrait, VideoBasicInfoTrait,PlaylistTrait,CommentsTrait,TrendingTrait, SearchResultTrait,NextResultTrait};
+use crate::api::{error::{ApiError, Errors}, ChannelTrait, VideoBasicInfoTrait,PlaylistTrait,CommentsTrait,TrendingTrait, SearchResultTrait,NextResultTrait, dash_utils};
 
 use super::{Video, Channel, Playlist, Comments, Trending, Search, misc::{SearchFilter, Next, PipedEndpoint}};
 
@@ -46,7 +45,16 @@ impl PipedApi{
             Err(err) => return Err(err),
         };
         match Video::try_from(value){
-            Ok(chan) => Ok(Box::new(chan)),
+            Ok(mut chan) => match chan.has_dash(){
+                true => Ok(Box::new(chan)),
+                false => {
+                    match dash_utils::dash::generate_dash(chan.get_video(),chan.get_audio(), chan.get_duration()).await{
+                        Ok(dash) => chan.set_dash(dash),
+                        Err(_) => return Ok(Box::new(chan)),
+                };
+                Ok(Box::new(chan))
+            },
+            },
             Err(err) => Err(err),
         }
     }

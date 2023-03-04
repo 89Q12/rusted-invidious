@@ -2,7 +2,7 @@ use super::piped::SearchItem;
 
 pub trait VideoBasicInfo{
     fn get_id(&self) -> String;
-    fn get_dash(&self) -> String;
+    fn get_dash(&self) -> Option<String>;
     fn get_hls(&self) -> Option<String>;
     fn get_description(&self) -> String;
     fn get_duration(&self) -> i32;

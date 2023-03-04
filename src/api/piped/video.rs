@@ -1,5 +1,5 @@
 use serde_json::Value;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::api::{error::{ApiError, Errors}, PartialVideoTrait, common::Streams};
 use super::misc::RelatedStream;
@@ -34,7 +34,7 @@ pub struct Video{
     privacy: String,
     age_limit: u8
 }
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct AudioStream{
     pub bitrate: i32, // The bitrate of the audio stream in bytes
@@ -50,7 +50,7 @@ pub struct AudioStream{
     pub video_only: bool, // Whether or not the stream is video only
     itag: i32,
 }
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct VideoStream{
     bitrate: i32, // The bitrate of the video stream in bytes
@@ -221,21 +221,8 @@ impl VideoBasicInfoTrait for Video{
     fn get_id(&self) -> String {
         String::from("")
     }
-    fn get_dash(&self) -> String {
-        match &self.dash{
-            Some(dash) => dash.to_owned(),
-            None => {
-                let mut vec: Vec<Streams> = Vec::new();
-                for stream in self.video_streams.to_owned(){
-                    vec.push(Streams::VideoStream(Box::new(stream) as Box<dyn VideoStreamTrait>));
-                };
-                for stream in self.audio_streams.to_owned(){
-                    vec.push(Streams::AudioStream(Box::new(stream) as Box<dyn AudioStreamTrait>));
-                };
-                let i = vec.len().try_into().unwrap();
-               return super::super::dash::generate_dash_file_from_formats(vec,i)
-            },
-        }
+    fn get_dash(&self) -> Option<String> {
+        self.dash.to_owned()
     }
 
     fn get_hls(&self) -> Option<String> {
@@ -376,4 +363,23 @@ impl VideoBasicInfoTrait for Video{
         ret_vec
     }
 
+}
+
+impl Video{
+    pub(super) fn set_dash(&mut self, dash: String){
+        self.dash = Some(dash)
+    }
+    pub(super) fn has_dash(&self) -> bool {
+        println!("{}", self.dash.is_some());
+        match  self.dash {
+            Some(_) => true,
+            None => false,
+        }
+    }
+    pub(super) fn get_audio(&self) -> Vec<AudioStream>{
+        self.audio_streams.clone()
+    }
+    pub(super) fn get_video(&self) -> Vec<VideoStream>{
+        self.video_streams.clone()
+    }
 }
